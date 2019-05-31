@@ -22,8 +22,8 @@ class Scene {
 
   //Model* sphere;
 
-  //Player* player1;
-  //Player* player2;
+  Player* player1;
+  Player* player2;
 
 
   ////
@@ -39,8 +39,8 @@ public:
     // Shader Program
     shaderID = LoadShaders( "shader.vert", "shader.frag" );
 
-	//player1 = new Player();
-	//player2 = new Player();
+	player1 = new Player();
+	player2 = new Player();
 
     ///
     //populatingTables();
@@ -51,8 +51,8 @@ public:
 
   void render( const glm::mat4 &projection, const glm::mat4 &view ) {
     ///test purpose only for index 0
-	  //player1->draw(shaderID, projection, view);
-	  //player2->draw(shaderID, projection, view);
+	  player1->draw(shaderID, projection, view);
+	  player2->draw(shaderID, projection, view);
 
   }
 
@@ -96,10 +96,10 @@ public:
   void updatePlayer(glm::mat4 headPose, ovrTrackingState handPoseState, int player) {
 
 	  if (player == 0) {
-		  //player1->updateState(headPose,handPoseState);
+		  player1->updateState(headPose,handPoseState);
 	  }
 	  else {
-		  //player2->updateState(headPose,handPoseState);
+		  player2->updateState(headPose,handPoseState);
 	  }
 
   }

@@ -1,7 +1,7 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
-#include "Core.h"
+#include "ovr.hpp"
 
 #define GLFW_INCLUDE_GLEXT
 #ifdef __APPLE__
