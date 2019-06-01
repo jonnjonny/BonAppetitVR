@@ -13,7 +13,7 @@ unsigned char* loadPPM( const char* filename, int &width, int &height ) {
   char* retval_fgets;
   size_t retval_sscanf;
 
-  if( ( fopen( filename, "rb" ) ) != 0 ) {
+  if((fp = fopen(filename, "rb")) == NULL) {
     std::cerr << "error reading ppm file, could not locate " << filename << std::endl;
     width = 0;
     height = 0;
