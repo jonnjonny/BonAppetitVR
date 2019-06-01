@@ -2,8 +2,8 @@
 // Created by Jonathan Leung
 //
 
-#ifndef CAVE_CORE_H
-#define CAVE_CORE_H
+#ifndef BONAPPETITE_CORE_H
+#define BONAPPETITE_CORE_H
 
 
 #include <iostream>
@@ -27,6 +27,6 @@
 
 #include "ovr.hpp" 
 
-#include "CaveApp.hpp"
+#include "BonAppetiteApp.hpp"
 
-#endif //CAVE_CORE_H
+#endif //BONAPPETITE_CORE_H

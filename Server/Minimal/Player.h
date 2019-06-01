@@ -1,15 +1,13 @@
-#ifndef _CUBE_H_
-#define _CUBE_H_
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
+
+#include "ovr.hpp"
 
 #define GLFW_INCLUDE_GLEXT
 #ifdef __APPLE__
 #define GLFW_INCLUDE_GLCOREARB
 #else
-
-
 #include <GL/glew.h>
-
-
 #endif
 
 
@@ -23,21 +21,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-class Cube {
+class Player {
 public:
-  Cube();
+  Player();
 
 
-  ~Cube();
+  ~Player();
 
 
   glm::mat4 toWorld;
+  glm::mat4 headPose;
+  glm::mat4 leftControllerPosition;
+  glm::mat4 rightControllerPosition;
+  glm::mat4 leftControllerOrientation;
+  glm::mat4 rightControllerOrientation;
 
 
   void draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view);
 
 
-  void update();
+  void updateState(glm::mat4 headPose, ovrTrackingState handState);
 
 
   void spin( float );

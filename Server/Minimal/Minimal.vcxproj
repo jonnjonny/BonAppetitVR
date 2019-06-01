@@ -132,15 +132,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Cube.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Pyramid.cpp" />
-    <ClCompile Include="Screen.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="Skybox.cpp" />
-    <ClCompile Include="TexturedCube.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="pyramid.frag" />
     <None Include="pyramid.vert" />
@@ -154,12 +145,13 @@
     <None Include="sphere.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BonAppetiteApp.hpp" />
+    <ClInclude Include="CaveApp.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="GlfwApp.hpp" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="ovr.hpp" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
     <ClInclude Include="RiftApp.hpp" />
     <ClInclude Include="RiftManagerApp.hpp" />
@@ -167,9 +159,15 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="CaveApp.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TexturedCube.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="TexturedCube.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

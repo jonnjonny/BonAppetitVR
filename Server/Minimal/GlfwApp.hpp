@@ -2,8 +2,8 @@
 // Created by Jonathan Leung
 //
 
-#ifndef WHEREISWALDOVR_GLFWAPP_H
-#define WHEREISWALDOVR_GLFWAPP_H
+#ifndef BONAPPETITEVR_GLFWAPP_H
+#define BONAPPETITEVR_GLFWAPP_H
 
 // GLEW gives cross platform access to OpenGL 3.x+ functionality.
 #include <GLFW/glfw3.h>

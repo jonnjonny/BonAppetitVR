@@ -6,7 +6,6 @@
 #include <algorithm>
 using namespace std;
 
-#define GLFW_INCLUDE_GLEXT
 #ifdef __APPLE__
 #define GLFW_INCLUDE_GLCOREARB
 #else

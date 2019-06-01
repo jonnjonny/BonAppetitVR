@@ -1,4 +1,4 @@
-#include "Cube.h"
+#include "Player.h"
 #include <iostream>
 
 
@@ -94,8 +94,9 @@ const GLfloat normals[] = {
 };
 
 
-Cube::Cube() {
-  toWorld = glm::mat4( 1.0f );
+Player::Player() {
+
+	toWorld = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -2.0));
 
   // Create array object and buffers. Remember to delete your buffers when the object is destroyed!
   glGenVertexArrays( 1, &VAO );
@@ -154,7 +155,7 @@ Cube::Cube() {
 }
 
 
-Cube::~Cube() {
+Player::~Player() {
   // Delete previously generated buffers. Note that forgetting to do this can waste GPU memory in a 
   // large project! This could crash the graphics driver due to memory leaks, or slow down application performance!
   glDeleteVertexArrays( 1, &VAO );
@@ -163,10 +164,10 @@ Cube::~Cube() {
 }
 
 
-void Cube::draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view) {
+void Player::draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view) {
   glUseProgram( shaderProgram );
   // Calculate the combination of the model and view (camera inverse) matrices
-  glm::mat4 modelview = view * toWorld;
+  glm::mat4 modelview = view * this->headPose;
   // We need to calcullate this because modern OpenGL does not keep track of any matrix other than the viewport (D)
   // Consequently, we need to forward the projection, view, and model matrices to the shader programs
   // Get the location of the uniform variables "projection" and "modelview"
@@ -187,13 +188,17 @@ void Cube::draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::m
   glBindVertexArray( 0 );
 }
 
-
-void Cube::update() {
-  spin( 1.0f );
+void Player::updateState(glm::mat4 headPose, ovrTrackingState handState) {
+	this->headPose = headPose;
+	ovrPoseStatef leftHand = handState.HandPoses[ovrHand_Left];
+	ovrPoseStatef rightHand = handState.HandPoses[ovrHand_Right];
+	this->leftControllerOrientation = glm::mat4_cast(ovr::toGlm(leftHand.ThePose.Orientation));
+	this->leftControllerPosition = glm::translate(glm::mat4(1.0),ovr::toGlm(leftHand.ThePose.Position));
+	this->rightControllerOrientation = glm::mat4_cast(ovr::toGlm(rightHand.ThePose.Orientation));
+	this->rightControllerPosition = glm::translate(glm::mat4(1.0), ovr::toGlm(rightHand.ThePose.Position));
 }
 
-
-void Cube::spin( float deg ) {
+void Player::spin( float deg ) {
   // If you haven't figured it out from the last project, this is how you fix spin's behavior
   toWorld = toWorld * glm::rotate( glm::mat4( 1.0f ), 1.0f / 180.0f * glm::pi <float>(),
                                    glm::vec3( 0.0f, 1.0f, 0.0f ) );

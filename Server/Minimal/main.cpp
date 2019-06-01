@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
   if (!OVR_SUCCESS(ovr_Initialize(nullptr))) {
     FAIL("Failed to initialize the Oculus SDK");
   }
-  result = CaveApp().run();
+  result = BonAppetiteApp().run();
 
   ovr_Shutdown();
   return result;

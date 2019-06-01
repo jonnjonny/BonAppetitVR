@@ -375,7 +375,6 @@ publish, and distribute this file as you see fit.
 // and only if iPhone convert-to-rgb processing is on).
 //
 
-
 #ifndef STBI_NO_STDIO
 #include <stdio.h>
 #endif // STBI_NO_STDIO

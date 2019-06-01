@@ -157,8 +157,7 @@ protected:
 			const auto& vp = _sceneLayer.Viewport[eye];
 			glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 			_sceneLayer.RenderPose[eye] = eyePoses[eye];
-			renderScene(_fbo,_eyeProjections[ovrEye_Left], ovr::toGlm(eyePoses[ovrEye_Left]),
-						_eyeProjections[ovrEye_Right], ovr::toGlm(eyePoses[ovrEye_Right]), eye);
+			renderScene(_eyeProjections[eye], ovr::toGlm(eyePoses[eye]));
 		});
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -175,6 +174,5 @@ protected:
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	}
 
-	virtual void renderScene(GLuint _fbo, const glm::mat4& projectionLeft, const glm::mat4& headPoseLeft, 
-							const glm::mat4& projectionRight, const glm::mat4& headPoseRight, ovrEyeType eye) = 0;
+	virtual void renderScene(const glm::mat4& projection, const glm::mat4& headPose) = 0;
 };
