@@ -1,7 +1,7 @@
 #ifndef OBJECTDATA_H
 #define OBJECTDATA_H
 
-#include <rpc/client.h>
+#include "rpc/client.h"
 #include "glm/glm.hpp"
 
 struct ObjectData {

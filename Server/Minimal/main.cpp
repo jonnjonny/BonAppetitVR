@@ -123,6 +123,11 @@ int main()
 	std::cout << "Listening to port: " << PORT << std::endl;
 
 	Scene scene;
+	int numPlayers = 0;
+	srv.bind("getPlayerNumber", [&numPlayers](){
+		std::cout << "Player Number Given: " << numPlayers << std::endl;
+		return numPlayers++;
+	});
 
 	// Define a rpc function: auto echo(string const& s, Player& p){} (return type is deduced)
 	srv.bind("updatePlayer", [&scene]

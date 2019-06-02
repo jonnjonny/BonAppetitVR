@@ -5,6 +5,8 @@
 #include "Core.h"
 #include "RiftApp.hpp"
 #include "Scene.hpp"
+#include "SceneGraph.hpp"
+#include "ObjectData.hpp"
 #include "rpc/client.h"
 
 // An example application that renders a simple cube
@@ -22,6 +24,7 @@ public:
 		buttonPressed = false;
 		stickShifted = false;
 		c = connection;
+		playerNumber = c->call("getPlayerNumber").as<int>();
 	}
 
 protected:
@@ -107,18 +110,30 @@ protected:
 			ftiming, ovrTrue);
 
 
-		auto[scene]/* structured binding: similar to
-									result = std::get<0>(return value);
-									player = std::get<1>(return value);
-								*/ =
-			c->call("updatePlayer", headPose, hmdState, playerNumber ).as<std::tuple<glm::mat4, ovrTrackingState, int>/*cast back the respond message to string and Player*/>();
+		 
+			
+		SceneGraph scenegraph = c->call("updatePlayer",  ).as<SceneGraph>/*cast back the respond message to string and Player*/>();
 
+		scene->updatePlayer(scenegraph.player1, 0);
+		scene->updatePlayer(scenegraph.player2, 1);
 
 	
 		scene->render(projection, glm::inverse(headPose));
 		
 		
 		
+	}
+
+	PlayerData getPlayerState(glm::mat4 headPose, ovrTrackingState handState) {
+		PlayerData output;
+		output.headPos = headPose[3];
+		output.headOri = glm::mat3(headPose);
+		output.LControlPos = glm::vec3(leftControllerPosition * glm::vec4(0.0, 0.0, 0.0, 1.0));
+		output.LControlOri = glm::quat_cast(leftControllerOrientation);
+		output.RControlPos = glm::vec3(rightControllerPosition * glm::vec4(0.0, 0.0, 0.0, 1.0));
+		output.RControlOri = glm::quat_cast(rightControllerOrientation);
+
+		return output;
 	}
 };
 

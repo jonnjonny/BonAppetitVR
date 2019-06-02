@@ -18,6 +18,7 @@ limitations under the License.
 ************************************************************************************/
 
 #include "Core.h"
+#include "rpc/client.h"
 
 // Import the most commonly used types into the default namespace
 
@@ -117,7 +118,10 @@ int main(int argc, char** argv) {
   if (!OVR_SUCCESS(ovr_Initialize(nullptr))) {
     FAIL("Failed to initialize the Oculus SDK");
   }
-  result = BonAppetiteApp().run();
+
+  rpc::client c("localhost", 8080);
+
+  result = BonAppetiteApp(&c).run();
 
   ovr_Shutdown();
   return result;

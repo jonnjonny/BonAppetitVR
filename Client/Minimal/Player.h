@@ -20,6 +20,8 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "objectdata.hpp"
+
 
 class Player {
 public:
@@ -39,8 +41,7 @@ public:
 
   void draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view);
 
-
-  void updateState(glm::mat4 headPose, ovrTrackingState handState);
+  void Player::updateState(PlayerData p);
 
 
   void spin( float );

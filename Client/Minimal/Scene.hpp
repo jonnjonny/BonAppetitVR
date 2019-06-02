@@ -9,7 +9,7 @@
 #include <vector>
 #include "Core.h"
 #include "shader.h"
-//#include "Model.h"
+#include "rpc/client.h"
 #include "TexturedCube.h"
 #include "Player.h"
 
@@ -93,13 +93,13 @@ public:
 
   }*/
 
-  void updatePlayer(glm::mat4 headPose, ovrTrackingState handPoseState, int player) {
+  void updatePlayer(PlayerData p, int player) {
 
 	  if (player == 0) {
-		  player1->updateState(headPose,handPoseState);
+		  player1->updateState(p);
 	  }
 	  else {
-		  player2->updateState(headPose,handPoseState);
+		  player2->updateState(p);
 	  }
 
   }
