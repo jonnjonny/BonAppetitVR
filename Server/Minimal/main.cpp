@@ -18,6 +18,10 @@ limitations under the License.
 ************************************************************************************/
 
 #include "Core.h"
+#include "Scene.hpp"
+#include "SceneGraph.hpp"
+#include "ObjectData.hpp"
+#include "rpc/server.h"
 
 // Import the most commonly used types into the default namespace
 
@@ -110,15 +114,26 @@ void glDebugCallbackHandler(GLenum source, GLenum type, GLuint id, GLenum severi
 }
 
 
-// Execute our example class
-int main(int argc, char** argv) {
-  int result = -1;
+#define PORT 8080
 
-  if (!OVR_SUCCESS(ovr_Initialize(nullptr))) {
-    FAIL("Failed to initialize the Oculus SDK");
-  }
-  result = BonAppetiteApp().run();
+int main()
+{
+	// Set up rpc server and listen to PORT
+	rpc::server srv(PORT);
+	std::cout << "Listening to port: " << PORT << std::endl;
 
-  ovr_Shutdown();
-  return result;
+	Scene scene;
+
+	// Define a rpc function: auto echo(string const& s, Player& p){} (return type is deduced)
+	srv.bind("updatePlayer", [&scene]
+	(PlayerData p, int player) -> SceneGraph
+	{
+		scene.updatePlayer(p, player);
+		SceneGraph output = scene.getGraph();
+		return output;
+	});
+
+	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);
+	srv.run();
+	return 0;
 }

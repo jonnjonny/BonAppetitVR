@@ -5,19 +5,23 @@
 #include "Core.h"
 #include "RiftApp.hpp"
 #include "Scene.hpp"
+#include "rpc/client.h"
 
 // An example application that renders a simple cube
 class BonAppetiteApp : public RiftApp
 {
 	std::shared_ptr<Scene> scene;
+	rpc::client* c;
+	int playerNumber;
 	bool buttonPressed;
 	bool stickShifted;
 
 public:
-	BonAppetiteApp()
+	BonAppetiteApp(rpc::client* connection)
 	{
 		buttonPressed = false;
 		stickShifted = false;
+		c = connection;
 	}
 
 protected:
@@ -97,6 +101,17 @@ protected:
 				stickShifted = false;
 			}
 		}
+
+		double ftiming = ovr_GetPredictedDisplayTime(_session, 0);
+		ovrTrackingState hmdState = ovr_GetTrackingState(_session,
+			ftiming, ovrTrue);
+
+
+		auto[scene]/* structured binding: similar to
+									result = std::get<0>(return value);
+									player = std::get<1>(return value);
+								*/ =
+			c->call("updatePlayer", headPose, hmdState, playerNumber ).as<std::tuple<glm::mat4, ovrTrackingState, int>/*cast back the respond message to string and Player*/>();
 
 
 	

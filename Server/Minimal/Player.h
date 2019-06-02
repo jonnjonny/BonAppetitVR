@@ -20,6 +20,8 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "ObjectData.hpp"
+
 
 class Player {
 public:
@@ -36,14 +38,15 @@ public:
   glm::mat4 leftControllerOrientation;
   glm::mat4 rightControllerOrientation;
 
-
   void draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view);
 
 
-  void updateState(glm::mat4 headPose, ovrTrackingState handState);
+  void updateState(PlayerData p);
 
 
   void spin( float );
+
+  PlayerData getState();
 
 
   // These variables are needed for the shader program

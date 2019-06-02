@@ -188,18 +188,28 @@ void Player::draw( GLuint shaderProgram, const glm::mat4 &projection, const glm:
   glBindVertexArray( 0 );
 }
 
-void Player::updateState(glm::mat4 headPose, ovrTrackingState handState) {
-	this->headPose = headPose;
-	ovrPoseStatef leftHand = handState.HandPoses[ovrHand_Left];
-	ovrPoseStatef rightHand = handState.HandPoses[ovrHand_Right];
-	this->leftControllerOrientation = glm::mat4_cast(ovr::toGlm(leftHand.ThePose.Orientation));
-	this->leftControllerPosition = glm::translate(glm::mat4(1.0),ovr::toGlm(leftHand.ThePose.Position));
-	this->rightControllerOrientation = glm::mat4_cast(ovr::toGlm(rightHand.ThePose.Orientation));
-	this->rightControllerPosition = glm::translate(glm::mat4(1.0), ovr::toGlm(rightHand.ThePose.Position));
+void Player::updateState(PlayerData p) {
+	this->headPose = glm::translate(glm::mat4_cast(p.headOri),p.headPos);
+	this->leftControllerOrientation = glm::mat4_cast(p.LControlOri);
+	this->leftControllerPosition = glm::translate(glm::mat4(1.0),p.LControlPos);
+	this->rightControllerOrientation = glm::mat4_cast(p.RControlOri);
+	this->rightControllerPosition = glm::translate(glm::mat4(1.0), p.RControlPos);
 }
 
 void Player::spin( float deg ) {
   // If you haven't figured it out from the last project, this is how you fix spin's behavior
   toWorld = toWorld * glm::rotate( glm::mat4( 1.0f ), 1.0f / 180.0f * glm::pi <float>(),
                                    glm::vec3( 0.0f, 1.0f, 0.0f ) );
+}
+
+PlayerData Player::getState() {
+	PlayerData output;
+	output.headPos = headPose[3];
+	output.headOri = glm::mat3(headPose);
+	output.LControlPos = glm::vec3(leftControllerPosition * glm::vec4(0.0,0.0,0.0,1.0));
+	output.LControlOri = glm::quat_cast(leftControllerOrientation);
+	output.RControlPos = glm::vec3(rightControllerPosition * glm::vec4(0.0,0.0,0.0,1.0));
+	output.RControlOri = glm::quat_cast(rightControllerOrientation);
+
+	return output;
 }

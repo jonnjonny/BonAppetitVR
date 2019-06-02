@@ -87,7 +87,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Include\LibOVR;$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;$(SolutionDir)\Include\LibOVR;$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -146,7 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BonAppetiteApp.hpp" />
-    <ClInclude Include="CaveApp.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="GlfwApp.hpp" />
@@ -156,7 +155,6 @@
     <ClInclude Include="RiftApp.hpp" />
     <ClInclude Include="RiftManagerApp.hpp" />
     <ClInclude Include="Scene.hpp" />
-    <ClInclude Include="Screen.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />

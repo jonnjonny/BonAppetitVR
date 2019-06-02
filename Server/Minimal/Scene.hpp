@@ -12,6 +12,8 @@
 //#include "Model.h"
 #include "TexturedCube.h"
 #include "Player.h"
+#include "rpc/server.h"
+#include "SceneGraph.hpp"
 
 
 // a class for building and rendering cubes
@@ -93,14 +95,23 @@ public:
 
   }*/
 
-  void updatePlayer(glm::mat4 headPose, ovrTrackingState handPoseState, int player) {
+  void updatePlayer(PlayerData p, int player) {
 
 	  if (player == 0) {
-		  player1->updateState(headPose,handPoseState);
+		  player1->updateState(p);
 	  }
 	  else {
-		  player2->updateState(headPose,handPoseState);
+		  player2->updateState(p);
 	  }
+
+  }
+
+  SceneGraph Scene::getGraph() {
+	  SceneGraph output;
+	  output.player1 = player1->getState();
+	  output.player2 = player2->getState();
+
+	  return output;
 
   }
 

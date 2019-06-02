@@ -57,9 +57,6 @@
     <ClInclude Include="BonAppetiteApp.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CaveApp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -85,9 +82,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
