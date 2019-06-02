@@ -27,6 +27,4 @@
 
 #include "ovr.hpp" 
 
-#include "BonAppetiteApp.hpp"
-
 #endif //BONAPPETITE_CORE_H

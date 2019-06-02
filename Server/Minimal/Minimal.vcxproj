@@ -120,14 +120,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Include\LibOVR;$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;$(SolutionDir)\Include\rpc;$(SolutionDir)\Include\LibOVR;$(MSBuildThisFileDirectory)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>LibOVR.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>rpc.lib;LibOVR.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -145,31 +145,18 @@
     <None Include="sphere.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BonAppetiteApp.hpp" />
-    <ClInclude Include="CaveApp.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
-    <ClInclude Include="GlfwApp.hpp" />
     <ClInclude Include="objectdata.hpp" />
     <ClInclude Include="ovr.hpp" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Pyramid.h" />
-    <ClInclude Include="RiftApp.hpp" />
-    <ClInclude Include="RiftManagerApp.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="SceneGraph.hpp" />
-    <ClInclude Include="Screen.h" />
-    <ClInclude Include="shader.h" />
-    <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="TexturedCube.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="TexturedCube.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

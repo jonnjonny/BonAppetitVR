@@ -20,7 +20,7 @@ limitations under the License.
 #include "Core.h"
 #include "Scene.hpp"
 #include "SceneGraph.hpp"
-#include "ObjectData.hpp"
+#include "objectdata.hpp"
 #include "rpc/server.h"
 
 // Import the most commonly used types into the default namespace
@@ -132,6 +132,8 @@ int main()
 		SceneGraph output = scene.getGraph();
 		return output;
 	});
+
+
 
 	// Blocking call to start the server: non-blocking call is srv.async_run(threadsCount);
 	srv.run();
