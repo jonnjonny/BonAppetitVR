@@ -152,6 +152,7 @@ protected:
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, curTexId, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 		ovr::for_each_eye([&](ovrEyeType eye)
 		{
 			const auto& vp = _sceneLayer.Viewport[eye];
@@ -174,5 +175,5 @@ protected:
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	}
 
-	virtual void renderScene(const glm::mat4& projection, const glm::mat4& headPose) = 0;
+	virtual void renderScene(const glm::mat4& projection, const glm::mat4& eyePose) = 0;
 };

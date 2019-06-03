@@ -21,6 +21,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Cube.h"
 #include "objectdata.hpp"
+#include "Model.h"
 
 
 class Player {
@@ -30,7 +31,7 @@ public:
 
   ~Player();
 
-  Cube* head;
+  Model* head;
   Cube* leftHand;
   Cube* rightHand;
 

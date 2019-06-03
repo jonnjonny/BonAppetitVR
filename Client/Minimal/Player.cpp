@@ -1,4 +1,5 @@
 #include "Player.h"
+
 #include <iostream>
 
 
@@ -8,7 +9,7 @@
 
 
 Player::Player() {
-	head = new Cube();
+	head = new Model("pigavatar.obj");
 	leftHand = new Cube();
 	rightHand = new Cube();
 }
@@ -28,7 +29,7 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 
 	if (!isSelf) {
 		head->toWorld = headPose * glm::scale(glm::mat4(1.0), glm::vec3(0.01, 0.01, 0.01));
-		head->draw(shaderProgram, projection, view);
+		head->Draw(shaderProgram, projection, view);
 	}
 
 	leftHand->draw(shaderProgram, projection, view);
