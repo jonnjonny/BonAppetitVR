@@ -32,8 +32,8 @@ public:
   ~Player();
 
   Model* head;
-  Cube* leftHand;
-  Cube* rightHand;
+  Model* leftHand;
+  Model* rightHand;
 
 
   glm::mat4 toWorld;

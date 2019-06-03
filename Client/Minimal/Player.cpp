@@ -10,8 +10,8 @@
 
 Player::Player() {
 	head = new Model("pigavatar.obj");
-	leftHand = new Cube();
-	rightHand = new Cube();
+	leftHand = new Model("pigavatar.obj");
+	rightHand = new Model("pigavatar.obj");
 }
 
 
@@ -32,8 +32,8 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 		head->Draw(shaderProgram, projection, view);
 	}
 
-	leftHand->draw(shaderProgram, projection, view);
-	rightHand->draw(shaderProgram, projection, view);
+	leftHand->Draw(shaderProgram, projection, view);
+	rightHand->Draw(shaderProgram, projection, view);
 	
 }
 
