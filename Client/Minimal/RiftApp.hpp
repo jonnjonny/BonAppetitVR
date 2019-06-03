@@ -158,7 +158,7 @@ protected:
 			const auto& vp = _sceneLayer.Viewport[eye];
 			glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 			_sceneLayer.RenderPose[eye] = eyePoses[eye];
-			renderScene(_eyeProjections[eye], ovr::toGlm(eyePoses[eye]), ovr::toGlm(eyePoses[eye])*
+			renderScene(_eyeProjections[eye], ovr::toGlm(eyePoses[eye]), ovr::toGlm(eyePoses[ovrEye_Left])*
 				glm::translate(glm::mat4(1.0f),glm::vec3((_viewScaleDesc.HmdToEyePose[1].Position.x - _viewScaleDesc.HmdToEyePose[0].Position.x)/2.0f,0.0,0.0)));
 		});
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
