@@ -19,7 +19,7 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include "Cube.h"
 #include "objectdata.hpp"
 
 
@@ -30,6 +30,10 @@ public:
 
   ~Player();
 
+  Cube* head;
+  Cube* leftHand;
+  Cube* rightHand;
+
 
   glm::mat4 toWorld;
   glm::mat4 headPose;
@@ -39,19 +43,10 @@ public:
   glm::mat4 rightControllerOrientation;
 
 
-  void draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view);
+  void draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view, const bool isSelf);
 
   void Player::updateState(PlayerData p);
 
-
-  void spin( float );
-
-
-  // These variables are needed for the shader program
-  GLuint vertexBuffer, normalBuffer, VAO;
-
-
-  GLuint uProjection, uModelview;
 };
 
 

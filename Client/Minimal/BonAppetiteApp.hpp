@@ -43,6 +43,21 @@ protected:
 		scene.reset();
 	}
 
+	PlayerData getPlayerState(glm::mat4 headPose, ovrTrackingState handState) {
+		PlayerData output;
+		output.headPos = headPose[3];
+		output.headOri = glm::mat3(headPose);
+
+		ovrPoseStatef handPoseStateL = handState.HandPoses[ovrHand_Left];
+		ovrPoseStatef handPoseStateR = handState.HandPoses[ovrHand_Right];
+		output.LControlPos = ovr::toGlm(handPoseStateL.ThePose.Position);
+		output.LControlOri = ovr::toGlm(handPoseStateL.ThePose.Orientation);
+		output.RControlPos = ovr::toGlm(handPoseStateR.ThePose.Position);
+		output.RControlOri = ovr::toGlm(handPoseStateR.ThePose.Orientation);
+
+		return output;
+	}
+
 
 	void renderScene(const glm::mat4& projection, const glm::mat4& headPose) override
 	{
@@ -108,32 +123,17 @@ protected:
 		double ftiming = ovr_GetPredictedDisplayTime(_session, 0);
 		ovrTrackingState hmdState = ovr_GetTrackingState(_session,
 			ftiming, ovrTrue);
-
-
-		 
 			
-		SceneGraph scenegraph = c->call("updatePlayer",  ).as<SceneGraph>/*cast back the respond message to string and Player*/>();
+		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(headPose,hmdState), playerNumber).as<SceneGraph>();
 
 		scene->updatePlayer(scenegraph.player1, 0);
 		scene->updatePlayer(scenegraph.player2, 1);
 
 	
-		scene->render(projection, glm::inverse(headPose));
+		scene->render(projection, glm::inverse(headPose), playerNumber);
 		
 		
 		
-	}
-
-	PlayerData getPlayerState(glm::mat4 headPose, ovrTrackingState handState) {
-		PlayerData output;
-		output.headPos = headPose[3];
-		output.headOri = glm::mat3(headPose);
-		output.LControlPos = glm::vec3(leftControllerPosition * glm::vec4(0.0, 0.0, 0.0, 1.0));
-		output.LControlOri = glm::quat_cast(leftControllerOrientation);
-		output.RControlPos = glm::vec3(rightControllerPosition * glm::vec4(0.0, 0.0, 0.0, 1.0));
-		output.RControlOri = glm::quat_cast(rightControllerOrientation);
-
-		return output;
 	}
 };
 

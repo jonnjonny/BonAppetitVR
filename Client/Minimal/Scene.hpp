@@ -49,10 +49,10 @@ public:
 
 
 
-  void render( const glm::mat4 &projection, const glm::mat4 &view ) {
+  void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber) {
     ///test purpose only for index 0
-	  player1->draw(shaderID, projection, view);
-	  player2->draw(shaderID, projection, view);
+	  player1->draw(shaderID, projection, view, playerNumber == 0);
+	  player2->draw(shaderID, projection, view, playerNumber == 1);
 
   }
 
