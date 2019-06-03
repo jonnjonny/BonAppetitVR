@@ -28,7 +28,7 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 	rightHand->toWorld = rightControllerPosition * rightControllerOrientation * glm::scale(glm::mat4(1.0), glm::vec3(0.01, 0.01, 0.01));
 
 	if (!isSelf) {
-		head->toWorld = headPose * glm::scale(glm::mat4(1.0), glm::vec3(0.01, 0.01, 0.01));
+		head->toWorld = headPose * glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
 		head->Draw(shaderProgram, projection, view);
 	}
 

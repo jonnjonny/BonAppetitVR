@@ -59,7 +59,7 @@ protected:
 	}
 
 
-	void renderScene(const glm::mat4& projection, const glm::mat4& eyePose) override
+	void renderScene(const glm::mat4& projection, const glm::mat4& eyePose, const glm::mat4& headPose) override
 	{
 		ovrInputState inputState;
 		if (OVR_SUCCESS(ovr_GetInputState(_session, ovrControllerType_Touch, &inputState))) {
@@ -124,7 +124,7 @@ protected:
 		ovrTrackingState hmdState = ovr_GetTrackingState(_session,
 			ftiming, ovrTrue);
 			
-		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(eyePose,hmdState), playerNumber).as<SceneGraph>();
+		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(headPose,hmdState), playerNumber).as<SceneGraph>();
 
 		scene->updatePlayer(scenegraph.player1, 0);
 		scene->updatePlayer(scenegraph.player2, 1);

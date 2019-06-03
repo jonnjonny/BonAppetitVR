@@ -152,13 +152,14 @@ protected:
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, curTexId, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 		ovr::for_each_eye([&](ovrEyeType eye)
 		{
 			const auto& vp = _sceneLayer.Viewport[eye];
 			glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 			_sceneLayer.RenderPose[eye] = eyePoses[eye];
-			renderScene(_eyeProjections[eye], ovr::toGlm(eyePoses[eye]));
+			renderScene(_eyeProjections[eye], ovr::toGlm(eyePoses[eye]), ovr::toGlm(eyePoses[eye])*
+				glm::translate(glm::mat4(1.0f),glm::vec3((_viewScaleDesc.HmdToEyePose[1].Position.x - _viewScaleDesc.HmdToEyePose[0].Position.x)/2.0f,0.0,0.0)));
 		});
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -175,5 +176,5 @@ protected:
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	}
 
-	virtual void renderScene(const glm::mat4& projection, const glm::mat4& eyePose) = 0;
+	virtual void renderScene(const glm::mat4& projection, const glm::mat4& eyePose, const glm::mat4& headPose) = 0;
 };
