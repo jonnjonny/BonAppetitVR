@@ -12,6 +12,7 @@ Player::Player() {
 	head = new Model("pigavatar.obj");
 	leftHand = new Model("pigavatar.obj");
 	rightHand = new Model("pigavatar.obj");
+	origin = new Model("sphere.obj");
 }
 
 
@@ -34,6 +35,7 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 
 	leftHand->Draw(shaderProgram, projection, view);
 	rightHand->Draw(shaderProgram, projection, view);
+	origin->Draw(shaderProgram, projection, view);
 	
 }
 

@@ -151,12 +151,14 @@
     <ClInclude Include="GlfwApp.hpp" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ObjectData.hpp" />
     <ClInclude Include="ovr.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
     <ClInclude Include="RiftApp.hpp" />
     <ClInclude Include="RiftManagerApp.hpp" />
     <ClInclude Include="Scene.hpp" />
+    <ClInclude Include="SceneGraph.hpp" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="stb_image.h" />

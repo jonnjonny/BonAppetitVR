@@ -34,6 +34,7 @@ public:
   Model* head;
   Model* leftHand;
   Model* rightHand;
+  Model* origin;
 
 
   glm::mat4 toWorld;
