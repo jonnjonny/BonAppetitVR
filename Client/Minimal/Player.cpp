@@ -29,7 +29,7 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 	rightHand->toWorld = rightControllerPosition * rightControllerOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.01, 0.01, 0.01));
 
 	if (!isSelf) {
-		head->toWorld = headPosition  * glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1)) * headOrientation;
+		head->toWorld = headPosition * headOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
 		head->Draw(shaderProgram, projection, view);
 	}
 
