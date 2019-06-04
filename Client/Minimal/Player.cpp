@@ -43,7 +43,8 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 
 void Player::updateState(PlayerData p) {
 	this->headPosition = glm::translate(glm::mat4(1.0),p.headPos);
-	this->headOrientation = glm::mat4_cast(p.headOri);
+	//this->headOrientation = glm::mat4_cast(p.headOri);
+	this->headOrientation = glm::mat4(1.0);
 	this->leftControllerOrientation = glm::mat4_cast(p.LControlOri);
 	this->leftControllerPosition = glm::translate(glm::mat4(1.0), p.LControlPos);
 	this->rightControllerOrientation = glm::mat4_cast(p.RControlOri);

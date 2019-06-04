@@ -127,8 +127,6 @@ protected:
 		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(headPose,hmdState), playerNumber).as<SceneGraph>();
 
 		scene->updatePlayer(scenegraph);
-		scene->updatePlayer(scenegraph);
-
 	
 		scene->render(projection, glm::inverse(eyePose), playerNumber);
 		
