@@ -93,14 +93,11 @@ public:
 
   }*/
 
-  void updatePlayer(PlayerData p, int player) {
+  void updatePlayer(SceneGraph s) {
 
-	  if (player == 0) {
-		  player1->updateState(p);
-	  }
-	  else {
-		  player2->updateState(p);
-	  }
+	  
+		  player1->updateState(s.player1);
+		  player2->updateState(s.player2);
 
   }
 
