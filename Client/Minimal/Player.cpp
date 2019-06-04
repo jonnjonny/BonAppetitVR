@@ -9,7 +9,7 @@
 
 
 Player::Player() {
-	head = new Model("pigavatar.obj");
+	head = new Model("pigavatarchef.obj");
 	leftHand = new Model("pigavatar.obj");
 	rightHand = new Model("pigavatar.obj");
 	origin = new Model("sphere.obj");

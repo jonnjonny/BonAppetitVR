@@ -105,7 +105,6 @@ public:
     // Get the location of the uniform variables "projection" and "modelview"
     uProjection = glGetUniformLocation( shaderId, "projection" );
     uModelview = glGetUniformLocation( shaderId, "modelview" );
-    ubooleanHighlight = glGetUniformLocation( shaderId, "isHighlighted" );
 
 
     // Now send these values to the shader program

@@ -5,11 +5,35 @@
 // Note that you do not have access to the vertex shader's default output, gl_Position.
 in vec3 vertNormal;
 
+uniform int colorScheme;
+
 // You can output many things. The first vec4 type output determines the color of the fragment
 out vec4 fragColor;
 
 void main()
 {
-    vec3 color = vec3(0.0,0.0,1.0);
-    fragColor = vec4(color, 1.0);
+    if(colorScheme == 0) {
+		fragColor = vec4(0.0,0.0,0.0,1.0);
+	}
+    else {
+		fragColor = vec4(248.0,131.0,121.0,255.0)/255.0;
+	}
+	/*else if(colorScheme == 2) {
+		fragColor = vec4(0.0,1.0,0.0,1.0);
+	}
+	else if(colorScheme == 3) {
+		fragColor = vec4(0.0,0.0,1.0,1.0);
+	}
+	else if(colorScheme == 4) {
+		fragColor = vec4(1.0,1.0,1.0,1.0);
+	}
+	else if(colorScheme == 5) {
+		fragColor = vec4(1.0,1.0,0.0,1.0);
+	}
+	else if(colorScheme == 6) {
+		fragColor = vec4(0.0,1.0,1.0,0.0);
+	}
+	else {
+		fragColor = vec4(1.0,0.0,1.0,1.0);
+	}*/
 }

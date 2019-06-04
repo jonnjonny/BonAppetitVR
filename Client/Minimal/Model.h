@@ -56,7 +56,8 @@ public:
   void
   Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view ) {
     for( unsigned int i = 0; i < meshes.size(); i++ )
-      meshes[i].Draw( shaderId, projection, view, toWorld );
+	  
+      meshes[i].Draw( shaderId, projection, view, toWorld, (int)(i==3||i==1||i==2||i==6));
   }
 
 
