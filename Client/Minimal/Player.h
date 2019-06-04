@@ -38,7 +38,8 @@ public:
 
 
   glm::mat4 toWorld;
-  glm::mat4 headPose;
+  glm::mat4 headPosition;
+  glm::mat4 headOrientation;
   glm::mat4 leftControllerPosition;
   glm::mat4 rightControllerPosition;
   glm::mat4 leftControllerOrientation;
