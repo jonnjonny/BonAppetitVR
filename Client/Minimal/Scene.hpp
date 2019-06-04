@@ -12,6 +12,7 @@
 #include "rpc/client.h"
 #include "TexturedCube.h"
 #include "Player.h"
+#include "SceneGraph.hpp"
 
 
 // a class for building and rendering cubes
@@ -95,7 +96,6 @@ public:
 
   void updatePlayer(SceneGraph s) {
 
-	  
 		  player1->updateState(s.player1);
 		  player2->updateState(s.player2);
 
