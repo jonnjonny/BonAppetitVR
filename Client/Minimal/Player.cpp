@@ -35,6 +35,8 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 
 	leftHand->Draw(shaderProgram, projection, view);
 	rightHand->Draw(shaderProgram, projection, view);
+
+	origin->toWorld = glm::scale(glm::mat4(1.0), glm::vec3(0.15, 0.15, 0.15));
 	origin->Draw(shaderProgram, projection, view);
 	
 }
