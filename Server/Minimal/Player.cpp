@@ -1,102 +1,12 @@
 #include "Player.h"
-#include <iostream>
 
 
 // Define the coordinates and indices needed to draw the cube. Note that it is not necessary
 // to use a 2-dimensional array, since the layout in memory is the same as a 1-dimensional array.
 // This just looks nicer since it's easy to tell what coordinates/indices belong where.
-const GLfloat vertices[] = {
-  -1.0f, 1.0f, -1.0f,
-  -1.0f, -1.0f, -1.0f,
-  1.0f, -1.0f, -1.0f,
-  1.0f, -1.0f, -1.0f,
-  1.0f, 1.0f, -1.0f,
-  -1.0f, 1.0f, -1.0f,
-
-  -1.0f, -1.0f, 1.0f,
-  -1.0f, -1.0f, -1.0f,
-  -1.0f, 1.0f, -1.0f,
-  -1.0f, 1.0f, -1.0f,
-  -1.0f, 1.0f, 1.0f,
-  -1.0f, -1.0f, 1.0f,
-
-  1.0f, -1.0f, -1.0f,
-  1.0f, -1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f, -1.0f,
-  1.0f, -1.0f, -1.0f,
-
-  -1.0f, -1.0f, 1.0f,
-  -1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f, -1.0f, 1.0f,
-  -1.0f, -1.0f, 1.0f,
-
-  -1.0f, 1.0f, -1.0f,
-  1.0f, 1.0f, -1.0f,
-  1.0f, 1.0f, 1.0f,
-  1.0f, 1.0f, 1.0f,
-  -1.0f, 1.0f, 1.0f,
-  -1.0f, 1.0f, -1.0f,
-
-  -1.0f, -1.0f, -1.0f,
-  -1.0f, -1.0f, 1.0f,
-  1.0f, -1.0f, -1.0f,
-  1.0f, -1.0f, -1.0f,
-  -1.0f, -1.0f, 1.0f,
-  1.0f, -1.0f, 1.0f
-};
-
-const GLfloat normals[] = {
-  0.0f, 0.0f, -1.0f,
-  0.0f, 0.0f, -1.0f,
-  0.0f, 0.0f, -1.0f,
-  0.0f, 0.0f, -1.0f,
-  0.0f, 0.0f, -1.0f,
-  0.0f, 0.0f, -1.0f,
-
-  -1.0f, 0.0f, 0.0f,
-  -1.0f, 0.0f, 0.0f,
-  -1.0f, 0.0f, 0.0f,
-  -1.0f, 0.0f, 0.0f,
-  -1.0f, 0.0f, 0.0f,
-  -1.0f, 0.0f, 0.0f,
-
-  1.0f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f,
-  1.0f, 0.0f, 0.0f,
-
-  0.0f, 0.0f, 1.0f,
-  0.0f, 0.0f, 1.0f,
-  0.0f, 0.0f, 1.0f,
-  0.0f, 0.0f, 1.0f,
-  0.0f, 0.0f, 1.0f,
-  0.0f, 0.0f, 1.0f,
-
-  0.0f, 1.0f, 0.0f,
-  0.0f, 1.0f, 0.0f,
-  0.0f, 1.0f, 0.0f,
-  0.0f, 1.0f, 0.0f,
-  0.0f, 1.0f, 0.0f,
-  0.0f, 1.0f, 0.0f,
-
-  0.0f, -1.0f, 0.0f,
-  0.0f, -1.0f, 0.0f,
-  0.0f, -1.0f, 0.0f,
-  0.0f, -1.0f, 0.0f,
-  0.0f, -1.0f, 0.0f,
-  0.0f, -1.0f, 0.0f,
-};
 
 
 Player::Player() {
-
-	toWorld = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, -2.0));
 
   // Create array object and buffers. Remember to delete your buffers when the object is destroyed!
  
@@ -119,12 +29,6 @@ void Player::updateState(PlayerData p) {
 	this->leftControllerPosition = glm::translate(glm::mat4(1.0),p.LControlPos);
 	this->rightControllerOrientation = glm::mat4_cast(p.RControlOri);
 	this->rightControllerPosition = glm::translate(glm::mat4(1.0), p.RControlPos);
-}
-
-void Player::spin( float deg ) {
-  // If you haven't figured it out from the last project, this is how you fix spin's behavior
-  toWorld = toWorld * glm::rotate( glm::mat4( 1.0f ), 1.0f / 180.0f * glm::pi <float>(),
-                                   glm::vec3( 0.0f, 1.0f, 0.0f ) );
 }
 
 PlayerData Player::getState() {

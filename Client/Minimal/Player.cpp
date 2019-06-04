@@ -10,9 +10,9 @@
 
 Player::Player() {
 	head = new Model("pigavatarchef.obj");
-	leftHand = new Model("pigavatar.obj");
-	rightHand = new Model("pigavatar.obj");
-	origin = new Model("sphere.obj");
+	leftHand = new Model("pigavatarchef.obj");
+	rightHand = new Model("pigavatarchef.obj");
+	//origin = new Model("sphere.obj");
 }
 
 
@@ -36,8 +36,8 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 	leftHand->Draw(shaderProgram, projection, view);
 	rightHand->Draw(shaderProgram, projection, view);
 
-	origin->toWorld = glm::scale(glm::mat4(1.0), glm::vec3(0.05, 0.05, 0.05));
-	origin->Draw(shaderProgram, projection, view);
+	//origin->toWorld = glm::scale(glm::mat4(1.0), glm::vec3(0.05, 0.05, 0.05));
+	//origin->Draw(shaderProgram, projection, view);
 	
 }
 

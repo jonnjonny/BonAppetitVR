@@ -15,13 +15,14 @@ void main()
     if(colorScheme == 0) {
 		fragColor = vec4(0.0,0.0,0.0,1.0);
 	}
-    else {
+    else if(colorScheme == 1) {
 		fragColor = vec4(248.0,131.0,121.0,255.0)/255.0;
 	}
-	/*else if(colorScheme == 2) {
-		fragColor = vec4(0.0,1.0,0.0,1.0);
+	else {
+		fragColor = vec4(1.0,1.0,1.0,1.0);
 	}
-	else if(colorScheme == 3) {
+
+	/*else if(colorScheme == 3) {
 		fragColor = vec4(0.0,0.0,1.0,1.0);
 	}
 	else if(colorScheme == 4) {

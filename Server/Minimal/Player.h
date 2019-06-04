@@ -30,8 +30,6 @@ public:
 
   ~Player();
 
-
-  glm::mat4 toWorld;
   glm::mat4 headPose;
   glm::mat4 leftControllerPosition;
   glm::mat4 rightControllerPosition;
@@ -43,17 +41,8 @@ public:
 
   void updateState(PlayerData p);
 
-
-  void spin( float );
-
   PlayerData getState();
 
-
-  // These variables are needed for the shader program
-  GLuint vertexBuffer, normalBuffer, VAO;
-
-
-  GLuint uProjection, uModelview;
 };
 
 
