@@ -43,13 +43,14 @@ protected:
 		scene.reset();
 	}
 
-	PlayerData getPlayerState(glm::mat4 headPose, ovrTrackingState handState) {
+	PlayerData getPlayerState(ovrTrackingState hmdState) {
 		PlayerData output;
-		output.headPos = headPose[3];
-		output.headOri = glm::mat3(headPose);
+		ovrPoseStatef headPoseState = hmdState.HeadPose;
+		output.headPos = ovr::toGlm(headPoseState.ThePose.Position);
+		output.headOri = ovr::toGlm(headPoseState.ThePose.Orientation);
 
-		ovrPoseStatef handPoseStateL = handState.HandPoses[ovrHand_Left];
-		ovrPoseStatef handPoseStateR = handState.HandPoses[ovrHand_Right];
+		ovrPoseStatef handPoseStateL = hmdState.HandPoses[ovrHand_Left];
+		ovrPoseStatef handPoseStateR = hmdState.HandPoses[ovrHand_Right];
 		output.LControlPos = ovr::toGlm(handPoseStateL.ThePose.Position);
 		output.LControlOri = ovr::toGlm(handPoseStateL.ThePose.Orientation);
 		output.RControlPos = ovr::toGlm(handPoseStateR.ThePose.Position);
@@ -59,7 +60,7 @@ protected:
 	}
 
 
-	void renderScene(const glm::mat4& projection, const glm::mat4& eyePose, const glm::mat4& headPose) override
+	void renderScene(const glm::mat4& projection, const glm::mat4& eyePose) override
 	{
 		ovrInputState inputState;
 		if (OVR_SUCCESS(ovr_GetInputState(_session, ovrControllerType_Touch, &inputState))) {
@@ -124,7 +125,7 @@ protected:
 		ovrTrackingState hmdState = ovr_GetTrackingState(_session,
 			ftiming, ovrTrue);
 			
-		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(headPose,hmdState), playerNumber).as<SceneGraph>();
+		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(hmdState), playerNumber).as<SceneGraph>();
 
 		scene->updatePlayer(scenegraph);
 	
