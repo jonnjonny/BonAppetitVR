@@ -175,5 +175,5 @@ protected:
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 	}
 
-	virtual void renderScene(const glm::mat4& projection, const glm::mat4& eyePose, const glm::mat4& headPose) = 0;
+	virtual void renderScene(const glm::mat4& projection, const glm::mat4& eyePose) = 0;
 };
