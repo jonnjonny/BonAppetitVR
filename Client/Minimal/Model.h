@@ -19,6 +19,7 @@
 #include <sstream>
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include "Mesh.h"
@@ -54,15 +55,10 @@ public:
 
   // draws the model, and thus all its meshes
   void
-  Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view ) {
+  Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view , std::unordered_map<int,int> colorMap ) {
 	
 	  for (unsigned int i = 0; i < meshes.size(); i++) {
-		  int color;
-		  if (i == 1 || i == 2 || i == 3 || i == 6) color = 1;
-		  else if (i == 9) color = 2;
-		  else color = 0;
-		  
-		  meshes[i].Draw(shaderId, projection, view, toWorld, color);
+		  meshes[i].Draw(shaderId, projection, view, toWorld, colorMap.at(i));
 	  }
   }
 

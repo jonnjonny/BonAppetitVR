@@ -19,6 +19,8 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
+#include <unordered_map>
 #include "Cube.h"
 #include "objectdata.hpp"
 #include "Model.h"
@@ -40,6 +42,7 @@ public:
   glm::mat4 toWorld;
   glm::mat4 headPosition;
   glm::mat4 headOrientation;
+  std::unordered_map<int,int> headColorMap;
   glm::mat4 leftControllerPosition;
   glm::mat4 rightControllerPosition;
   glm::mat4 leftControllerOrientation;
