@@ -153,7 +153,7 @@ protected:
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, curTexId, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::vec3 headPosition = (glm::vec3((ovr::toGlm(eyePoses[ovrEye_Left])[3])) + glm::vec3(ovr::toGlm(eyePoses[ovrEye_Right])[3])) / 2.0f;
+		glm::vec3 headPosition = (glm::vec3((ovr::toGlm(eyePoses[ovrEye_Left])*glm::vec4(0.0,0.0,0.0,1.0))) + glm::vec3(ovr::toGlm(eyePoses[ovrEye_Right])*glm::vec4(0.0,0.0,0.0,1.0))) / 2.0f;
 		glm::mat3 headOrientation = glm::mat3(ovr::toGlm(eyePoses[ovrEye_Left]));
 		glm::mat4 headPose = glm::mat4(1.0f);
 		headPose[0] = glm::vec4(headOrientation[0], 0.0);
