@@ -33,9 +33,9 @@ public:
 
   ~Player();
 
-  Model* head;
-  Model* leftHand;
-  Model* rightHand;
+  Cube* head;
+  Cube* leftHand;
+  Cube* rightHand;
   Model* origin;
 
 
