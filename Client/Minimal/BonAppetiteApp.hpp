@@ -43,7 +43,7 @@ protected:
 		scene.reset();
 	}
 
-	PlayerData getPlayerState(ovrTrackingState hmdState) {
+	PlayerData getPlayerState(ovrTrackingState hmdState, int playerNumber) {
 		PlayerData output;
 		ovrPoseStatef headPoseState = hmdState.HeadPose;
 		output.headPos = ovr::toGlm(headPoseState.ThePose.Position);
@@ -55,6 +55,12 @@ protected:
 		output.LControlOri = ovr::toGlm(handPoseStateL.ThePose.Orientation);
 		output.RControlPos = ovr::toGlm(handPoseStateR.ThePose.Position);
 		output.RControlOri = ovr::toGlm(handPoseStateR.ThePose.Orientation);
+
+		if (playerNumber == 1) {
+			output.headPos = glm::vec3(2.0,0.0,0.0) + output.headPos;
+			output.LControlPos = glm::vec3(2.0, 0.0, 0.0) + output.LControlPos;
+			output.RControlPos = glm::vec3(2.0, 0.0, 0.0) + output.RControlPos;
+		}
 
 		return output;
 	}
@@ -125,11 +131,11 @@ protected:
 		ovrTrackingState hmdState = ovr_GetTrackingState(_session,
 			ftiming, ovrTrue);
 			
-		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(hmdState), playerNumber).as<SceneGraph>();
+		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(hmdState,playerNumber), playerNumber).as<SceneGraph>();
 
 		scene->updatePlayer(scenegraph);
 	
-		scene->render(projection, glm::inverse(eyePose), playerNumber);
+		scene->render(projection, playerNumber == 0 ? glm::inverse(eyePose) : glm::inverse(glm::translate(glm::mat4(1.0),glm::vec3(2.0,0.0,0.0)) * eyePose), playerNumber);
 		
 		
 		
