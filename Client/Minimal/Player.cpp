@@ -7,9 +7,9 @@
 
 
 Player::Player() {
-	head = new Model("pigavatarchef.obj");
-	leftHand = new Model("pigavatarchef.obj");
-	rightHand = new Model("pigavatarchef.obj");
+	head = new Model("./Models/pigavatarchef.obj");
+	leftHand = new Model("./Models/pigavatarchef.obj");
+	rightHand = new Model("./Models/pigavatarchef.obj");
 	headColorMap = { {0,1},{1,1},{2, 1},{3,1}, { 4,0},{5,0},{7,0},{8 , 0},{6,1},{9,2} };
 }
 

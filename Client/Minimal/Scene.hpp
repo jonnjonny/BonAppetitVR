@@ -59,40 +59,45 @@ public:
 
 
 
-  /*void populatingTables() {
-    for( int i = 0; i < 11; ++i ) {
-      tables.push_back( new TexturedCube( "table_box" ) );
-    }
+  void populatingTables() {
+	  for (int i = 0; i < 12; ++i) {
+		  tables.push_back(new TexturedCube("Martini"));
+	  }
 
-    glm::mat4 currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.25, 0.25, 0.25 ) ) *
-                        glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.25, 0.25, 0.25 ) );
-    currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0, 0, -0.5 ) ); //0
-    table_positions.push_back( currPos );
+	  glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.25, 0.5, 0.25));//glm::vec3(0.25, 0.5, 0.25));
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.25, -1, -0.75)) * scaleMatrix);//0
+	  //std::cout << glm::to_string(table_positions.at(table_positions.size() - 1)) << std::endl;
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, -0.75)) * scaleMatrix);//1
+	  //std::cout << glm::to_string(glm::vec4(0.5, 0, 0,1) * table_positions.at(0)   ) << std::endl;
 
-    currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.5, 0, 0 ) ); //1
-    table_positions.push_back( currPos );
+	  //std::cout << glm::to_string(table_positions.at(1)/table_positions.at(0)) << std::endl;
 
-    for( int j = 0; j < 3; ++j ) {
-      currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0, 0, 0.5 ) ); //2,3,4
-      table_positions.push_back( currPos );
-    }
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, -0.25)) * scaleMatrix);//2
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, 0.25)) * scaleMatrix);//3
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, 0.75)) * scaleMatrix);//4
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.25, -1, 0.75)) * scaleMatrix);//5
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.25, -1, 0.75)) * scaleMatrix);//6
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, 0.75)) * scaleMatrix);//7
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, 0.25)) * scaleMatrix);//8
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, -0.25)) * scaleMatrix);//9
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, -0.75)) * scaleMatrix);//10
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.25, -1, -0.75)) * scaleMatrix);//11
 
-    for( int j = 0; j < 3; ++j ) {
-      currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( -0.5, 0, 0 ) ); //5,6,7
-      table_positions.push_back( currPos );
-    }
 
-    for( int j = 0; j < 3; ++j ) {
-      currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0, 0, -0.5 ) ); //8,9,10
-      table_positions.push_back( currPos );
-    }
+	  table_center_positions.push_back(glm::vec3(0.25, -0.495, -0.75));//0
+	  table_center_positions.push_back(glm::vec3(0.75, -0.495, -0.75));//1
+	  table_center_positions.push_back(glm::vec3(0.75, -0.495, -0.25));//2
+	  table_center_positions.push_back(glm::vec3(0.75, -0.495, 0.25));//3
+	  table_center_positions.push_back(glm::vec3(0.75, -0.495, 0.75));//4 
+	  table_center_positions.push_back(glm::vec3(0.25, -0.495, 0.75));//5
+	  table_center_positions.push_back(glm::vec3(-0.25, -0.495, 0.75));//6
+	  table_center_positions.push_back(glm::vec3(-0.75, -0.495, 0.75));//7
+	  table_center_positions.push_back(glm::vec3(-0.75, -0.495, 0.25)); //8
+	  table_center_positions.push_back(glm::vec3(-0.75, -0.495, -0.25));//9
+	  table_center_positions.push_back(glm::vec3(-0.75, -0.495, -0.75));//10
+	  table_center_positions.push_back(glm::vec3(-0.25, -0.495, -0.75));//11
 
-    currPos = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.5, 0, 0 ) ); //11
-    table_positions.push_back( currPos );
-
-    ///finished calculating all the positions of tables
-
-  }*/
+  }
 
   void updatePlayer(SceneGraph s) {
 
