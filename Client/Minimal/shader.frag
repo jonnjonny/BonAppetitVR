@@ -12,7 +12,7 @@ out vec4 fragColor;
 
 void main()
 {
-    /*if(colorScheme == 0) {
+    if(colorScheme == 0) {
 		fragColor = vec4(0.0,0.0,0.0,1.0);
 	}
     else if(colorScheme == 1) {
