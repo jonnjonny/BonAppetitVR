@@ -21,7 +21,7 @@ void main()
 	else {
 		fragColor = vec4(1.0,1.0,1.0,1.0);
 	}
-
+	/*
 	else if(colorScheme == 3) {
 		fragColor = vec4(0.0,0.0,1.0,1.0);
 	}
@@ -37,6 +37,4 @@ void main()
 	else {
 		fragColor = vec4(1.0,0.0,1.0,1.0);
 	}*/
-
-	fragColor = vec4(1.0,0.0,0.0,1.0);
 }
