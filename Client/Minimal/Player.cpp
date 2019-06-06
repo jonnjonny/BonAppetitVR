@@ -8,11 +8,11 @@
 
 Player::Player() {
 	//head = new Model("./Models/pigavatarchef.obj");
-	leftHand = new Model("./Models/glovehi_poly.obj");
+	leftHand = new Model("./Models/glovehi_poly.obj", 0.01);
 	//rightHand = new Model("./Models/hand.obj");
 	rightHand = new Cube();
 
-	head = new Model("./Models/pigavatarchef.obj");
+	head = new Model("./Models/pigavatarchef.obj", 0.1);
 	headColorMap = { {0,1},{1,1},{2, 1},{3,1}, { 4,0},{5,0},{7,0},{8 , 0},{6,1},{9,2} };
 }
 

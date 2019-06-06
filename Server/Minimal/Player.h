@@ -21,6 +21,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "ObjectData.hpp"
+#include "BoundingBox.hpp"
 
 
 class Player {
@@ -30,11 +31,13 @@ public:
 
   ~Player();
 
-  glm::mat4 headPose;
-  glm::mat4 leftControllerPosition;
-  glm::mat4 rightControllerPosition;
-  glm::mat4 leftControllerOrientation;
-  glm::mat4 rightControllerOrientation;
+  glm::vec3 headPos;
+  glm::quat headOri;
+  glm::vec3 leftControllerPosition;
+  glm::vec3 rightControllerPosition;
+  glm::quat leftControllerOrientation;
+  glm::quat rightControllerOrientation;
+  BoundingBox b;
 
   void draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view);
 

@@ -24,21 +24,22 @@ void Player::draw( GLuint shaderProgram, const glm::mat4 &projection, const glm:
 }
 
 void Player::updateState(PlayerData p) {
-	this->headPose = glm::translate(glm::mat4_cast(p.headOri),p.headPos);
-	this->leftControllerOrientation = glm::mat4_cast(p.LControlOri);
-	this->leftControllerPosition = glm::translate(glm::mat4(1.0),p.LControlPos);
-	this->rightControllerOrientation = glm::mat4_cast(p.RControlOri);
-	this->rightControllerPosition = glm::translate(glm::mat4(1.0), p.RControlPos);
+	this->headPos = p.headPos;
+	this->headOri = p.headOri;
+	this->leftControllerOrientation = p.LControlOri;
+	this->leftControllerPosition = p.LControlPos;
+	this->rightControllerOrientation = p.RControlOri;
+	this->rightControllerPosition =  p.RControlPos;
 }
 
 PlayerData Player::getState() {
 	PlayerData output;
-	output.headPos = headPose[3];
-	output.headOri = glm::mat3(headPose);
-	output.LControlPos = glm::vec3(leftControllerPosition * glm::vec4(0.0,0.0,0.0,1.0));
-	output.LControlOri = glm::quat_cast(leftControllerOrientation);
-	output.RControlPos = glm::vec3(rightControllerPosition * glm::vec4(0.0,0.0,0.0,1.0));
-	output.RControlOri = glm::quat_cast(rightControllerOrientation);
+	output.headPos = this->headPos;
+	output.headOri = this->headOri;
+	output.LControlPos = this->leftControllerPosition;
+	output.LControlOri = this->leftControllerOrientation;
+	output.RControlPos = this->rightControllerPosition;
+	output.RControlOri = this->rightControllerOrientation;
 
 	return output;
 }

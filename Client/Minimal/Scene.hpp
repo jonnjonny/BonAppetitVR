@@ -13,6 +13,7 @@
 #include "Player.h"
 #include "SceneGraph.hpp"
 #include "Skybox.h"
+#include "BoundingBox.hpp"
 
 #include <random>
 #include <stdlib.h>     /* srand, rand */
@@ -90,7 +91,7 @@ public:
 	desertbox->toWorld = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f));
 
 	///controller
-	sphere = new Model("./Models/sphere.obj");
+	sphere = new Model("./Models/sphere.obj",0.01);
 
 	// Shader Program
 	controllerShaderID = LoadShaders("shader.vert", "shader.frag");
@@ -143,6 +144,19 @@ public:
 
   }
 
+  InitialData getInitialData() {
+
+	  InitialData output;
+
+	  BoundingBox controller;
+	  controller.xmin = controller.ymin = controller.zmin = -0.01;
+	  controller.xmax = controller.ymax = controller.zmax = 0.01;
+	  output.controller = controller;
+
+	  output.cuttingBoard = props.at(0)->getScaledBoundingBox();
+
+	  return output;
+  }
 
 
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber) {
@@ -186,12 +200,12 @@ public:
 
 
   void loadingModels() {
-	  props.push_back(new Model("./Models/ChoppingBoard.obj"));
-	  props.push_back(new Model("./Models/Knife.obj"));
-	  props.push_back(new Model("./Models/SingleEgg.obj"));
-	  props.push_back(new Model("./Models/StandMixer.obj"));
-	  props.push_back(new Model("./Models/teapot_s0.obj"));
-	  props.push_back(new Model("./Models/SugarBowl.obj"));
+	  props.push_back(new Model("./Models/ChoppingBoard.obj",0.01));
+	  props.push_back(new Model("./Models/Knife.obj", 0.01));
+	  props.push_back(new Model("./Models/SingleEgg.obj", 0.01));
+	  props.push_back(new Model("./Models/StandMixer.obj", 0.01));
+	  props.push_back(new Model("./Models/teapot_s0.obj", 0.01));
+	  props.push_back(new Model("./Models/SugarBowl.obj", 0.01));
 
   }
 
