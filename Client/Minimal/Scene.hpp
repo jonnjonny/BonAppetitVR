@@ -53,6 +53,7 @@ class Scene {
   GLuint shaderID; //shader id for skyboxB
   GLuint woodShaderID;
   GLuint skyBoxShaderID;
+  GLuint boundingBoxShaderID;
 
   ///controller specific
   Model* sphere;
@@ -93,6 +94,7 @@ public:
 	woodShaderID = LoadShaders("woodShader.vert", "woodShader.frag");
 	skyBoxShaderID = LoadShaders("skybox.vert", "skybox.frag");
 	processingBarShaderID = LoadShaders("processingBarShader.vert", "processingBarShader.frag");
+	boundingBoxShaderID = LoadShaders("boundingbox.vert", "boundingbox.frag");
 
 
 	//for desert box

@@ -26,6 +26,7 @@
 
 #include "Mesh.h"
 #include "BoundingBox.hpp"
+#include "BoundingBoxLines.h"
 
 
 using namespace std;
@@ -41,13 +42,13 @@ public:
   /*  Model Data */
   vector <Texture> textures_loaded;  // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
   vector <Mesh> meshes;
-  BoundingBox b;
   float scaleFactor;
 
   glm::mat4 toWorld;
 
   string directory;
 
+  BoundingBoxLines* box;
 
   bool gammaCorrection;
 
@@ -62,15 +63,21 @@ public:
 	  b.zmax = std::numeric_limits<float>::min();
 	  scaleFactor = scale;
 	  loadModel( path );
+	  box = new BoundingBoxLines(getBoundingBoxVertices);
+
   }
 
 
   // draws the model, and thus all its meshes
   void
-  Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view , std::unordered_map<int,int> colorMap ) {
+  Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view , std::unordered_map<int,int> colorMap, bool debug, GLuint boxShaderId) {
 	
 	  for (unsigned int i = 0; i < meshes.size(); i++) {
 		  meshes[i].Draw(shaderId, projection, view, toWorld, colorMap.at(i));
+	  }
+
+	  if (debug) {
+		  box->draw(boxShaderId, projection, view, 0);
 	  }
   }
 
@@ -98,8 +105,26 @@ public:
 	  return output;
   }
 
+  std::vector<glm::vec3> getBoundingBoxVertices() {
+
+	  std::vector<glm::vec3> output;
+	  BoundingBox scaledBox = getScaledBoundingBox();
+	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymax, scaledBox.zmax));
+	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymax, scaledBox.zmin));
+	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymax, scaledBox.zmin));
+	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymax, scaledBox.zmax));
+	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymin, scaledBox.zmax));
+	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymin, scaledBox.zmin));
+	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymin, scaledBox.zmin));
+	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymin, scaledBox.zmax));
+
+	  return output;
+
+  }
+
 
 private:
+  BoundingBox b;
   /*  Functions   */
   // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
   void loadModel( string const &path ) {
