@@ -7,6 +7,7 @@
 #include "Scene.hpp"
 #include "SceneGraph.hpp"
 #include "ObjectData.hpp"
+#include "BoundingBox.hpp"
 #include "rpc/client.h"
 
 // An example application that renders a simple cube
@@ -36,6 +37,8 @@ protected:
 		glEnable(GL_DEPTH_TEST);
 		ovr_RecenterTrackingOrigin(_session);
 		scene = std::shared_ptr<Scene>(new Scene());
+		InitialData initialData = scene->getInitialData();
+		c->call("loadInitialData", initialData);
 	}
 
 	void shutdownGl() override
@@ -55,6 +58,8 @@ protected:
 		output.LControlOri = ovr::toGlm(handPoseStateL.ThePose.Orientation);
 		output.RControlPos = ovr::toGlm(handPoseStateR.ThePose.Position);
 		output.RControlOri = ovr::toGlm(handPoseStateR.ThePose.Orientation);
+		output.xmin = output.ymin = output.zmin = -0.01;
+		output.xmax = output.ymax = output.zmax = 0.01;
 
 		if (playerNumber == 1) {
 			output.headPos = glm::vec3(2.0,0.0,0.0) + output.headPos;

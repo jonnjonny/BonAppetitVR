@@ -21,6 +21,7 @@ limitations under the License.
 #include "Scene.hpp"
 #include "SceneGraph.hpp"
 #include "objectdata.hpp"
+#include "BoundingBox.hpp"
 #include "rpc/server.h"
 
 // Import the most commonly used types into the default namespace
@@ -127,6 +128,11 @@ int main()
 	srv.bind("getPlayerNumber", [&numPlayers](){
 		std::cout << "Player Number Given: " << numPlayers << std::endl;
 		return numPlayers++;
+	});
+
+	srv.bind("loadInitialData", [&scene](InitialData b) {
+		std::cout << "Initializing Data" << std::endl;
+		scene.loadInitialData(b);
 	});
 
 	// Define a rpc function: auto echo(string const& s, Player& p){} (return type is deduced)

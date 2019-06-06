@@ -145,8 +145,10 @@
     <None Include="sphere.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="KitchenItem.hpp" />
     <ClInclude Include="objectdata.hpp" />
     <ClInclude Include="ovr.hpp" />
     <ClInclude Include="Player.h" />

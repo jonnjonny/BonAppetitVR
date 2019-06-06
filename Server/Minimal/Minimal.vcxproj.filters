@@ -72,6 +72,12 @@
     <ClInclude Include="SceneGraph.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingBox.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KitchenItem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

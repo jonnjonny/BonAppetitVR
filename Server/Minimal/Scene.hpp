@@ -10,6 +10,8 @@
 #include "Core.h"
 #include "Player.h"
 #include "rpc/server.h"
+#include "BoundingBox.hpp"
+#include "KitchenItem.hpp"
 #include "SceneGraph.hpp"
 
 
@@ -22,6 +24,7 @@ class Scene {
 
   Player* player1;
   Player* player2;
+  KitchenItem* cuttingBoard;
 
 
 public:
@@ -29,6 +32,7 @@ public:
 
 	player1 = new Player();
 	player2 = new Player();
+	cuttingBoard = new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))));
 
   }
 
@@ -36,6 +40,9 @@ public:
 
 	  if (player == 0) {
 		  player1->updateState(p);
+		  if (cuttingBoard->detectCollision(player1->rightControllerPosition, player1->b)) {
+			  std::cout << "Collision Detected" << std::endl;
+		  };
 	  }
 	  else {
 		  player2->updateState(p);
@@ -43,11 +50,19 @@ public:
 
   }
 
+  void loadInitialData (InitialData b) {
+	  player1->b = b.controller;
+	  player2->b = b.controller;
+	  cuttingBoard->b = b.cuttingBoard;
+	  std::cout << "Cutting Board Bounding Box:" << cuttingBoard->b.xmin << " " << cuttingBoard->b.ymin << " " << cuttingBoard->b.zmin << " ";
+	  std::cout << cuttingBoard->b.xmax << " " << cuttingBoard->b.ymax << " " << cuttingBoard->b.zmax << std::endl;
+  }
+
   SceneGraph Scene::getGraph() {
 	  SceneGraph output;
 	  output.player1 = player1->getState();
 	  output.player2 = player2->getState();
-
+	  output.cuttingBoard = cuttingBoard->getState();
 	  return output;
 
   }

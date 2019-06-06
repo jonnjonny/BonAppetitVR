@@ -21,8 +21,11 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
+#include <limits>
 
 #include "Mesh.h"
+#include "BoundingBox.hpp"
 
 
 using namespace std;
@@ -38,6 +41,8 @@ public:
   /*  Model Data */
   vector <Texture> textures_loaded;  // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
   vector <Mesh> meshes;
+  BoundingBox b;
+  float scaleFactor;
 
   glm::mat4 toWorld;
 
@@ -48,8 +53,15 @@ public:
 
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.
-  Model( string const &path, bool gamma = false ) : gammaCorrection( gamma ) {
-    loadModel( path );
+  Model(string const &path, float scale , bool gamma = false) : gammaCorrection(gamma) {
+	  b.xmin = std::numeric_limits<float>::max();
+	  b.ymin = std::numeric_limits<float>::max();
+	  b.zmin = std::numeric_limits<float>::max();
+	  b.xmax = std::numeric_limits<float>::min();
+	  b.ymax = std::numeric_limits<float>::min();
+	  b.zmax = std::numeric_limits<float>::min();
+	  scaleFactor = scale;
+	  loadModel( path );
   }
 
 
@@ -71,6 +83,19 @@ public:
 	  for (unsigned int i = 0; i < meshes.size(); i++) {
 		  meshes[i].Draw(shaderId, projection, view, toWorld);
 	  }
+  }
+
+  BoundingBox getScaledBoundingBox() {
+	  BoundingBox output;
+
+	  output.xmin = scaleFactor*b.xmin;
+	  output.xmax = scaleFactor*b.xmax;
+	  output.ymin = scaleFactor*b.ymin;
+	  output.ymax = scaleFactor*b.ymax;
+	  output.zmin = scaleFactor*b.zmin;
+	  output.zmax = scaleFactor*b.zmax;
+
+	  return output;
   }
 
 
@@ -127,8 +152,14 @@ private:
       glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
       // positions
       vector.x = mesh->mVertices[i].x;
+	  b.xmin = std::min(b.xmin,vector.x);
+	  b.xmax = std::max(b.xmax, vector.x);
       vector.y = mesh->mVertices[i].y;
+	  b.ymin = std::min(b.ymin, vector.y);
+	  b.ymax = std::max(b.ymax, vector.y);
       vector.z = mesh->mVertices[i].z;
+	  b.zmin = std::min(b.zmin, vector.z);
+	  b.zmax = std::max(b.zmax, vector.z);
       vertex.Position = vector;
       // normals
       vector.x = mesh->mNormals[i].x;
