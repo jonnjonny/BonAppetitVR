@@ -66,7 +66,10 @@ class Scene {
 
 
   ///collection of props that constantly updating positions (maybe)
+  std::vector<std::string> modelFileNames;
   std::vector<Model*> props;
+  //std::vector<std::string> props;
+
 
 
 
