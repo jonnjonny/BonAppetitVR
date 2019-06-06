@@ -40,10 +40,16 @@
     <None Include="screen.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pyramid.vert">
+    <None Include="woodShader.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pyramid.frag">
+    <None Include="woodShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="textureFromPictureShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="textureFromPictureShader.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

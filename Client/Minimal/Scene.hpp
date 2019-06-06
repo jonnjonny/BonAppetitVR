@@ -103,16 +103,19 @@ public:
 
 
 
-	glActiveTexture(GL_TEXTURE0);
-	textureShaderID = LoadShaders("textureShader.vert", "textureShader.frag");
+	textureShaderID = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
 	//Setting up textures
+	glActiveTexture(GL_TEXTURE0);
 	unsigned char* data;
 	int width, height, numChannels;
 
-	data = stbi_load("./JPG/wood-texture-pattern.jpg", &width, &height, &numChannels, STBI_rgb_alpha);
+	data = stbi_load("./JPG/ChoppingBoard.jpg", &width, &height, &numChannels, 0);
 	if (!data) {
-		throw std::runtime_error("Cannot load file waldo.jpg");
+		throw std::runtime_error("Cannot load JPG file");
+	}
+	else {
+		std::cout << numChannels << std::endl;
 	}
 
 	glGenTextures(1, &textureId);
@@ -121,11 +124,11 @@ public:
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-	uniform_texture = glGetUniformLocation(textureShaderID, "tex");
+	uniform_texture = glGetUniformLocation(textureShaderID, "texFramebuffer");
 	glUniform1i(uniform_texture, 0);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	//glBindTexture(GL_TEXTURE_2D, textureId);
 
 
 
@@ -152,11 +155,11 @@ public:
 
 	  //tables
 	  render11Tables(projection, view);
-/*
+
 	  //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
 	  props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
-	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, 2);
-
+	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view);
+/*
 	  props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
 	  props.at((int)propsID::KNIFE)->Draw(woodShaderID, projection, view, 2);
 

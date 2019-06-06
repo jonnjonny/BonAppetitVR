@@ -133,8 +133,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="pyramid.frag" />
-    <None Include="pyramid.vert" />
     <None Include="screen.frag" />
     <None Include="screen.vert" />
     <None Include="shader.frag" />
@@ -143,6 +141,10 @@
     <None Include="skybox.vert" />
     <None Include="sphere.frag" />
     <None Include="sphere.vert" />
+    <None Include="textureFromPictureShader.frag" />
+    <None Include="textureFromPictureShader.vert" />
+    <None Include="woodShader.frag" />
+    <None Include="woodShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BonAppetiteApp.hpp" />
