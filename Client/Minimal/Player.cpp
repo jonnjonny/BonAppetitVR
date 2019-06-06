@@ -12,7 +12,7 @@ Player::Player() {
 	//rightHand = new Model("./Models/hand.obj");
 	rightHand = new Cube();
 
-	head = new Cube();
+	head = new Model("./Models/pigavatarchef.obj");
 	headColorMap = { {0,1},{1,1},{2, 1},{3,1}, { 4,0},{5,0},{7,0},{8 , 0},{6,1},{9,2} };
 }
 
@@ -31,7 +31,7 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 
 	if (!isSelf) {
 		head->toWorld = headPosition * headOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
-		head->draw(shaderProgram, projection, view);
+		head->Draw(shaderProgram, projection, view, headColorMap);
 	}
 
 	//leftHand->draw(shaderProgram, projection, view);
