@@ -52,6 +52,12 @@
     <None Include="textureFromPictureShader.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="processingBarShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="processingBarShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">

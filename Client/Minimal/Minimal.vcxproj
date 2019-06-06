@@ -133,6 +133,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="processingBarShader.frag" />
+    <None Include="processingBarShader.vert" />
     <None Include="screen.frag" />
     <None Include="screen.vert" />
     <None Include="shader.frag" />

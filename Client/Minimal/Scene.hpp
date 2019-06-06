@@ -60,7 +60,7 @@ class Scene {
 
 
   ////table specs
-  std::vector <glm::mat4> table_positions;
+  std::vector <glm::vec3> table_positions;
   std::vector <glm::vec3> table_center_positions;
   std::vector <TexturedCube*> tables;
 
@@ -76,6 +76,14 @@ class Scene {
   GLuint textureShaderID, textureId;
   GLint uniform_texture, attribute_texture;
 
+
+  //processing bar specs
+  Model* processingBar;
+
+
+  GLuint processingBarShaderID; //shader id for skyboxB
+
+
 public:
   Scene() {
 
@@ -83,6 +91,7 @@ public:
     shaderID = LoadShaders( "shader.vert", "shader.frag" );
 	woodShaderID = LoadShaders("woodShader.vert", "woodShader.frag");
 	skyBoxShaderID = LoadShaders("skybox.vert", "skybox.frag");
+	processingBarShaderID = LoadShaders("processingBarShader.vert", "processingBarShader.frag");
 
 
 	//for desert box
@@ -101,10 +110,10 @@ public:
 	//woodenBox = new Model("./Models/cube.obj");
 
 
-
 	loadingModels();
 
-
+	processingBar = new Model("./Models/cube.obj");
+	//glm::translate(glm::mat4(1.0f), table_center_positions[0]) *
 
 	textureShaderID = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
@@ -180,7 +189,41 @@ public:
  */
 	  player1->draw(shaderID, projection, view, playerNumber == 0);
 	  player2->draw(shaderID, projection, view, playerNumber == 1);
-	 
+
+
+	  renderProcessingBar(projection, view, 0.75f);
+  }
+
+
+  void renderProcessingBar(const glm::mat4 &projection, const glm::mat4 &view, float percentage) {//
+
+	  GLint uPercentage = glGetUniformLocation(processingBarShaderID, "percentDone");
+	 // std::cout << uPercentage << std::endl;
+	 // std::cout << percentage << std::endl;
+	  glm::mat4 cubeToBar = glm::scale(glm::mat4(1.0f), glm::vec3(0.4, 0.1, 0.01));
+
+		  ///testing
+		//  processingBar->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 1.25, 0))*glm::translate(glm::mat4(1.0f), table_positions[5]) * cubeToBar;
+		 
+
+
+		  glUseProgram(processingBarShaderID);
+		  glUniform1f(1, percentage);
+
+
+	//	processingBar->Draw(processingBarShaderID, projection, view);
+	
+	  for (int i = 0; i < 20; ++i) {
+		 if (i == 9|| i == 8|| i == 2|| i == 3|| i == 15|| i == 16) {
+			  processingBar->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 1.25, 0))*glm::translate(glm::mat4(1.0f), table_positions[i]) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))* cubeToBar ;
+		  }
+		  else {
+			 processingBar->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 1.25, 0))*glm::translate(glm::mat4(1.0f), table_positions[i]) * cubeToBar;
+
+		  }	 // std::cout << i << std::endl;
+
+		  processingBar->Draw(processingBarShaderID, projection, view);
+	  }
   }
 
 
@@ -194,47 +237,45 @@ public:
 	  props.push_back(new Model("./Models/SugarBowl.obj"));
 
   }
-
+ 
 
 
   void render11Tables(const glm::mat4 &projection, const glm::mat4 &view) {
+	  //glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.25, 0.5, 0.25));
 	  for (int i = 0; i < tables.size(); ++i) {
-		  tables[i]->toWorld = table_positions[i];
+		  //tables[i]->toWorld = glm::translate(glm::mat4(1.0f), table_positions[i]) * scaleMatrix;
 		  tables[i]->draw(skyBoxShaderID, projection, view);
 	  }
   }
 
   void populatingTables() {
-	  for (int i = 0; i < 12; ++i) {
+	  for (int i = 0; i < 20; ++i) {
 		  tables.push_back(new TexturedCube("Martini"));
+
+		  std::cout << i << std::endl;
 	  }
 
-	  glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.25, 0.5, 0.25));//glm::vec3(0.25, 0.5, 0.25));
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.25, -1, -0.75)) * scaleMatrix);//0
-	  //std::cout << glm::to_string(table_positions.at(table_positions.size() - 1)) << std::endl;
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, -0.75)) * scaleMatrix);//1
-	  //std::cout << glm::to_string(glm::vec4(0.5, 0, 0,1) * table_positions.at(0)   ) << std::endl;
-
-	  //std::cout << glm::to_string(table_positions.at(1)/table_positions.at(0)) << std::endl;
-
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, -0.25)) * scaleMatrix);//2
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, 0.25)) * scaleMatrix);//3
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.75, -1, 0.75)) * scaleMatrix);//4
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0.25, -1, 0.75)) * scaleMatrix);//5
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.25, -1, 0.75)) * scaleMatrix);//6
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, 0.75)) * scaleMatrix);//7
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, 0.25)) * scaleMatrix);//8
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, -0.25)) * scaleMatrix);//9
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, -0.75)) * scaleMatrix);//10
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.25, -1, -0.75)) * scaleMatrix);//11
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.25, -1, -0.75)) * scaleMatrix);//12
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.75, -1, -0.75)) * scaleMatrix);//13
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, -0.75)) * scaleMatrix);//14
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, -0.25)) * scaleMatrix);//15
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, 0.25)) * scaleMatrix);//16
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, 0.75)) * scaleMatrix);//17
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.75, -1, 0.75)) * scaleMatrix);//18
-	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.25, -1, 0.75)) * scaleMatrix);//19
+	  table_positions.push_back( glm::vec3(0.25, -1, -0.75))  ;//0
+	  table_positions.push_back( glm::vec3(0.75, -1, -0.75))  ;//1
+	  table_positions.push_back( glm::vec3(0.75, -1, -0.25))  ;//2
+	  table_positions.push_back( glm::vec3(0.75, -1, 0.25))  ;//3
+	  table_positions.push_back( glm::vec3(0.75, -1, 0.75))  ;//4
+	  table_positions.push_back( glm::vec3(0.25, -1, 0.75))  ;//5
+	  table_positions.push_back( glm::vec3(-0.25, -1, 0.75))  ;//6
+	  table_positions.push_back( glm::vec3(-0.75, -1, 0.75))  ;//7
+	  table_positions.push_back( glm::vec3(-0.75, -1, 0.25))  ;//8
+	  table_positions.push_back( glm::vec3(-0.75, -1, -0.25))  ;//9
+	  table_positions.push_back( glm::vec3(-0.75, -1, -0.75))  ;//10
+	  table_positions.push_back( glm::vec3(-0.25, -1, -0.75))  ;//11
+	  table_positions.push_back( glm::vec3(1.25, -1, -0.75))  ;//12
+	  table_positions.push_back( glm::vec3(1.75, -1, -0.75))  ;//13
+	  table_positions.push_back( glm::vec3(2.25, -1, -0.75))  ;//14
+	  table_positions.push_back( glm::vec3(2.25, -1, -0.25))  ;//15
+	  table_positions.push_back( glm::vec3(2.25, -1, 0.25))  ;//16
+	  table_positions.push_back( glm::vec3(2.25, -1, 0.75))  ;//17
+	  table_positions.push_back( glm::vec3(1.75, -1, 0.75))  ;//18
+	  table_positions.push_back( glm::vec3(1.25, -1, 0.75))  ;//19
+  	  std::cout << tables.size() << std::endl;
 
 
 	  table_center_positions.push_back(glm::vec3(0.25, -0.495, -0.75));//0
@@ -250,6 +291,11 @@ public:
 	  table_center_positions.push_back(glm::vec3(-0.75, -0.495, -0.75));//10
 	  table_center_positions.push_back(glm::vec3(-0.25, -0.495, -0.75));//11
 
+	  glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.25, 0.5, 0.25));
+
+	  for (int i = 0; i < tables.size(); ++i) {
+		  tables[i]->toWorld = glm::translate(glm::mat4(1.0f), table_positions[i]) * scaleMatrix;
+	  }
   }
 
   void updatePlayer(SceneGraph s) {
