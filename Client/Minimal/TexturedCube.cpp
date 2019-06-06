@@ -13,7 +13,7 @@ unsigned char* loadPPM( const char* filename, int &width, int &height ) {
   char* retval_fgets;
   size_t retval_sscanf;
 
-  if((fp = fopen(filename, "rb")) == NULL) {
+  if( ( fp = fopen( filename, "rb" ) ) == NULL ) {
     std::cerr << "error reading ppm file, could not locate " << filename << std::endl;
     width = 0;
     height = 0;
@@ -79,20 +79,20 @@ unsigned loadCubemap( const std::string directory, std::vector <std::string> &fa
   return textureID;
 }
 
-
 std::vector <std::string> faces
-  {
-    "left.jpg",
-    "right.jpg",
-    "up.jpg",
-    "down.jpg",
-    "back.jpg",
-    "front.jpg"
-  };
+{
+  "left.ppm",
+  "right.ppm",
+  "up.ppm",
+  "down.ppm",
+  "back.ppm",
+  "front.ppm"
+};
 
 
 TexturedCube::TexturedCube( const std::string dir ) : Cube() {
   cubeMap = loadCubemap( "./" + dir + "/", faces );
+  std::cout << dir << std::endl;
 }
 
 

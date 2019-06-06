@@ -8,15 +8,11 @@
 
 Player::Player() {
 	//head = new Model("./Models/pigavatarchef.obj");
-	//leftHand = new Model("./Models/pigavatarchef.obj");
-//	rightHand = new Model("./Models/pigavatarchef.obj");
-	//head = new Model("pigavatarchef.obj");
-	//leftHand = new Model("pigavatarchef.obj");
-	//rightHand = new Model("pigavatarchef.obj");
+	leftHand = new Model("./Models/glovehi_poly.obj");
+	//rightHand = new Model("./Models/hand.obj");
+	rightHand = new Cube();
 
 	head = new Cube();
-	leftHand = new Cube();
-	rightHand = new Cube();
 	headColorMap = { {0,1},{1,1},{2, 1},{3,1}, { 4,0},{5,0},{7,0},{8 , 0},{6,1},{9,2} };
 }
 
@@ -30,7 +26,7 @@ Player::~Player() {
 
 void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view, const bool isSelf) {
 
-	leftHand->toWorld = leftControllerPosition * leftControllerOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0),glm::vec3(0.01,0.01,0.01));
+	leftHand->toWorld = leftControllerPosition * leftControllerOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0),glm::vec3(0.001,0.001,0.001));
 	rightHand->toWorld = rightControllerPosition * rightControllerOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.01, 0.01, 0.01));
 
 	if (!isSelf) {
@@ -38,7 +34,8 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 		head->draw(shaderProgram, projection, view);
 	}
 
-	leftHand->draw(shaderProgram, projection, view);
+	//leftHand->draw(shaderProgram, projection, view);
+	leftHand->Draw(shaderProgram, projection, view, headColorMap);
 	rightHand->draw(shaderProgram, projection, view);
 	
 }

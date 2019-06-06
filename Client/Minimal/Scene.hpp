@@ -10,9 +10,31 @@
 #include "Core.h"
 #include "shader.h"
 #include "rpc/client.h"
-#include "TexturedCube.h"
 #include "Player.h"
 #include "SceneGraph.hpp"
+#include "Skybox.h"
+
+#include <random>
+#include <stdlib.h>     /* srand, rand */
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#include "Model.h"
+
+
+#include "stb_image.h"
+
+#include <glm/gtx/string_cast.hpp>
+
+#include <vector>
+#include "shader.h"
+
+
+#include "enums.h"
+
+
 
 
 // a class for building and rendering cubes
@@ -24,12 +46,12 @@ class Scene {
   Player* player2;
 
 
-  std::unique_ptr <Skybox> desertbox; //background box
+  Skybox* desertbox; //background box
 
 
-  GLuint shaderID; //shader id for skybox
+  GLuint shaderID; //shader id for skyboxB
   GLuint woodShaderID;
-
+  GLuint skyBoxShaderID;
 
   ///controller specific
   Model* sphere;
@@ -57,10 +79,11 @@ public:
     // Shader Program
     shaderID = LoadShaders( "shader.vert", "shader.frag" );
 	woodShaderID = LoadShaders("woodShader.vert", "woodShader.frag");
+	skyBoxShaderID = LoadShaders("skybox.vert", "skybox.frag");
 
 
 	//for desert box
-	desertbox = std::make_unique <Skybox>("desertbox");
+	desertbox = new Skybox ("desertbox");
 	desertbox->toWorld = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f));
 
 	///controller
@@ -110,7 +133,7 @@ public:
 	player2 = new Player();
 
     ///
-    //populatingTables();
+    populatingTables();
 
   }
 
@@ -118,18 +141,18 @@ public:
 
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber) {
 
-	  desertbox->draw(shaderID, projection, view);
+	  desertbox->draw(skyBoxShaderID, projection, view);
 
 
 	  ///controller
-	  renderController(projection, view, controllerPosition);
+	 // renderController(projection, view, controllerPosition);
 
 
 	  glDisable(GL_CULL_FACE);
 
 	  //tables
 	  render11Tables(projection, view);
-
+/*
 	  //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
 	  props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, 2);
@@ -148,10 +171,10 @@ public:
 
 	  props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0));
 	  props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, 2);
-
+ */
 	  player1->draw(shaderID, projection, view, playerNumber == 0);
 	  player2->draw(shaderID, projection, view, playerNumber == 1);
-
+	 
   }
 
 
@@ -171,7 +194,7 @@ public:
   void render11Tables(const glm::mat4 &projection, const glm::mat4 &view) {
 	  for (int i = 0; i < tables.size(); ++i) {
 		  tables[i]->toWorld = table_positions[i];
-		  tables[i]->draw(shaderID, projection, view);
+		  tables[i]->draw(skyBoxShaderID, projection, view);
 	  }
   }
 
@@ -198,6 +221,14 @@ public:
 	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, -0.25)) * scaleMatrix);//9
 	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.75, -1, -0.75)) * scaleMatrix);//10
 	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(-0.25, -1, -0.75)) * scaleMatrix);//11
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.25, -1, -0.75)) * scaleMatrix);//12
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.75, -1, -0.75)) * scaleMatrix);//13
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, -0.75)) * scaleMatrix);//14
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, -0.25)) * scaleMatrix);//15
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, 0.25)) * scaleMatrix);//16
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(2.25, -1, 0.75)) * scaleMatrix);//17
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.75, -1, 0.75)) * scaleMatrix);//18
+	  table_positions.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(1.25, -1, 0.75)) * scaleMatrix);//19
 
 
 	  table_center_positions.push_back(glm::vec3(0.25, -0.495, -0.75));//0
@@ -229,7 +260,7 @@ public:
 	  sphere->toWorld =
 		  glm::translate(glm::mat4(1.0f), controllerPosition) *
 		  glm::scale(glm::mat4(1.0f), vec3(0.0175, 0.0175, 0.0175));
-	  sphere->Draw(controllerShaderID, projection, view, 2);
+	 // sphere->Draw(controllerShaderID, projection, view, 2);
   }
 
 

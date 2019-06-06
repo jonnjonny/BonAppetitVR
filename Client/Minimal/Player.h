@@ -34,7 +34,7 @@ public:
   ~Player();
 
   Cube* head;
-  Cube* leftHand;
+  Model* leftHand;
   Cube* rightHand;
   Model* origin;
 

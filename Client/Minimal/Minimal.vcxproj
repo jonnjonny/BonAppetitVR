@@ -148,6 +148,7 @@
     <ClInclude Include="BonAppetiteApp.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="enums.h" />
     <ClInclude Include="GlfwApp.hpp" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="TexturedCube.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
