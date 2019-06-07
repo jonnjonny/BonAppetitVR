@@ -119,13 +119,8 @@ int main(int argc, char** argv) {
     FAIL("Failed to initialize the Oculus SDK");
   }
 
-<<<<<<< HEAD
  rpc::client c("localhost", 8080);
   //rpc::client c("128.54.70.63", 8080);
-=======
-  //rpc::client c("localhost", 8080);
-  rpc::client c("128.54.70.63", 8080);
->>>>>>> 74c37aa0406ec4608a5c12522f1e1a265b1c42c5
 
   result = BonAppetiteApp(&c).run();
 

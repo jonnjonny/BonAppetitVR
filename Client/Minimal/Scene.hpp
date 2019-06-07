@@ -158,7 +158,7 @@ public:
     desertbox->toWorld = glm::scale( glm::mat4( 1.0f ), glm::vec3( 5.0f ) );
 
     ///controller
-    sphere = new Model( "./Models/sphere.obj", 0.01f );
+    sphere = new Model( "./Models/sphere.obj");
 
     // Shader Program
     controllerShaderID = LoadShaders( "shader.vert", "shader.frag" );
@@ -171,7 +171,7 @@ public:
 
     loadingModels();
 
-    processingBar = new Model( "./Models/cube.obj", 0.1f );
+    processingBar = new Model( "./Models/cube.obj" );
 
     textureShaderID = LoadShaders( "textureFromPictureShader.vert",
                                    "textureFromPictureShader.frag" );
@@ -208,17 +208,20 @@ public:
     textureFileNames.push_back( std::string( "woodLog" ) );
     loadTextureFiles();
 
-    recipeBookOpened = new Model( "./Models/RecipeBookOpened.obj", 1.0f );
-    recipeBookClosed = new Model( "./Models/RecipeBookClosed.obj", 1.0f );
+    recipeBookOpened = new Model( "./Models/RecipeBookOpened.obj" );
+    recipeBookClosed = new Model( "./Models/RecipeBookClosed.obj" );
 
-
+	populateLetterModels();
   }
 
 
   void populateLetterModels() {
 	  letters = unordered_map<char, Model*>();
-	  for (int i = 0; i < 26; i++) {
-		  letters.insert({ (char)ascii_A, new Model((std::string("./Models/Letters/") + (char)ascii_A + std::string(".obj"))).c_str() });
+	  for (int i = 0; i < 1; i++) {
+		  Model* upperCaseModel = new Model((std::string("./Models/Letters/") + (char)(ascii_A+i) + std::string(".obj")).c_str());
+		  letters.insert({ (char)ascii_A, upperCaseModel });
+		 // Model* lowerCaseModel = new Model((std::string("./Models/Letters/") + (char)(ascii_a+i) + std::string(".obj")).c_str());
+		 // letters.insert({ (char)ascii_A, lowerCaseModel });
 	  }
 	  
   }
@@ -335,15 +338,17 @@ public:
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber ) {
 
 ///screen in-framebuffer rendering
-    //glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
-    //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    //glEnable( GL_DEPTH_TEST );
-    screen->draw( screenShaderID, projection, view );
+    glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glEnable( GL_DEPTH_TEST );
     //set the view port ready for the texture scene
-    //glViewport(0, 0, 1344, 1344);
+    glViewport(0, 0, 1344, 1344);
     //TODO: render whatever in the screen later
+	letters.at('A')->Draw(woodShaderID, projection, view);
     //re-bind to default
     glBindFramebuffer( GL_FRAMEBUFFER, 1 );
+	screen->draw(screenShaderID, projection, view);
+
 /*
     if (eyeType == ovrEyeType::ovrEye_Left) {
       glViewport(0, 0, 1344, 1600);
@@ -454,12 +459,12 @@ public:
 
 
   void loadingModels() {
-    props.push_back( new Model( "./Models/ChoppingBoard.obj", 0.01 ) );
-    props.push_back( new Model( "./Models/Knife.obj", 0.01 ) );
-    props.push_back( new Model( "./Models/SingleEgg.obj", 0.01 ) );
-    props.push_back( new Model( "./Models/StandMixer.obj", 0.01 ) );
-    props.push_back( new Model( "./Models/teapot_s0.obj", 0.01 ) );
-    props.push_back( new Model( "./Models/SugarBowl.obj", 0.01 ) );
+    props.push_back( new Model( "./Models/ChoppingBoard.obj" ) );
+    props.push_back( new Model( "./Models/Knife.obj" ) );
+    props.push_back( new Model( "./Models/SingleEgg.obj" ) );
+    props.push_back( new Model( "./Models/StandMixer.obj" ) );
+    props.push_back( new Model( "./Models/teapot_s0.obj" ) );
+    props.push_back( new Model( "./Models/SugarBowl.obj" ) );
 
   }
 

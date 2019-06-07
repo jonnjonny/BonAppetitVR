@@ -87,7 +87,6 @@ public:
 				appliances.at(i)->orientation = players.at(player)->rightControllerOrientation;
 			};
 
-			if
 		}
 
   }
