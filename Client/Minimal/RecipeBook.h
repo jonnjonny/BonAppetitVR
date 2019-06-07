@@ -4,6 +4,7 @@
 #include<stdlib.h>
 #include<vector>
 #include<unordered_map>
+#include <locale>         // std::locale, std::toupper
 
 class RecipeBook
 {
@@ -12,12 +13,17 @@ public:
 
 	RecipeBook() {
 		 pages = std::unordered_map<std::string, RecipePage>();
+		 populateBook();
 	}
 
 	void addRecipePage(RecipePage p) {
 		pages.insert({ p.title, p });
 	}
 
+	void populateBook() {
+		RecipePage cookie = RecipePage( std::string("COOKIE"), false);
+
+	}
 
 	~RecipeBook() {}
 

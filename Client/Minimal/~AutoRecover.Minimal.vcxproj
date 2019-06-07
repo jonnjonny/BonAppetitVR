@@ -134,6 +134,8 @@
   <ItemGroup>
     <None Include="boundingbox.frag" />
     <None Include="boundingbox.vert" />
+    <None Include="cave.frag" />
+    <None Include="cave.vert" />
     <None Include="packages.config" />
     <None Include="processingBarShader.frag" />
     <None Include="processingBarShader.vert" />
@@ -164,6 +166,8 @@
     <ClInclude Include="ovr.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
+    <ClInclude Include="Quad.hpp" />
+    <ClInclude Include="RecipeBook.h" />
     <ClInclude Include="RiftApp.hpp" />
     <ClInclude Include="RiftManagerApp.hpp" />
     <ClInclude Include="Scene.hpp" />

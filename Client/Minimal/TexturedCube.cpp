@@ -92,7 +92,7 @@ std::vector <std::string> faces
 
 TexturedCube::TexturedCube( const std::string dir ) : Cube() {
   cubeMap = loadCubemap( "./" + dir + "/", faces );
-  std::cout << dir << std::endl;
+ // std::cout << dir << std::endl;
 }
 
 
