@@ -37,14 +37,16 @@ public:
   glm::vec3 rightControllerPosition;
   glm::quat leftControllerOrientation;
   glm::quat rightControllerOrientation;
+
   BoundingBox b;
 
   void draw( GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view);
 
-
   void updateState(PlayerData p);
 
   PlayerData getState();
+
+  BoundingBox getTransformedBoundingBox();
 
 };
 

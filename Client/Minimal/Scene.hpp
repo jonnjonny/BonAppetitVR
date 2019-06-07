@@ -152,6 +152,8 @@ public:
     ///
     populatingTables();
 
+	props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+
   }
 
   InitialData getInitialData() {
@@ -195,7 +197,6 @@ public:
 	  render11Tables(projection, view);
 
 	  //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
-	  props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 /*
 	  props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
@@ -324,10 +325,12 @@ public:
 	  }
   }
 
-  void updatePlayer(SceneGraph s) {
+  void update(SceneGraph s) {
 
 		  player1->updateState(s.player1);
 		  player2->updateState(s.player2);
+		  props.at((int)propsID::CHOPPING_BOARD)->toWorld = (glm::translate(glm::mat4(1.0), s.cuttingBoard.position)* glm::mat4_cast(s.cuttingBoard.orientation)
+			                                                 * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0)));
 
   }
 
