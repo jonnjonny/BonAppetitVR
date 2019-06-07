@@ -37,6 +37,8 @@ public:
   glm::vec3 rightControllerPosition;
   glm::quat leftControllerOrientation;
   glm::quat rightControllerOrientation;
+  int leftObjectHeld;
+  int rightObjectHeld;
 
   BoundingBox b;
 
@@ -46,7 +48,7 @@ public:
 
   PlayerData getState();
 
-  BoundingBox getTransformedBoundingBox();
+  BoundingBox getTransformedBoundingBox(int side);
 
 };
 

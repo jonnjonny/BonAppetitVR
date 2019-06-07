@@ -13,6 +13,7 @@
 #include "BoundingBox.hpp"
 #include "KitchenItem.hpp"
 #include "SceneGraph.hpp"
+#include "enums.h"
 
 
 // a class for building and rendering cubes
@@ -22,18 +23,18 @@ class Scene {
 
   //Model* sphere;
 
-  Player* player1;
-  Player* player2;
+  std::vector<Player*> players;
   std::vector<KitchenItem*> tables;
-  KitchenItem* cuttingBoard;
+  std::vector<KitchenItem*> appliances;
+
 
 
 public:
   Scene() {
 
-	player1 = new Player();
-	player2 = new Player();
-	cuttingBoard = new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))),glm::vec3(0.01,0.01,0.01));
+	players.push_back(new Player());
+	players.push_back(new Player());
+	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))),glm::vec3(0.01,0.01,0.01)));
 	loadTableCoordinates();
   }
 
@@ -64,17 +65,30 @@ public:
 
   void update(PlayerData p, int player) {
 
-	  if (player == 0) {
-		  player1->updateState(p);
-		  if (cuttingBoard->detectCollision(player1->getTransformedBoundingBox()) && p.rightIndexTrigger) {
-			  std::cout << "Collision Detected" << std::endl;
-			  cuttingBoard->position = player1->rightControllerPosition;
-			  cuttingBoard->orientation = player1->rightControllerOrientation;
-		  };
-	  }
-	  else {
-		  player2->updateState(p);
-	  }
+	  
+		players.at(player)->updateState(p);
+
+		if (!p.rightIndexTrigger && players.at(player)->rightObjectHeld > -1) {
+			appliances.at(players.at(player)->rightObjectHeld)->grabbed = false;
+			players.at(player)->rightObjectHeld = -1;
+		}
+
+		if (!p.leftIndexTrigger && players.at(player)->leftObjectHeld > -1) {
+			appliances.at(players.at(player)->leftObjectHeld)->grabbed = false;
+			players.at(player)->leftObjectHeld = -1;
+		}
+
+		
+		for (int i = 0; i < appliances.size(); i++) {
+
+			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(1))  && !appliances.at(i)->grabbed
+				&& players.at(player)->rightObjectHeld == -1 && p.rightIndexTrigger) {
+				appliances.at(i)->position = players.at(player)->rightControllerPosition;
+				appliances.at(i)->orientation = players.at(player)->rightControllerOrientation;
+			};
+
+			if
+		}
 
   }
 

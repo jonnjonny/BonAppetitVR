@@ -42,7 +42,6 @@ public:
   /*  Model Data */
   vector <Texture> textures_loaded;  // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
   vector <Mesh> meshes;
-  float scaleFactor;
 
   glm::mat4 toWorld;
 
@@ -56,14 +55,13 @@ public:
 
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.
-  Model(string const &path, float scale , bool gamma = false) : gammaCorrection(gamma) {
+  Model(string const &path , bool gamma = false) : gammaCorrection(gamma) {
 	  xmin = std::numeric_limits<float>::max();
 	  ymin = std::numeric_limits<float>::max();
 	  zmin = std::numeric_limits<float>::max();
 	  xmax = std::numeric_limits<float>::min();
 	  ymax = std::numeric_limits<float>::min();
 	  zmax = std::numeric_limits<float>::min();
-	  scaleFactor = scale;
 	  loadModel( path );
 	  loadBoundingBoxCoordinates();
 	  box = new BoundingBoxLines(getObjectSpaceBoundingBoxVerticesAsVector());
@@ -120,21 +118,6 @@ public:
 	  b.v6 = vert.at(5);
 	  b.v7 = vert.at(6);
 	  b.v8 = vert.at(7);
-  }
-
-  BoundingBox getScaledBoundingBox() {
-	  BoundingBox output;
-
-	  output.v1 = scaleFactor*b.v1;
-	  output.v2 = scaleFactor*b.v2;
-	  output.v3 = scaleFactor*b.v3;
-	  output.v4 = scaleFactor*b.v4;
-	  output.v5 = scaleFactor*b.v5;
-	  output.v6 = scaleFactor*b.v6;
-	  output.v7 = scaleFactor*b.v7;
-	  output.v8 = scaleFactor*b.v8;
-
-	  return output;
   }
 
   std::vector<glm::vec3> getObjectSpaceBoundingBoxVerticesAsVector() {
