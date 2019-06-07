@@ -36,6 +36,8 @@
 #include "enums.h"
 
 
+#include "Quad.hpp"
+
 
 
 // a class for building and rendering cubes
@@ -76,7 +78,7 @@ class Scene {
 
 
 
-  GLuint textureShaderID, textureId;
+  GLuint textureShaderID, textureId, textureId2;
   GLint uniform_texture, attribute_texture;
 
 
@@ -86,10 +88,18 @@ class Scene {
 
   GLuint processingBarShaderID; //shader id for skyboxB
 
+  std::vector<std::string> textureFileNames;
+  std::vector<GLuint> textureIds;
+
+
+  Model* recipeBookOpened;
+  Model* recipeBookClosed;
+
+  Quad* screen;
+
 
 public:
   Scene() {
-
     // Shader Program
     shaderID = LoadShaders( "shader.vert", "shader.frag" );
 	woodShaderID = LoadShaders("woodShader.vert", "woodShader.frag");
@@ -120,30 +130,9 @@ public:
 
 	textureShaderID = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
-	//Setting up textures
-	glActiveTexture(GL_TEXTURE0);
-	unsigned char* data;
-	int width, height, numChannels;
+	
+	
 
-	data = stbi_load("./JPG/ChoppingBoard.jpg", &width, &height, &numChannels, 0);
-	if (!data) {
-		throw std::runtime_error("Cannot load JPG file");
-	}
-	else {
-		std::cout << numChannels << std::endl;
-	}
-
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
-	uniform_texture = glGetUniformLocation(textureShaderID, "texFramebuffer");
-	glUniform1i(uniform_texture, 0);
-	//glBindTexture(GL_TEXTURE_2D, textureId);
 
 
 
@@ -153,9 +142,58 @@ public:
     ///
     populatingTables();
 
-	desk = new Model("./Models/table.obj", 0.01f);
+	desk = new Model("./Models/unitTableLog.obj", 1.0f);
+
+	props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 
 
+	textureFileNames.push_back(std::string("RecipeBookClosed_Cover_diffuse"));
+
+	textureFileNames.push_back(std::string("RecipeBookOpened_p1"));
+
+	textureFileNames.push_back(std::string("ChoppingBoard"));
+	textureFileNames.push_back(std::string("woodLog"));
+	loadTextureFiles();
+	
+	recipeBookOpened = new Model("./Models/RecipeBookOpened.obj", 1.0f);
+	recipeBookClosed = new Model("./Models/RecipeBookClosed.obj", 1.0f);
+  }
+
+  void loadTextureFiles( ) {
+
+	  textureIds = std::vector<GLuint>(31);
+	  std::cout << textureIds.size() << std::endl;
+
+		  int width, height, numChannels;
+		  unsigned char* data;
+
+	  for (int i = 0; i < 3; i++) {
+
+		  //Setting up textures
+		  std::string fileName = "./JPG/" + textureFileNames[i] + ".jpg";
+		  data = stbi_load(fileName.c_str(), &width, &height, &numChannels, 0);
+		  if (!data) {
+			  throw std::runtime_error("Cannot load JPG file");
+		  }
+		  else {
+			  std::cout << textureFileNames[i] + " loaded successfully." << std::endl;
+		  }
+		  
+		  		  glActiveTexture(GL_TEXTURE0+i);
+			glGenTextures(1, &(textureIds[i]));
+				glBindTexture(GL_TEXTURE_2D, textureIds[i]);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				uniform_texture = glGetUniformLocation(textureShaderID, "texFramebuffer");
+		  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+		  glUniform1i(uniform_texture, i);
+		  
+	  }
+
+	 
   }
 
   InitialData getInitialData() {
@@ -199,7 +237,6 @@ public:
 	  render11Tables(projection, view);
 
 	  //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
-	  props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 /*
 	  props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
@@ -223,7 +260,19 @@ public:
 
 	  renderProcessingBar(projection, view, 0.75f);
 
-	  desk->Draw(woodShaderID, projection, view);
+	  //std::cout << glm::to_string(desk->toWorld) << std::endl;
+	  desk->toWorld = glm::translate(glm::mat4(1.0f), table_positions[12] - glm::vec3(0, 0.5, 0)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5));// *glm::scale(glm::mat4(1.0f), glm::vec3(4.3, 4.6, 4.3));
+	  // std::cout << glm::to_string(desk->toWorld) << std::endl;
+
+	  //loadTextureFiles(textureFileNames[1]);
+	  desk->Draw(textureShaderID, projection, view);
+
+
+	  recipeBookClosed->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[3] + glm::vec3(0,0.03,0));
+	  recipeBookClosed->Draw(textureShaderID, projection, view);
+
+	  recipeBookOpened->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2] + glm::vec3(0, 0.03, 0));
+	  recipeBookOpened->Draw(textureShaderID, projection, view);
   }
 
 
@@ -273,9 +322,10 @@ public:
 
 
   void render11Tables(const glm::mat4 &projection, const glm::mat4 &view) {
-	  //glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.25, 0.5, 0.25));
-	  for (int i = 0; i < tables.size(); ++i) {
-		  //tables[i]->toWorld = glm::translate(glm::mat4(1.0f), table_positions[i]) * scaleMatrix;
+	  glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.25, 0.5, 0.25));
+	  for (int i = 0; i < 20; ++i) {
+		  tables[i]->toWorld = glm::translate(glm::mat4(1.0f), table_positions[i]) * scaleMatrix;
+		  if(i != 12)
 		  tables[i]->draw(skyBoxShaderID, projection, view);
 	  }
   }
@@ -284,7 +334,7 @@ public:
 	  for (int i = 0; i < 20; ++i) {
 		  tables.push_back(new TexturedCube("Martini"));
 
-		  std::cout << i << std::endl;
+		  //std::cout << i << std::endl;
 	  }
 
 	  table_positions.push_back( glm::vec3(0.25, -1, -0.75))  ;//0
@@ -307,7 +357,7 @@ public:
 	  table_positions.push_back( glm::vec3(2.25, -1, 0.75))  ;//17
 	  table_positions.push_back( glm::vec3(1.75, -1, 0.75))  ;//18
 	  table_positions.push_back( glm::vec3(1.25, -1, 0.75))  ;//19
-  	  std::cout << tables.size() << std::endl;
+  	  //std::cout << tables.size() << std::endl;
 
 
 	  table_center_positions.push_back(glm::vec3(0.25, -0.495, -0.75));//0
@@ -330,10 +380,12 @@ public:
 	  }
   }
 
-  void updatePlayer(SceneGraph s) {
+  void update(SceneGraph s) {
 
 		  player1->updateState(s.player1);
 		  player2->updateState(s.player2);
+		  props.at((int)propsID::CHOPPING_BOARD)->toWorld = (glm::translate(glm::mat4(1.0), s.cuttingBoard.position)* glm::mat4_cast(s.cuttingBoard.orientation)
+			                                                 * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0)));
 
   }
 

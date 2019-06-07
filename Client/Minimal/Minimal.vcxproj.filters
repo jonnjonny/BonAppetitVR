@@ -64,6 +64,12 @@
     <None Include="boundingbox.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="cave.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cave.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -130,6 +136,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RecipeBook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Quad.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
