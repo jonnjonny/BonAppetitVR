@@ -70,7 +70,7 @@ BoundingBoxLines::BoundingBoxLines(std::vector<glm::vec3> vertex) {
 
 }
 
-BoundingBoxLines::~Pyramid() {
+BoundingBoxLines::~BoundingBoxLines() {
   // Delete previously generated buffers. Note that forgetting to do this can waste GPU memory in a
   // large project! This could crash the graphics driver due to memory leaks, or slow down application performance!
 	glDeleteVertexArrays(1, &VAO);
@@ -78,7 +78,8 @@ BoundingBoxLines::~Pyramid() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void BoundingBoxLines::draw(GLuint shaderProgram, const glm::mat4& projection, const glm::mat4& view, glm::vec3 eyePos, int color) {
+
+void BoundingBoxLines::draw(GLuint shaderProgram, const glm::mat4& projection, const glm::mat4& view, int color) {
 
 	glUseProgram(shaderProgram);
 
@@ -100,18 +101,14 @@ void BoundingBoxLines::draw(GLuint shaderProgram, const glm::mat4& projection, c
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	vertices[0] = eyePos.x;
-	vertices[1] = eyePos.y;
-	vertices[2] = eyePos.z;
-
-	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glLineWidth(3.0f);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT,0);
+	glDrawElements(GL_LINES, 24, GL_UNSIGNED_INT,0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

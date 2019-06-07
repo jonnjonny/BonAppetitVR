@@ -46,6 +46,8 @@ public:
 
   glm::mat4 toWorld;
 
+  float xmin, ymin, zmin, xmax, ymax, zmax;
+
   string directory;
 
   BoundingBoxLines* box;
@@ -55,15 +57,16 @@ public:
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.
   Model(string const &path, float scale , bool gamma = false) : gammaCorrection(gamma) {
-	  b.xmin = std::numeric_limits<float>::max();
-	  b.ymin = std::numeric_limits<float>::max();
-	  b.zmin = std::numeric_limits<float>::max();
-	  b.xmax = std::numeric_limits<float>::min();
-	  b.ymax = std::numeric_limits<float>::min();
-	  b.zmax = std::numeric_limits<float>::min();
+	  xmin = std::numeric_limits<float>::max();
+	  ymin = std::numeric_limits<float>::max();
+	  zmin = std::numeric_limits<float>::max();
+	  xmax = std::numeric_limits<float>::min();
+	  ymax = std::numeric_limits<float>::min();
+	  zmax = std::numeric_limits<float>::min();
 	  scaleFactor = scale;
 	  loadModel( path );
-	  box = new BoundingBoxLines(getBoundingBoxVertices);
+	  loadBoundingBoxCoordinates();
+	  box = new BoundingBoxLines(getObjectSpaceBoundingBoxVerticesAsVector());
 
   }
 
@@ -77,6 +80,7 @@ public:
 	  }
 
 	  if (debug) {
+		  box->toWorld = toWorld;
 		  box->draw(boxShaderId, projection, view, 0);
 	  }
   }
@@ -92,34 +96,65 @@ public:
 	  }
   }
 
+  // overload draw
+  void
+	  Draw(GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view, bool debug, GLuint boxShaderId) {
+
+	  for (unsigned int i = 0; i < meshes.size(); i++) {
+		  meshes[i].Draw(shaderId, projection, view, toWorld);
+	  }
+
+	  if (debug) {
+		  box->toWorld = toWorld;
+		  box->draw(boxShaderId, projection, view, 0);
+	  }
+  }
+
+  void loadBoundingBoxCoordinates() {
+	  std::vector<glm::vec3> vert = getObjectSpaceBoundingBoxVerticesAsVector();
+	  b.v1 = vert.at(0);
+	  b.v2 = vert.at(1);
+	  b.v3 = vert.at(2);
+	  b.v4 = vert.at(3);
+	  b.v5 = vert.at(4);
+	  b.v6 = vert.at(5);
+	  b.v7 = vert.at(6);
+	  b.v8 = vert.at(7);
+  }
+
   BoundingBox getScaledBoundingBox() {
 	  BoundingBox output;
 
-	  output.xmin = scaleFactor*b.xmin;
-	  output.xmax = scaleFactor*b.xmax;
-	  output.ymin = scaleFactor*b.ymin;
-	  output.ymax = scaleFactor*b.ymax;
-	  output.zmin = scaleFactor*b.zmin;
-	  output.zmax = scaleFactor*b.zmax;
+	  output.v1 = scaleFactor*b.v1;
+	  output.v2 = scaleFactor*b.v2;
+	  output.v3 = scaleFactor*b.v3;
+	  output.v4 = scaleFactor*b.v4;
+	  output.v5 = scaleFactor*b.v5;
+	  output.v6 = scaleFactor*b.v6;
+	  output.v7 = scaleFactor*b.v7;
+	  output.v8 = scaleFactor*b.v8;
 
 	  return output;
   }
 
-  std::vector<glm::vec3> getBoundingBoxVertices() {
+  std::vector<glm::vec3> getObjectSpaceBoundingBoxVerticesAsVector() {
 
 	  std::vector<glm::vec3> output;
-	  BoundingBox scaledBox = getScaledBoundingBox();
-	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymax, scaledBox.zmax));
-	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymax, scaledBox.zmin));
-	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymax, scaledBox.zmin));
-	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymax, scaledBox.zmax));
-	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymin, scaledBox.zmax));
-	  output.push_back(glm::vec3(scaledBox.xmin, scaledBox.ymin, scaledBox.zmin));
-	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymin, scaledBox.zmin));
-	  output.push_back(glm::vec3(scaledBox.xmax, scaledBox.ymin, scaledBox.zmax));
+	  output.push_back(glm::vec3(xmin, ymax, zmax));
+	  output.push_back(glm::vec3(xmin, ymax, zmin));
+	  output.push_back(glm::vec3(xmax, ymax, zmin));
+	  output.push_back(glm::vec3(xmax, ymax, zmax));
+	  output.push_back(glm::vec3(xmin, ymin, zmax));
+	  output.push_back(glm::vec3(xmin, ymin, zmin));
+	  output.push_back(glm::vec3(xmax, ymin, zmin));
+	  output.push_back(glm::vec3(xmax, ymin, zmax));
 
 	  return output;
 
+  }
+
+  BoundingBox getObjectSpaceBoundingBox() {
+	  return b;
   }
 
 
@@ -177,14 +212,14 @@ private:
       glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
       // positions
       vector.x = mesh->mVertices[i].x;
-	  b.xmin = std::min(b.xmin,vector.x);
-	  b.xmax = std::max(b.xmax, vector.x);
+	  xmin = std::min(xmin,vector.x);
+	  xmax = std::max(xmax, vector.x);
       vector.y = mesh->mVertices[i].y;
-	  b.ymin = std::min(b.ymin, vector.y);
-	  b.ymax = std::max(b.ymax, vector.y);
+	  ymin = std::min(ymin, vector.y);
+	  ymax = std::max(ymax, vector.y);
       vector.z = mesh->mVertices[i].z;
-	  b.zmin = std::min(b.zmin, vector.z);
-	  b.zmax = std::max(b.zmax, vector.z);
+	  zmin = std::min(zmin, vector.z);
+	  zmax = std::max(zmax, vector.z);
       vertex.Position = vector;
       // normals
       vector.x = mesh->mNormals[i].x;

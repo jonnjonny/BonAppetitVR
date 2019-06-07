@@ -58,6 +58,12 @@
     <None Include="processingBarShader.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="boundingbox.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="boundingbox.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -120,6 +126,9 @@
     <ClInclude Include="BoundingBox.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingBoxLines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shader.cpp">
@@ -141,6 +150,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxLines.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

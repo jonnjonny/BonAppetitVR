@@ -132,6 +132,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="boundingbox.frag" />
+    <None Include="boundingbox.vert" />
     <None Include="packages.config" />
     <None Include="processingBarShader.frag" />
     <None Include="processingBarShader.vert" />
@@ -151,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="BonAppetiteApp.hpp" />
     <ClInclude Include="BoundingBox.hpp" />
+    <ClInclude Include="BoundingBoxLines.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="enums.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="TexturedCube.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBoxLines.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />

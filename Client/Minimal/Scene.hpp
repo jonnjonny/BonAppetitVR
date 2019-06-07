@@ -102,7 +102,7 @@ public:
 	desertbox->toWorld = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f));
 
 	///controller
-	sphere = new Model("./Models/sphere.obj",0.01);
+	sphere = new Model("./Models/sphere.obj",0.01f);
 
 	// Shader Program
 	controllerShaderID = LoadShaders("shader.vert", "shader.frag");
@@ -115,8 +115,7 @@ public:
 
 	loadingModels();
 
-	processingBar = new Model("./Models/cube.obj", 0.1);
-	//glm::translate(glm::mat4(1.0f), table_center_positions[0]) *
+	processingBar = new Model("./Models/cube.obj", 0.1f);
 
 	textureShaderID = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
@@ -160,11 +159,22 @@ public:
 	  InitialData output;
 
 	  BoundingBox controller;
-	  controller.xmin = controller.ymin = controller.zmin = -0.01;
-	  controller.xmax = controller.ymax = controller.zmax = 0.01;
+	  float xmin, xmax, ymin, ymax, zmin, zmax;
+	  xmin = ymin = zmin = -0.01f;
+	  xmax = ymax = zmax = 0.01f;
+
+	  controller.v1 = glm::vec3(xmin, ymax, zmax);
+	  controller.v2 = glm::vec3(xmin, ymax, zmin);
+	  controller.v3 = glm::vec3(xmax, ymax, zmin);
+	  controller.v4 = glm::vec3(xmax, ymax, zmax);
+	  controller.v5 = glm::vec3(xmin, ymin, zmax);
+	  controller.v6 = glm::vec3(xmin, ymin, zmin);
+	  controller.v7 = glm::vec3(xmax, ymin, zmin);
+	  controller.v8 = glm::vec3(xmax, ymin, zmax);
+	  
 	  output.controller = controller;
 
-	  output.cuttingBoard = props.at(0)->getScaledBoundingBox();
+	  output.cuttingBoard = props.at(0)->getObjectSpaceBoundingBox();
 
 	  return output;
   }
@@ -186,7 +196,7 @@ public:
 
 	  //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
 	  props.at((int)propsID::CHOPPING_BOARD)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
-	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view);
+	  props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 /*
 	  props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
 	  props.at((int)propsID::KNIFE)->Draw(woodShaderID, projection, view, 2);

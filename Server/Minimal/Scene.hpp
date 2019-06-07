@@ -54,8 +54,6 @@ public:
 	  player1->b = b.controller;
 	  player2->b = b.controller;
 	  cuttingBoard->b = b.cuttingBoard;
-	  std::cout << "Cutting Board Bounding Box:" << cuttingBoard->b.xmin << " " << cuttingBoard->b.ymin << " " << cuttingBoard->b.zmin << " ";
-	  std::cout << cuttingBoard->b.xmax << " " << cuttingBoard->b.ymax << " " << cuttingBoard->b.zmax << std::endl;
   }
 
   SceneGraph Scene::getGraph() {

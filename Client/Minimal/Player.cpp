@@ -31,11 +31,11 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 
 	if (!isSelf) {
 		head->toWorld = headPosition * headOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
-		head->Draw(shaderProgram, projection, view, headColorMap);
+		head->Draw(shaderProgram, projection, view, headColorMap,false,0);
 	}
 
 	//leftHand->draw(shaderProgram, projection, view);
-	leftHand->Draw(shaderProgram, projection, view, headColorMap);
+	leftHand->Draw(shaderProgram, projection, view, headColorMap,false,0);
 	rightHand->draw(shaderProgram, projection, view);
 	
 }
