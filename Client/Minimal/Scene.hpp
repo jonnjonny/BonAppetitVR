@@ -294,7 +294,23 @@ public:
 
     output.cuttingBoard = props.at( 0 )->getObjectSpaceBoundingBox();
 
-    return output;
+
+	  BoundingBox table;
+	  xmin = ymin = zmin = -1.0f;
+	  xmax = ymax = zmax = 1.0f;
+
+	  table.v1 = glm::vec3(xmin, ymax, zmax);
+	  table.v2 = glm::vec3(xmin, ymax, zmin);
+	  table.v3 = glm::vec3(xmax, ymax, zmin);
+	  table.v4 = glm::vec3(xmax, ymax, zmax);
+	  table.v5 = glm::vec3(xmin, ymin, zmax);
+	  table.v6 = glm::vec3(xmin, ymin, zmin);
+	  table.v7 = glm::vec3(xmax, ymin, zmin);
+	  table.v8 = glm::vec3(xmax, ymin, zmax);
+
+	  output.table = table;
+
+	  return output;
   }
 
 
@@ -490,6 +506,7 @@ public:
       tables[i]->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[i] ) * scaleMatrix;
     }
   }
+
 
 
   void update( SceneGraph s ) {

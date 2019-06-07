@@ -139,7 +139,7 @@ int main()
 	srv.bind("updatePlayer", [&scene]
 	(PlayerData p, int player) -> SceneGraph
 	{
-		scene.updatePlayer(p, player);
+		scene.update(p, player);
 		SceneGraph output = scene.getGraph();
 		return output;
 	});

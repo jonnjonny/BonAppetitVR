@@ -18,9 +18,9 @@ public:
 	BoundingBox objectSpaceBoundingBox;
 	glm::vec3 position;
 	glm::quat orientation;
-	float scale;
+	glm::vec3 scale;
 
-	KitchenItem(glm::vec3 pos, glm::quat ori, float scaleFactor) {
+	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor) {
 		position = pos;
 		orientation = ori;
 		scale = scaleFactor;
@@ -29,16 +29,15 @@ public:
 	BoundingBox getTransformedBoundingBox() {
 
 		BoundingBox box;
-		glm::vec3 scaleVector(scale, scale, scale);
 
-		box.v1 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v1, 1.0));
-		box.v2 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v2, 1.0));
-		box.v3 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v3, 1.0));
-		box.v4 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v4, 1.0));
-		box.v5 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v5, 1.0));
-		box.v6 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v6, 1.0));
-		box.v7 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v7, 1.0));
-		box.v8 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scaleVector) * glm::vec4(objectSpaceBoundingBox.v8, 1.0));
+		box.v1 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v1, 1.0));
+		box.v2 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v2, 1.0));
+		box.v3 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v3, 1.0));
+		box.v4 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v4, 1.0));
+		box.v5 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v5, 1.0));
+		box.v6 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v6, 1.0));
+		box.v7 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v7, 1.0));
+		box.v8 = glm::vec3(glm::translate(glm::mat4(1.0), position)* glm::mat4_cast(orientation)*glm::scale(glm::mat4(1.0), scale) * glm::vec4(objectSpaceBoundingBox.v8, 1.0));
 		
 		return box;
 	}

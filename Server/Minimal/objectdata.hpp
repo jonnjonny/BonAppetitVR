@@ -24,6 +24,8 @@ struct PlayerData {
 	glm::quat LControlOri;
 	glm::vec3 RControlPos;
 	glm::quat RControlOri;
+	bool leftIndexTrigger;
+	bool rightIndexTrigger;
 	float xmin, xmax, ymin, ymax, zmin, zmax;
 
 	MSGPACK_DEFINE_MAP(headPos.x, headPos.y, headPos.z,
@@ -32,6 +34,7 @@ struct PlayerData {
 		LControlOri.x, LControlOri.y, LControlOri.z, LControlOri.w,
 		RControlPos.x, RControlPos.y, RControlPos.z,
 		RControlOri.x, RControlOri.y, RControlOri.z, RControlOri.w,
+		leftIndexTrigger, rightIndexTrigger,
 		xmin, xmax, ymin, ymax, zmin, zmax);
 
 };

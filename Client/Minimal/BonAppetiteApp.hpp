@@ -18,6 +18,8 @@ class BonAppetiteApp : public RiftApp
 	int playerNumber;
 	bool buttonPressed;
 	bool stickShifted;
+	bool rightIndexTrigger;
+	bool leftIndexTrigger;
 
 public:
 	BonAppetiteApp(rpc::client* connection)
@@ -46,7 +48,8 @@ protected:
 		scene.reset();
 	}
 
-	PlayerData getPlayerState(ovrTrackingState hmdState, int playerNumber) {
+	PlayerData getPlayerState(ovrTrackingState hmdState) {
+
 		PlayerData output;
 		ovrPoseStatef headPoseState = hmdState.HeadPose;
 		output.headPos = ovr::toGlm(headPoseState.ThePose.Position);
@@ -60,6 +63,8 @@ protected:
 		output.RControlOri = ovr::toGlm(handPoseStateR.ThePose.Orientation);
 		output.xmin = output.ymin = output.zmin = -0.01;
 		output.xmax = output.ymax = output.zmax = 0.01;
+		output.rightIndexTrigger = rightIndexTrigger;
+		output.leftIndexTrigger = leftIndexTrigger;
 
 		if (playerNumber == 1) {
 			output.headPos = glm::vec3(2.0,0.0,0.0) + output.headPos;
@@ -75,60 +80,18 @@ protected:
 	{
 		ovrInputState inputState;
 		if (OVR_SUCCESS(ovr_GetInputState(_session, ovrControllerType_Touch, &inputState))) {
-			if (inputState.Buttons & ovrButton_RThumb) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Buttons & ovrButton_B) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-
-			}
-			else if (inputState.Thumbstick[ovrHand_Right].x > 0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Right].x < -0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Right].y > 0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Right].y < -0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Left].x < -0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Left].x > 0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Left].y < -0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
-			}
-			else if (inputState.Thumbstick[ovrHand_Left].y > 0.5f) {
-				if (!buttonPressed) {
-					buttonPressed = true;
-				}
+			if (inputState.IndexTrigger[ovrHand_Right] > 0.5f) {
+				rightIndexTrigger = true;
 			}
 			else {
-				buttonPressed = false;
-				stickShifted = false;
+				rightIndexTrigger = false;
+			}
+
+			if (inputState.IndexTrigger[ovrHand_Left] > 0.5f) {
+				leftIndexTrigger = true;
+			}
+			else {
+				leftIndexTrigger = false;
 			}
 		}
 
@@ -136,7 +99,7 @@ protected:
 		ovrTrackingState hmdState = ovr_GetTrackingState(_session,
 			ftiming, ovrTrue);
 			
-		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(hmdState,playerNumber), playerNumber).as<SceneGraph>();
+		SceneGraph scenegraph = c->call("updatePlayer", getPlayerState(hmdState), playerNumber).as<SceneGraph>();
 
 		scene->update(scenegraph);
 	
