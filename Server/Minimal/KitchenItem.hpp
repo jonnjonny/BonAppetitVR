@@ -19,6 +19,7 @@ public:
 	glm::vec3 position;
 	glm::quat orientation;
 	glm::vec3 scale;
+	 
 
 	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor) {
 		position = pos;
