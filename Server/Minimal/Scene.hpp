@@ -35,6 +35,11 @@ public:
 	players.push_back(new Player());
 	players.push_back(new Player());
 	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))),glm::vec3(0.01,0.01,0.01)));
+	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.475, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.02, 0.02, 0.02)));
+	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.005, 0.005, 0.005)));
+	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.01, 0.01, 0.01)));
+	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0))), glm::vec3(1, 1, 1)));
+	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0))), glm::vec3(0.05, 0.05, 0.05)));
 	loadTableCoordinates();
   }
 
@@ -87,7 +92,7 @@ public:
 			for (int i = 0; i < tables.size(); i++) {
 				if (tables.at(i)->detectCollision(appliances.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox())) {
 					glm::vec3 snappedPosition = tables.at(i)->position;
-					snappedPosition.y = -0.495f;
+					snappedPosition.y = appliances.at(players.at(player)->rightObjectHeld)->originalPosition.y;
 					appliances.at(players.at(player)->rightObjectHeld)->position = snappedPosition;
 					appliances.at(players.at(player)->rightObjectHeld)->orientation = appliances.at(players.at(player)->rightObjectHeld)->originalOrientation;
 				}
@@ -123,6 +128,11 @@ public:
 	  players.at(0)->b = b.controller;
 	  players.at(1)->b = b.controller;
 	  appliances.at(0)->objectSpaceBoundingBox = b.cuttingBoard;
+	  appliances.at(1)->objectSpaceBoundingBox = b.knife;
+	  appliances.at(2)->objectSpaceBoundingBox = b.singleEgg;
+	  appliances.at(3)->objectSpaceBoundingBox = b.standMixer;
+	  appliances.at(4)->objectSpaceBoundingBox = b.barrel;
+	  appliances.at(5)->objectSpaceBoundingBox = b.sugarBowl;
 	  for(int i = 0; i < tables.size(); i++) tables.at(i)->objectSpaceBoundingBox = b.table;
   }
 
@@ -131,6 +141,11 @@ public:
 	  output.player1 = players.at(0)->getState();
 	  output.player2 = players.at(1)->getState();
 	  output.cuttingBoard = appliances.at(0)->getState();
+	  output.knife = appliances.at(1)->getState();
+	  output.singleEgg = appliances.at(2)->getState();
+	  output.standMixer = appliances.at(3)->getState();
+	  output.barrel = appliances.at(4)->getState();
+	  output.sugarBowl = appliances.at(5)->getState();
 	  return output;
 
   }

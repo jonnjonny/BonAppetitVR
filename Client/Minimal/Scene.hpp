@@ -186,6 +186,29 @@ public:
 	recipeBookOpened = new Model("./Models/RecipeBookOpened.obj");
 	recipeBookClosed = new Model("./Models/RecipeBookClosed.obj");
 
+
+	props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *
+		glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* 
+		glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
+
+	props.at((int)propsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) * 
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* 
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+
+	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) * 
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+
+	props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[11]) * 
+		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
+
+	props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) * 
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0));
+
+
+
+
+
+
 	loadTextureFiles();
 
 	populateLetterModels();
@@ -295,8 +318,12 @@ public:
 
     output.controller = controller;
 
-    output.cuttingBoard = props.at( 0 )->getObjectSpaceBoundingBox();
-
+    output.cuttingBoard = props.at((int)propsID::CHOPPING_BOARD)->getObjectSpaceBoundingBox();
+	output.knife = props.at((int)propsID::KNIFE)->getObjectSpaceBoundingBox();
+	output.singleEgg = props.at((int)propsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
+	output.standMixer = props.at((int)propsID::STAND_MIXER)->getObjectSpaceBoundingBox();
+	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
+	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
 
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
@@ -356,22 +383,27 @@ public:
     render11Tables( projection, view );
 
 
-/*
-	  props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
-	  props.at((int)propsID::KNIFE)->Draw(woodShaderID, projection, view, 2);
 
-	  props.at((int)propsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	  props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, 2);
 
-	  props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	  props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, 2);
+    //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
+    props.at( ( int ) propsID::CHOPPING_BOARD )->Draw( textureShaderID, projection, view, true,
+                                                       boundingBoxShaderID );
 
-	  props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[11]) * glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
-	  props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, 2);
+	 props.at((int)propsID::KNIFE)->Draw(woodShaderID, projection, view, true,
+		 boundingBoxShaderID);
 
-	  props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0));
-	  props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, 2);
- */
+	  props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true,
+		  boundingBoxShaderID);
+
+	  props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true,
+		  boundingBoxShaderID);
+
+	  props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true,
+		  boundingBoxShaderID);
+
+	  props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true,
+		  boundingBoxShaderID);
+ 
     player1->draw( shaderID, projection, view, playerNumber == 0 );
     player2->draw( shaderID, projection, view, playerNumber == 1 );
 
@@ -530,6 +562,26 @@ public:
       glm::translate( glm::mat4( 1.0 ), s.cuttingBoard.position ) *
       glm::mat4_cast( s.cuttingBoard.orientation )
       * glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.01, 0.01, 0.01 ) ));
+	props.at((int)propsID::KNIFE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.knife.position) *
+		glm::mat4_cast(s.knife.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02)));
+	props.at((int)propsID::SINGLE_EGG)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.singleEgg.position) *
+		glm::mat4_cast(s.singleEgg.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));
+	props.at((int)propsID::STAND_MIXER)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.standMixer.position) *
+		glm::mat4_cast(s.standMixer.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)));
+	props.at((int)propsID::BARREL)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.barrel.position) *
+		glm::mat4_cast(s.barrel.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)));
+	props.at((int)propsID::SUGAR_BOWL)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.sugarBowl.position) *
+		glm::mat4_cast(s.sugarBowl.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
 
   }
 
