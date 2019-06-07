@@ -68,22 +68,30 @@ public:
 	  
 		players.at(player)->updateState(p);
 
-
-
-		
-		for (int i = 0; i < tables.size(); i++) {
-			if (tables.at(i)->detectCollision(appliances.at(0)->getTransformedBoundingBox())) {
-				std::cout << "Colliding with Table: " << i << std::endl;
-			}
-		}
-		
-
 		if (!p.leftIndexTrigger && players.at(player)->leftObjectHeld > -1) {
+			BoundingBox leftApplianceBox = appliances.at(players.at(player)->leftObjectHeld)->getTransformedBoundingBox();
+			for (int i = 0; i < tables.size(); i++) {
+				if (tables.at(i)->detectCollision(leftApplianceBox)) {
+					std::cout << "Collision" << std::endl;
+				}
+			}
 			appliances.at(players.at(player)->leftObjectHeld)->grabbed = false;
 			players.at(player)->leftObjectHeld = -1;
 		}
 
+
+
 		if (!p.rightIndexTrigger && players.at(player)->rightObjectHeld > -1) {
+			BoundingBox rightApplianceBox = appliances.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox();
+
+			for (int i = 0; i < tables.size(); i++) {
+				if (tables.at(i)->detectCollision(appliances.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox())) {
+					glm::vec3 snappedPosition = tables.at(i)->position;
+					snappedPosition.y = -0.495f;
+					appliances.at(players.at(player)->rightObjectHeld)->position = snappedPosition;
+					appliances.at(players.at(player)->rightObjectHeld)->orientation = appliances.at(players.at(player)->rightObjectHeld)->originalOrientation;
+				}
+			}
 			appliances.at(players.at(player)->rightObjectHeld)->grabbed = false;
 			players.at(player)->rightObjectHeld = -1;
 		}
@@ -91,19 +99,19 @@ public:
 		
 		for (int i = 0; i < appliances.size(); i++) {
 
-			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(0)) && !appliances.at(i)->grabbed
-				&& players.at(player)->leftObjectHeld == -1 && p.leftIndexTrigger) {
+			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(0))
+			    && p.leftIndexTrigger && ((players.at(player)->leftObjectHeld == -1 && !appliances.at(i)->grabbed) || players.at(player)->leftObjectHeld == i)) {
 				appliances.at(i)->position = players.at(player)->leftControllerPosition;
 				appliances.at(i)->orientation = players.at(player)->leftControllerOrientation;
-				players.at(player)->rightObjectHeld = i;
+				players.at(player)->leftObjectHeld = i;
 				appliances.at(i)->grabbed = true;
 			};
 
-			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(1))  && !appliances.at(i)->grabbed
-				&& players.at(player)->rightObjectHeld == -1 && p.rightIndexTrigger) {
+			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(1))
+				&& p.rightIndexTrigger && ((players.at(player)->rightObjectHeld == -1 && !appliances.at(i)->grabbed) || players.at(player)->rightObjectHeld == i)) {
 				appliances.at(i)->position = players.at(player)->rightControllerPosition;
 				appliances.at(i)->orientation = players.at(player)->rightControllerOrientation;
-				players.at(player)->leftObjectHeld = i;
+				players.at(player)->rightObjectHeld = i;
 				appliances.at(i)->grabbed = true;
 			};
 
@@ -115,7 +123,7 @@ public:
 	  players.at(0)->b = b.controller;
 	  players.at(1)->b = b.controller;
 	  appliances.at(0)->objectSpaceBoundingBox = b.cuttingBoard;
-	  tables.at(0)->objectSpaceBoundingBox = b.table;
+	  for(int i = 0; i < tables.size(); i++) tables.at(i)->objectSpaceBoundingBox = b.table;
   }
 
   SceneGraph Scene::getGraph() {
