@@ -16,6 +16,7 @@
 class KitchenItem {
 public:
 	BoundingBox objectSpaceBoundingBox;
+	bool grabbed;
 	glm::vec3 position;
 	glm::quat orientation;
 	glm::vec3 scale;
@@ -25,6 +26,7 @@ public:
 		position = pos;
 		orientation = ori;
 		scale = scaleFactor;
+		grabbed = false;
 	}
 
 	BoundingBox getTransformedBoundingBox() {

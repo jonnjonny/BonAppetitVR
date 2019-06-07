@@ -9,7 +9,8 @@
 Player::Player() {
 
   // Create array object and buffers. Remember to delete your buffers when the object is destroyed!
- 
+	leftObjectHeld = -1;
+	rightObjectHeld = -1;
 }
 
 
@@ -23,18 +24,22 @@ void Player::draw( GLuint shaderProgram, const glm::mat4 &projection, const glm:
   
 }
 
-BoundingBox Player::getTransformedBoundingBox() {
+BoundingBox Player::getTransformedBoundingBox(int side) {
 
 	BoundingBox box;
+	glm::vec3 controllerPos = (side == 0 ? leftControllerPosition : rightControllerPosition);
+	glm::quat controllerOri = (side == 0 ? leftControllerOrientation : rightControllerOrientation);
+	
+	box.v1 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v1, 1.0));
+	box.v2 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v2, 1.0));
+	box.v3 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v3, 1.0));
+	box.v4 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v4, 1.0));
+	box.v5 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v5, 1.0));
+	box.v6 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v6, 1.0));
+	box.v7 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v7, 1.0));
+	box.v8 = glm::vec3(glm::translate(glm::mat4(1.0), controllerPos)* glm::mat4_cast(controllerOri)* glm::vec4(b.v8, 1.0));
 
-	box.v1 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v1, 1.0));
-	box.v2 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v2, 1.0));
-	box.v3 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v3, 1.0));
-	box.v4 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v4, 1.0));
-	box.v5 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v5, 1.0));
-	box.v6 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v6, 1.0));
-	box.v7 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v7, 1.0));
-	box.v8 = glm::vec3(glm::translate(glm::mat4(1.0), rightControllerPosition)* glm::mat4_cast(rightControllerOrientation)* glm::vec4(b.v8, 1.0));
+
 
 	return box;
 }
