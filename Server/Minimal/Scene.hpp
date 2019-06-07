@@ -41,6 +41,7 @@ public:
 	  if (player == 0) {
 		  player1->updateState(p);
 		  if (cuttingBoard->detectCollision(player1->getTransformedBoundingBox())) {
+			  std::cout << "Collision Detected" << std::endl;
 			  cuttingBoard->position = player1->rightControllerPosition;
 			  cuttingBoard->orientation = player1->rightControllerOrientation;
 		  };
