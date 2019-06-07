@@ -164,6 +164,7 @@
     <ClInclude Include="ovr.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Pyramid.h" />
+    <ClInclude Include="RecipeBook.h" />
     <ClInclude Include="RiftApp.hpp" />
     <ClInclude Include="RiftManagerApp.hpp" />
     <ClInclude Include="Scene.hpp" />

@@ -65,7 +65,8 @@ class Scene {
   std::vector <glm::vec3> table_positions;
   std::vector <glm::vec3> table_center_positions;
   std::vector <TexturedCube*> tables;
-
+  std::vector <Model*> desks;
+  Model* desk;
 
   ///collection of props that constantly updating positions (maybe)
   std::vector<std::string> modelFileNames;
@@ -152,6 +153,9 @@ public:
     ///
     populatingTables();
 
+	desk = new Model("./Models/table.obj", 0.01f);
+
+
   }
 
   InitialData getInitialData() {
@@ -218,6 +222,8 @@ public:
 
 
 	  renderProcessingBar(projection, view, 0.75f);
+
+	  desk->Draw(woodShaderID, projection, view);
   }
 
 
