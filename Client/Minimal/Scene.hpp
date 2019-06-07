@@ -151,7 +151,10 @@ public:
     processingBarShaderID = LoadShaders( "processingBarShader.vert", "processingBarShader.frag" );
     boundingBoxShaderID = LoadShaders( "boundingbox.vert", "boundingbox.frag" );
     screenShaderID = LoadShaders( "screenShader.vert", "screenShader.frag" );
+    controllerShaderID = LoadShaders( "shader.vert", "shader.frag" );    
+	textureShaderID = LoadShaders( "textureFromPictureShader.vert","textureFromPictureShader.frag" );
 
+	textureId2 = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
     //for desert box
     desertbox = new Skybox( "desertbox" );
@@ -160,56 +163,30 @@ public:
     ///controller
     sphere = new Model( "./Models/sphere.obj");
 
-    // Shader Program
-    controllerShaderID = LoadShaders( "shader.vert", "shader.frag" );
-
     populatingTables();
-
-
-    //woodenBox = new Model("./Models/cube.obj");
-
 
     loadingModels();
 
     processingBar = new Model( "./Models/cube.obj" );
 
-    textureShaderID = LoadShaders( "textureFromPictureShader.vert",
-                                   "textureFromPictureShader.frag" );
 
-
-
-///for screen appearing from opening book
+	///for screen appearing from opening book
     screen = new Quad();
 	screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
                   //   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
                     // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    populateInFrameRenderingBuffers();
+    //populateInFrameRenderingBuffers();
 
 
     player1 = new Player();
     player2 = new Player();
 
-    ///
-    populatingTables();
 
     desk = new Model( "./Models/woodLog.obj", 1.0f );
+	recipeBookOpened = new Model("./Models/RecipeBookOpened.obj");
+	recipeBookClosed = new Model("./Models/RecipeBookClosed.obj");
 
-    props.at( ( int ) propsID::CHOPPING_BOARD )->toWorld =
-      glm::translate( glm::mat4( 1.0f ), table_center_positions[0] ) *
-      glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.01, 0.01, 0.01 ) ) *
-      glm::rotate( glm::mat4( 1.0f ), glm::radians( 90.0f ), glm::vec3( 0, 1, 0 ) );
-
-
-    textureFileNames.push_back( std::string( "RecipeBookClosed_Cover_diffuse" ) );
-
-    textureFileNames.push_back( std::string( "RecipeBookOpened_p1" ) );
-
-    textureFileNames.push_back( std::string( "ChoppingBoard" ) );
-    textureFileNames.push_back( std::string( "woodLog" ) );
-    loadTextureFiles();
-
-    recipeBookOpened = new Model( "./Models/RecipeBookOpened.obj" );
-    recipeBookClosed = new Model( "./Models/RecipeBookClosed.obj" );
+	loadTextureFiles();
 
 	populateLetterModels();
   }
@@ -256,6 +233,13 @@ public:
 
 
   void loadTextureFiles() {
+	textureFileNames.push_back(std::string("RecipeBookClosed_Cover_diffuse"));
+
+	textureFileNames.push_back(std::string("pages"));
+
+	textureFileNames.push_back(std::string("ChoppingBoard"));
+	textureFileNames.push_back(std::string("woodLog"));
+
 
     textureIds = std::vector <GLuint>( 31 );
     std::cout << textureIds.size() << std::endl;
@@ -265,7 +249,6 @@ public:
 	uniform_texture = glGetUniformLocation(textureShaderID, "texFramebuffer");
 
     for( GLuint i = 0; i < 4; i++ ) {
-
       //Setting up textures
       std::string fileName = "./JPG/" + textureFileNames[i] + ".jpg";
       data = stbi_load( fileName.c_str(), &width, &height, &numChannels, 0 );
@@ -279,8 +262,8 @@ public:
       glActiveTexture( GL_TEXTURE0 + i );
       glGenTextures( 1, &( textureIds[i] ) );
       glBindTexture( GL_TEXTURE_2D, textureIds[i] );
-      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR );
+      glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
       glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data );
@@ -398,24 +381,33 @@ public:
 
 
 
-
-
+	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture, 0);
     recipeBookClosed->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[3] + glm::vec3( 0, 0.03, 0 ) );
 	recipeBookClosed->Draw( textureShaderID, projection, view );
-
+	
+	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture, 1);
 	recipeBookOpened->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[2] + glm::vec3( 0, 0.03, 0 ) );
 	recipeBookOpened->Draw( textureShaderID, projection, view );
 
-	glUniform1i(uniform_texture, 2);
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture, 2); 
 	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
+	props.at((int)propsID::CHOPPING_BOARD)->toWorld =
+		glm::translate(glm::mat4(1.0f), table_center_positions[0]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)) *
+		glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-
-	glUniform1i(uniform_texture, 3);	
+	
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture, 3);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
     desk->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;
 	desk->Draw(textureShaderID, projection, view);
+
+	//glUniform1i(uniform_texture, 0);
+
   }
 
 
@@ -470,7 +462,7 @@ public:
 
   void render11Tables( const glm::mat4 &projection, const glm::mat4 &view ) {
     glm::mat4 scaleMatrix = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.25, 0.5, 0.25 ) );
-    for( int i = 0; i < 20; ++i ) {
+    for( int i = 0; i < tables.size(); ++i ) {
       tables[i]->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[i] ) * scaleMatrix;
       if( i != 12 )
         tables[i]->draw( skyBoxShaderID, projection, view );

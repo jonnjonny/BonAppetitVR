@@ -151,7 +151,7 @@ public:
 	  }*/
 
 	  // draw mesh
-	  glUseProgram(shaderId);
+	  //glUseProgram(shaderId);
 
 	  // Calculate the combination of the model and view (camera inverse) matrices
 	  glm::mat4 modelview = view * toWorld;

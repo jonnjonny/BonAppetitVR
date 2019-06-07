@@ -120,7 +120,7 @@ int main(int argc, char** argv) {
   }
 
  rpc::client c("localhost", 8080);
-  //rpc::client c("128.54.70.63", 8080);
+ // rpc::client c("128.54.70.63", 8080);
 
   result = BonAppetiteApp(&c).run();
 
