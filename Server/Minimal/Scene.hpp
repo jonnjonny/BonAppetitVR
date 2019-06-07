@@ -68,41 +68,60 @@ public:
 	  
 		players.at(player)->updateState(p);
 
-		if (!p.rightIndexTrigger && players.at(player)->rightObjectHeld > -1) {
-			appliances.at(players.at(player)->rightObjectHeld)->grabbed = false;
-			players.at(player)->rightObjectHeld = -1;
+
+
+		
+		for (int i = 0; i < tables.size(); i++) {
+			if (tables.at(i)->detectCollision(appliances.at(0)->getTransformedBoundingBox())) {
+				std::cout << "Colliding with Table: " << i << std::endl;
+			}
 		}
+		
 
 		if (!p.leftIndexTrigger && players.at(player)->leftObjectHeld > -1) {
 			appliances.at(players.at(player)->leftObjectHeld)->grabbed = false;
 			players.at(player)->leftObjectHeld = -1;
 		}
 
+		if (!p.rightIndexTrigger && players.at(player)->rightObjectHeld > -1) {
+			appliances.at(players.at(player)->rightObjectHeld)->grabbed = false;
+			players.at(player)->rightObjectHeld = -1;
+		}
+
 		
 		for (int i = 0; i < appliances.size(); i++) {
+
+			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(0)) && !appliances.at(i)->grabbed
+				&& players.at(player)->leftObjectHeld == -1 && p.leftIndexTrigger) {
+				appliances.at(i)->position = players.at(player)->leftControllerPosition;
+				appliances.at(i)->orientation = players.at(player)->leftControllerOrientation;
+				players.at(player)->rightObjectHeld = i;
+				appliances.at(i)->grabbed = true;
+			};
 
 			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(1))  && !appliances.at(i)->grabbed
 				&& players.at(player)->rightObjectHeld == -1 && p.rightIndexTrigger) {
 				appliances.at(i)->position = players.at(player)->rightControllerPosition;
 				appliances.at(i)->orientation = players.at(player)->rightControllerOrientation;
+				players.at(player)->leftObjectHeld = i;
+				appliances.at(i)->grabbed = true;
 			};
-
-			if
 		}
 
   }
 
   void loadInitialData (InitialData b) {
-	  player1->b = b.controller;
-	  player2->b = b.controller;
-	  cuttingBoard->objectSpaceBoundingBox = b.cuttingBoard;
+	  players.at(0)->b = b.controller;
+	  players.at(1)->b = b.controller;
+	  appliances.at(0)->objectSpaceBoundingBox = b.cuttingBoard;
+	  tables.at(0)->objectSpaceBoundingBox = b.table;
   }
 
   SceneGraph Scene::getGraph() {
 	  SceneGraph output;
-	  output.player1 = player1->getState();
-	  output.player2 = player2->getState();
-	  output.cuttingBoard = cuttingBoard->getState();
+	  output.player1 = players.at(0)->getState();
+	  output.player2 = players.at(1)->getState();
+	  output.cuttingBoard = appliances.at(0)->getState();
 	  return output;
 
   }

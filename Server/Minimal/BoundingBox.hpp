@@ -33,8 +33,9 @@ struct InitialData {
 
 	BoundingBox controller;
 	BoundingBox cuttingBoard;
+	BoundingBox table;
 
-	MSGPACK_DEFINE_MAP(controller, cuttingBoard);
+	MSGPACK_DEFINE_MAP(controller, cuttingBoard, table);
 
 };
 
