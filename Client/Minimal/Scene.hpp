@@ -38,9 +38,19 @@
 
 #include "Quad.hpp"
 
+#include <unordered_map>
+
 
 // a class for building and rendering cubes
 class Scene {
+
+	const unsigned int ascii_A{ 65 };
+	const unsigned int ascii_Z{ 90 };
+	const unsigned int ascii_a{ 97 };
+	const unsigned int ascii_z{ 122 };
+	const unsigned int ascii_comma{ 65 };
+	const unsigned int ascii_period{ 65 };
+	const unsigned int ascii_exclamation{ 65 };
 
   //Model* sphere;
 
@@ -129,6 +139,8 @@ class Scene {
 
   GLuint screenFbo, screenRbo, screenTexture;
 
+  
+  unordered_map<char, Model*> letters;
 
 public:
   Scene() {
@@ -168,12 +180,9 @@ public:
 
 ///for screen appearing from opening book
     screen = new Quad();
-    screen->toWorld = glm::translate( glm::mat4( 1.0f ),
-                                     glm::vec3( -1.2f * glm::sqrt( 2.0f ) / 2.0f, 0.0f,
-                                                0.0f ) )
-                     * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ),
-                                    glm::vec3( 0.0f, 1.0f, 0.0f ) )
-                     * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+	screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
+                  //   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
+                    // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
     populateInFrameRenderingBuffers();
 
 
@@ -183,7 +192,7 @@ public:
     ///
     populatingTables();
 
-    desk = new Model( "./Models/unitTableLog.obj", 1.0f );
+    desk = new Model( "./Models/woodLog.obj", 1.0f );
 
     props.at( ( int ) propsID::CHOPPING_BOARD )->toWorld =
       glm::translate( glm::mat4( 1.0f ), table_center_positions[0] ) *
@@ -201,9 +210,18 @@ public:
 
     recipeBookOpened = new Model( "./Models/RecipeBookOpened.obj", 1.0f );
     recipeBookClosed = new Model( "./Models/RecipeBookClosed.obj", 1.0f );
+
+
   }
 
 
+  void populateLetterModels() {
+	  letters = unordered_map<char, Model*>();
+	  for (int i = 0; i < 26; i++) {
+		  letters.insert({ (char)ascii_A, new Model((std::string("./Models/Letters/") + (char)ascii_A + std::string(".obj"))).c_str() });
+	  }
+	  
+  }
   void populateInFrameRenderingBuffers() {
     ///Framebuffers
     screenFbo = 0;
@@ -317,9 +335,9 @@ public:
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber ) {
 
 ///screen in-framebuffer rendering
-    glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glEnable( GL_DEPTH_TEST );
+    //glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
+    //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    //glEnable( GL_DEPTH_TEST );
     screen->draw( screenShaderID, projection, view );
     //set the view port ready for the texture scene
     //glViewport(0, 0, 1344, 1344);
@@ -376,10 +394,9 @@ public:
     renderProcessingBar( projection, view, 0.75f );
 
     //std::cout << glm::to_string(desk->toWorld) << std::endl;
+	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
     desk->toWorld =
-      glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *
-      glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.5, 0.5,
-                                                0.5 ) );// *glm::scale(glm::mat4(1.0f), glm::vec3(4.3, 4.6, 4.3));
+      glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;// *glm::scale(glm::mat4(1.0f), glm::vec3(4.3, 4.6, 4.3));
     // std::cout << glm::to_string(desk->toWorld) << std::endl;
 
     //loadTextureFiles(textureFileNames[1]);

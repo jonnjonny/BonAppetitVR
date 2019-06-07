@@ -34,12 +34,6 @@
     <None Include="sphere.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="screen.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="screen.vert">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="woodShader.frag">
       <Filter>Resource Files</Filter>
     </None>
@@ -64,10 +58,10 @@
     <None Include="boundingbox.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="cave.frag">
+    <None Include="screenShader.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="cave.vert">
+    <None Include="screenShader.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

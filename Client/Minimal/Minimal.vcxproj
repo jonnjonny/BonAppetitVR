@@ -134,13 +134,11 @@
   <ItemGroup>
     <None Include="boundingbox.frag" />
     <None Include="boundingbox.vert" />
-    <None Include="cave.frag" />
-    <None Include="cave.vert" />
     <None Include="packages.config" />
     <None Include="processingBarShader.frag" />
     <None Include="processingBarShader.vert" />
-    <None Include="screen.frag" />
-    <None Include="screen.vert" />
+    <None Include="screenShader.frag" />
+    <None Include="screenShader.vert" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
     <None Include="skybox.frag" />
