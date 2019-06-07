@@ -262,8 +262,9 @@ public:
 
     int width, height, numChannels;
     unsigned char* data;
+	uniform_texture = glGetUniformLocation(textureShaderID, "texFramebuffer");
 
-    for( int i = 0; i < 3; i++ ) {
+    for( GLuint i = 0; i < 4; i++ ) {
 
       //Setting up textures
       std::string fileName = "./JPG/" + textureFileNames[i] + ".jpg";
@@ -272,7 +273,7 @@ public:
         throw std::runtime_error( "Cannot load JPG file" );
       }
       else {
-        std::cout << textureFileNames[i] + " loaded successfully." << std::endl;
+        std::cout << textureFileNames[i] + " loaded successfully." << " id = " << i << std::endl;
       }
 
       glActiveTexture( GL_TEXTURE0 + i );
@@ -282,10 +283,8 @@ public:
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
       glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-      uniform_texture = glGetUniformLocation( textureShaderID, "texFramebuffer" );
       glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data );
 
-      glUniform1i( uniform_texture, i );
 
     }
 
@@ -316,38 +315,38 @@ public:
     output.cuttingBoard = props.at( 0 )->getObjectSpaceBoundingBox();
 
 
-	  BoundingBox table;
-	  xmin = ymin = zmin = -1.0f;
-	  xmax = ymax = zmax = 1.0f;
+	BoundingBox table;
+	xmin = ymin = zmin = -1.0f;
+	xmax = ymax = zmax = 1.0f;
 
-	  table.v1 = glm::vec3(xmin, ymax, zmax);
-	  table.v2 = glm::vec3(xmin, ymax, zmin);
-	  table.v3 = glm::vec3(xmax, ymax, zmin);
-	  table.v4 = glm::vec3(xmax, ymax, zmax);
-	  table.v5 = glm::vec3(xmin, ymin, zmax);
-	  table.v6 = glm::vec3(xmin, ymin, zmin);
-	  table.v7 = glm::vec3(xmax, ymin, zmin);
-	  table.v8 = glm::vec3(xmax, ymin, zmax);
+	table.v1 = glm::vec3(xmin, ymax, zmax);
+	table.v2 = glm::vec3(xmin, ymax, zmin);
+	table.v3 = glm::vec3(xmax, ymax, zmin);
+	table.v4 = glm::vec3(xmax, ymax, zmax);
+	table.v5 = glm::vec3(xmin, ymin, zmax);
+	table.v6 = glm::vec3(xmin, ymin, zmin);
+	table.v7 = glm::vec3(xmax, ymin, zmin);
+	table.v8 = glm::vec3(xmax, ymin, zmax);
 
-	  output.table = table;
+	output.table = table;
 
-	  return output;
+	return output;
   }
 
 
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber ) {
 
 ///screen in-framebuffer rendering
-    glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glEnable( GL_DEPTH_TEST );
+    //glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
+    //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    //glEnable( GL_DEPTH_TEST );
     //set the view port ready for the texture scene
-    glViewport(0, 0, 1344, 1344);
+   // glViewport(0, 0, 1344, 1344);
     //TODO: render whatever in the screen later
-	letters.at('A')->Draw(woodShaderID, projection, view);
+	//letters.at('A')->Draw(woodShaderID, projection, view);
     //re-bind to default
-    glBindFramebuffer( GL_FRAMEBUFFER, 1 );
-	screen->draw(screenShaderID, projection, view);
+    //glBindFramebuffer( GL_FRAMEBUFFER, 1 );
+	//screen->draw(screenShaderID, projection, view);
 
 /*
     if (eyeType == ovrEyeType::ovrEye_Left) {
@@ -373,9 +372,7 @@ public:
     //tables
     render11Tables( projection, view );
 
-    //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
-    props.at( ( int ) propsID::CHOPPING_BOARD )->Draw( textureShaderID, projection, view, true,
-                                                       boundingBoxShaderID );
+
 /*
 	  props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
 	  props.at((int)propsID::KNIFE)->Draw(woodShaderID, projection, view, 2);
@@ -398,25 +395,27 @@ public:
 
     renderProcessingBar( projection, view, 0.75f );
 
-    //std::cout << glm::to_string(desk->toWorld) << std::endl;
+
+
+
+
+
+	glUniform1i(uniform_texture, 0);
+    recipeBookClosed->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[3] + glm::vec3( 0, 0.03, 0 ) );
+	recipeBookClosed->Draw( textureShaderID, projection, view );
+
+	glUniform1i(uniform_texture, 1);
+	recipeBookOpened->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[2] + glm::vec3( 0, 0.03, 0 ) );
+	recipeBookOpened->Draw( textureShaderID, projection, view );
+
+	glUniform1i(uniform_texture, 2);
+	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
+	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	glUniform1i(uniform_texture, 3);	
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
-    desk->toWorld =
-      glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;// *glm::scale(glm::mat4(1.0f), glm::vec3(4.3, 4.6, 4.3));
-    // std::cout << glm::to_string(desk->toWorld) << std::endl;
-
-    //loadTextureFiles(textureFileNames[1]);
-    desk->Draw( textureShaderID, projection, view );
-
-
-    recipeBookClosed->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[3] +
-                                                                   glm::vec3( 0, 0.03, 0 ) );
-    recipeBookClosed->Draw( textureShaderID, projection, view );
-
-    recipeBookOpened->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[2] +
-                                                                   glm::vec3( 0, 0.03, 0 ) );
-    recipeBookOpened->Draw( textureShaderID, projection, view );
-
-
+    desk->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;
+	desk->Draw(textureShaderID, projection, view);
   }
 
 
