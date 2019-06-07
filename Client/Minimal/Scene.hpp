@@ -168,7 +168,7 @@ public:
 
 ///for screen appearing from opening book
     screen = new Quad();
-    sreen->toWorld = glm::translate( glm::mat4( 1.0f ),
+    screen->toWorld = glm::translate( glm::mat4( 1.0f ),
                                      glm::vec3( -1.2f * glm::sqrt( 2.0f ) / 2.0f, 0.0f,
                                                 0.0f ) )
                      * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ),
@@ -317,7 +317,7 @@ public:
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber ) {
 
 ///screen in-framebuffer rendering
-    glBindFramebuffer( GL_FRAMEBUFFER, fbos[eyeType * 3 + i] );
+    glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glEnable( GL_DEPTH_TEST );
     screen->draw( screenShaderID, projection, view );
@@ -516,8 +516,7 @@ public:
     props.at( ( int ) propsID::CHOPPING_BOARD )->toWorld = (
       glm::translate( glm::mat4( 1.0 ), s.cuttingBoard.position ) *
       glm::mat4_cast( s.cuttingBoard.orientation )
-      * glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.01, 0.01, 0.01 ) ) *
-      glm::rotate( glm::mat4( 1.0f ), glm::radians( 90.0f ), glm::vec3( 0, 1, 0 ) ) );
+      * glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.01, 0.01, 0.01 ) ));
 
   }
 
