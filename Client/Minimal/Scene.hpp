@@ -201,8 +201,8 @@ public:
 	props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[11]) * 
 		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
 
-	props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) * 
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0));
+	props.at((int)propsID::SUGAR_CUBES)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.5,0.5,0.5 ))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0));
 
 	props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
@@ -268,6 +268,7 @@ public:
 	textureFileNames.push_back(std::string("woodLog"));
 	textureFileNames.push_back(std::string("ChoppingBoard"));
 	textureFileNames.push_back(std::string("Knife_metal"));
+	textureFileNames.push_back(std::string("Sugar_cubes"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -329,7 +330,7 @@ public:
 	output.singleEgg = props.at((int)propsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
 	output.standMixer = props.at((int)propsID::STAND_MIXER)->getObjectSpaceBoundingBox();
 	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
-	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
+	output.sugarBowl = props.at((int)propsID::SUGAR_CUBES)->getObjectSpaceBoundingBox();
 	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
@@ -414,7 +415,9 @@ public:
 
 	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
-	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 6);
+	props.at((int)propsID::SUGAR_CUBES)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
@@ -486,7 +489,7 @@ public:
     props.push_back( new Model( "./Models/SingleEgg.obj" ) );
     props.push_back( new Model( "./Models/StandMixer.obj" ) );
     props.push_back( new Model( "./Models/teapot_s0.obj" ) );
-    props.push_back( new Model( "./Models/SugarBowl.obj" ) );
+    props.push_back( new Model( "./Models/Sugar_cubes.obj" ) );
 	props.push_back(new Model("./Models/EggCrate.obj"));
 
   }
@@ -578,10 +581,10 @@ public:
 		glm::translate(glm::mat4(1.0), s.barrel.position) *
 		glm::mat4_cast(s.barrel.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)));
-	props.at((int)propsID::SUGAR_BOWL)->toWorld = (
+	props.at((int)propsID::SUGAR_CUBES)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.sugarBowl.position) *
 		glm::mat4_cast(s.sugarBowl.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
 
 	props.at((int)propsID::EGG_CRATE)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.eggCrate.position) *
