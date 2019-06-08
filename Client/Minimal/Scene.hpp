@@ -269,6 +269,7 @@ public:
 	textureFileNames.push_back(std::string("ChoppingBoard"));
 	textureFileNames.push_back(std::string("Knife_metal"));
 	textureFileNames.push_back(std::string("Sugar_cubes"));
+	textureFileNames.push_back(std::string("HandMixer"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -411,6 +412,8 @@ public:
 
 	props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 7);
 	props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
@@ -487,7 +490,7 @@ public:
     props.push_back( new Model( "./Models/ChoppingBoard.obj" ) );
     props.push_back( new Model( "./Models/Knife.obj" ) );
     props.push_back( new Model( "./Models/SingleEgg.obj" ) );
-    props.push_back( new Model( "./Models/StandMixer.obj" ) );
+    props.push_back( new Model( "./Models/HandMixer.obj" ) );
     props.push_back( new Model( "./Models/teapot_s0.obj" ) );
     props.push_back( new Model( "./Models/Sugar_cubes.obj" ) );
 	props.push_back(new Model("./Models/EggCrate.obj"));
