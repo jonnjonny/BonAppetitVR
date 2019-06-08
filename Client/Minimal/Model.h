@@ -47,6 +47,8 @@ public:
 
   float xmin, ymin, zmin, xmax, ymax, zmax;
 
+  bool isVisible;
+
   string directory;
 
   BoundingBoxLines* box;
@@ -55,7 +57,8 @@ public:
 
   /*  Functions   */
   // constructor, expects a filepath to a 3D model.
-  Model(string const &path , bool gamma = false) : gammaCorrection(gamma) {
+  Model(string const &path , bool visible = true, bool gamma = false) : gammaCorrection(gamma) {
+	  isVisible = visible;
 	  xmin = std::numeric_limits<float>::max();
 	  ymin = std::numeric_limits<float>::max();
 	  zmin = std::numeric_limits<float>::max();
