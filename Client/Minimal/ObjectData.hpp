@@ -8,11 +8,12 @@ struct ObjectData {
 
 	glm::vec3 position;
 	glm::quat orientation;
+	bool visible;
 	float xmin, xmax, ymin, ymax, zmin, zmax;
 
 	MSGPACK_DEFINE_MAP(position.x, position.y, position.z,
-		orientation.x, orientation.y, orientation.z, orientation.w,
-		xmin,xmax,ymin,ymax,zmin,zmax);
+		orientation.x, orientation.y, orientation.z, orientation.w, visible,
+		xmin, xmax, ymin, ymax, zmin, zmax);
 
 };
 

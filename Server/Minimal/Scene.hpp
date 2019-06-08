@@ -26,6 +26,7 @@ class Scene {
   std::vector<Player*> players;
   std::vector<KitchenItem*> tables;
   std::vector<KitchenItem*> appliances;
+  std::vector<KitchenItem*> ingredients;
 
 
 
