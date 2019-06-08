@@ -368,7 +368,7 @@ public:
 */
 
 
-
+	  
 
     desertbox->draw( skyBoxShaderID, projection, view );
 
@@ -384,32 +384,28 @@ public:
 
 
 
-
-    //rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
-    props.at( ( int ) propsID::CHOPPING_BOARD )->Draw( textureShaderID, projection, view, true,
-                                                       boundingBoxShaderID );
-
-	 props.at((int)propsID::KNIFE)->Draw(woodShaderID, projection, view, true,
-		 boundingBoxShaderID);
-
-	  props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true,
-		  boundingBoxShaderID);
-
-	  props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true,
-		  boundingBoxShaderID);
-
-	  props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true,
-		  boundingBoxShaderID);
-
-	  props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true,
-		  boundingBoxShaderID);
- 
     player1->draw( shaderID, projection, view, playerNumber == 0 );
     player2->draw( shaderID, projection, view, playerNumber == 1 );
 
 
     renderProcessingBar( projection, view, 0.75f );
 
+
+
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture, 2);
+	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
+	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	props.at((int)propsID::KNIFE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 
 
@@ -423,14 +419,7 @@ public:
 	recipeBookOpened->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[2] + glm::vec3( 0, 0.03, 0 ) );
 	recipeBookOpened->Draw( textureShaderID, projection, view );
 
-	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture, 2); 
-	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
-	props.at((int)propsID::CHOPPING_BOARD)->toWorld =
-		glm::translate(glm::mat4(1.0f), table_center_positions[0]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)) *
-		glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
-	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture, 3);
@@ -438,7 +427,6 @@ public:
     desk->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;
 	desk->Draw(textureShaderID, projection, view);
 
-	//glUniform1i(uniform_texture, 0);
 
   }
 

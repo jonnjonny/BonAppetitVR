@@ -70,6 +70,8 @@ public:
 
 
   // draws the model, and thus all its meshes
+
+  //draw function for pig model only
   void
   Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view , std::unordered_map<int,int> colorMap, bool debug, GLuint boxShaderId) {
 	
@@ -94,6 +96,7 @@ public:
 	  }
   }
 
+  //draw with bounding box
   // overload draw
   void
 	  Draw(GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view, bool debug, GLuint boxShaderId) {
@@ -106,6 +109,8 @@ public:
 		  box->toWorld = toWorld;
 		  box->draw(boxShaderId, projection, view, 0);
 	  }
+	  glUseProgram(shaderId);
+
   }
 
   void loadBoundingBoxCoordinates() {
