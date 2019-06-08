@@ -204,6 +204,8 @@ public:
 	props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) * 
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0));
 
+	props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 
 
 
@@ -328,7 +330,7 @@ public:
 	output.standMixer = props.at((int)propsID::STAND_MIXER)->getObjectSpaceBoundingBox();
 	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
 	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
-
+	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
 	xmax = ymax = zmax = 1.0f;
@@ -414,6 +416,8 @@ public:
 
 	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
+	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
 
 
 	glUseProgram(textureShaderID);
@@ -483,6 +487,7 @@ public:
     props.push_back( new Model( "./Models/StandMixer.obj" ) );
     props.push_back( new Model( "./Models/teapot_s0.obj" ) );
     props.push_back( new Model( "./Models/SugarBowl.obj" ) );
+	props.push_back(new Model("./Models/EggCrate.obj"));
 
   }
 
@@ -576,6 +581,11 @@ public:
 	props.at((int)propsID::SUGAR_BOWL)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.sugarBowl.position) *
 		glm::mat4_cast(s.sugarBowl.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+
+	props.at((int)propsID::EGG_CRATE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.eggCrate.position) *
+		glm::mat4_cast(s.eggCrate.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
 
   }

@@ -13,6 +13,7 @@ enum class propsID {
 	STAND_MIXER,
 	BARREL,
 	SUGAR_BOWL,
+	EGG_CRATE
 };
 
 enum class SizeOption {
