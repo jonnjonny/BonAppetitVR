@@ -116,6 +116,8 @@ public:
 
   }
 
+  //for multi texture
+
   void loadBoundingBoxCoordinates() {
 	  std::vector<glm::vec3> vert = getObjectSpaceBoundingBoxVerticesAsVector();
 	  b.v1 = vert.at(0);
