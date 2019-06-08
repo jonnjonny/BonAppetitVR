@@ -265,6 +265,7 @@ public:
 
 	textureFileNames.push_back(std::string("woodLog"));
 	textureFileNames.push_back(std::string("ChoppingBoard"));
+	textureFileNames.push_back(std::string("Knife_metal"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -401,7 +402,8 @@ public:
 	glUniform1i(uniform_texture_from_picture, 4);
 	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
 	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 5);
 	props.at((int)propsID::KNIFE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
