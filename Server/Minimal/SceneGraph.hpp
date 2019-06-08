@@ -13,9 +13,10 @@ struct SceneGraph {
 	ObjectData standMixer;
 	ObjectData barrel;
 	ObjectData sugarBowl;
+	ObjectData eggCrate;
 
 
-	MSGPACK_DEFINE_MAP(player1, player2, cuttingBoard, knife, singleEgg, standMixer, barrel, sugarBowl);
+	MSGPACK_DEFINE_MAP(player1, player2, cuttingBoard, knife, singleEgg, standMixer, barrel, sugarBowl, eggCrate);
 
 };
 
