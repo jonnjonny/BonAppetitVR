@@ -110,7 +110,7 @@ class Scene {
   GLuint textureShaderID, textureId, textureId2;
 
 
-  GLint uniform_texture, attribute_texture;
+  GLint uniform_texture_from_picture, attribute_texture, uniform_texture_from_screen;
 
 
   //processing bar specs
@@ -225,6 +225,7 @@ public:
 	  }
 	  
   }
+
   void populateInFrameRenderingBuffers() {
     ///Framebuffers
     screenFbo = 0;
@@ -233,6 +234,7 @@ public:
 
 
     screenTexture = 0;
+	glActiveTexture(GL_TEXTURE0);
     glGenTextures( 1, &screenTexture );
     glBindTexture( GL_TEXTURE_2D, screenTexture );
     glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0, GL_RGB,
@@ -252,6 +254,7 @@ public:
 
     glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, screenRbo );
 
+
   }
 
 
@@ -260,8 +263,8 @@ public:
 
 	textureFileNames.push_back(std::string("pages"));
 
-	textureFileNames.push_back(std::string("ChoppingBoard"));
 	textureFileNames.push_back(std::string("woodLog"));
+	textureFileNames.push_back(std::string("ChoppingBoard"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -269,17 +272,17 @@ public:
 
     int width, height, numChannels;
     unsigned char* data;
-	uniform_texture = glGetUniformLocation(textureShaderID, "texFramebuffer");
+	uniform_texture_from_picture = glGetUniformLocation(textureShaderID, "texFramebuffer");
 
-    for( GLuint i = 0; i < 4; i++ ) {
+    for( GLuint i = 1; i < textureFileNames.size()+1; i++ ) { //skipping index 0
       //Setting up textures
-      std::string fileName = "./JPG/" + textureFileNames[i] + ".jpg";
+      std::string fileName = "./JPG/" + textureFileNames[i-1] + ".jpg";
       data = stbi_load( fileName.c_str(), &width, &height, &numChannels, 0 );
       if( !data ) {
         throw std::runtime_error( "Cannot load JPG file" );
       }
       else {
-        std::cout << textureFileNames[i] + " loaded successfully." << " id = " << i << std::endl;
+        std::cout << textureFileNames[i-1] + " loaded successfully." << " id = " << i << std::endl;
       }
 
       glActiveTexture( GL_TEXTURE0 + i );
@@ -347,16 +350,18 @@ public:
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber ) {
 
 ///screen in-framebuffer rendering
-    //glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
-    //glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    //glEnable( GL_DEPTH_TEST );
+    glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glEnable( GL_DEPTH_TEST );
     //set the view port ready for the texture scene
    // glViewport(0, 0, 1344, 1344);
     //TODO: render whatever in the screen later
-	//letters.at('A')->Draw(woodShaderID, projection, view);
+	glUseProgram(woodShaderID);
+	letters.at('A')->Draw(woodShaderID, projection, view);
     //re-bind to default
-    //glBindFramebuffer( GL_FRAMEBUFFER, 1 );
-	//screen->draw(screenShaderID, projection, view);
+    glBindFramebuffer( GL_FRAMEBUFFER, 1 );
+	  glUseProgram(screenShaderID);
+	screen->draw(screenShaderID, projection, view);
 
 /*
     if (eyeType == ovrEyeType::ovrEye_Left) {
@@ -393,7 +398,7 @@ public:
 
 
 	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture, 2);
+	glUniform1i(uniform_texture_from_picture, 4);
 	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
 	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
@@ -410,19 +415,19 @@ public:
 
 
 	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture, 0);
+	glUniform1i(uniform_texture_from_picture, 1);
     recipeBookClosed->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[3] + glm::vec3( 0, 0.03, 0 ) );
 	recipeBookClosed->Draw( textureShaderID, projection, view );
 	
 	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture, 1);
+	glUniform1i(uniform_texture_from_picture, 2);
 	recipeBookOpened->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[2] + glm::vec3( 0, 0.03, 0 ) );
 	recipeBookOpened->Draw( textureShaderID, projection, view );
 
 
 	
 	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture, 3);
+	glUniform1i(uniform_texture_from_picture, 3);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
     desk->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;
 	desk->Draw(textureShaderID, projection, view);
