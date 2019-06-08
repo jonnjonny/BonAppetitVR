@@ -7,6 +7,7 @@
 
 
 #include <vector>
+#include <unordered_map>
 #include "Core.h"
 #include "Player.h"
 #include "rpc/server.h"
@@ -27,6 +28,7 @@ class Scene {
   std::vector<KitchenItem*> tables;
   std::vector<KitchenItem*> appliances;
   std::vector<KitchenItem*> ingredients;
+  std::unordered_map<int, int> propToIngredient;
 
 
 
@@ -37,12 +39,18 @@ public:
 	players.push_back(new Player());
 	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))),glm::vec3(0.01,0.01,0.01))); //CHOPPING BOARD
 	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.475, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.02, 0.02, 0.02))); //KNIFE
-	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.005, 0.005, 0.005))); //SINGLE EGG
 	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.01, 0.01, 0.01))); //STAND MIXER
 	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0))), glm::vec3(1, 1, 1))); //BARREL
 	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0))), glm::vec3(0.05, 0.05, 0.05))); //SUGAR BOWL
-	appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f),glm::vec3(0,1,0))), glm::vec3(0.05, 0.05, 0.05)));
+	appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f),glm::vec3(0,1,0))), glm::vec3(0.05, 0.05, 0.05))); //EGG CRATE
+
+
+	//Ingredients
+
+	ingredients.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.005, 0.005, 0.005),false)); //SINGLE EGG
 	loadTableCoordinates();
+
+	propToIngredient = { {(int)propsID::EGG_CRATE,(int)ingredientsID::SINGLE_EGG} };
   }
 
   void loadTableCoordinates() {
@@ -75,7 +83,34 @@ public:
 	  
 		players.at(player)->updateState(p);
 
-		if (!p.leftIndexTrigger && players.at(player)->leftObjectHeld > -1) {
+		if (!p.rightIndexTrigger && p.rightHandTrigger) {
+			BoundingBox playerBox = players.at(player)->getTransformedBoundingBox(1);
+			if (players.at(player)->rightObjectHeld == -1) {
+				for (int i = 0; i < appliances.size(); i++) {
+					if (propToIngredient.find(i) != propToIngredient.end() && appliances.at(i)->detectCollision(playerBox)) {
+
+						ingredients.at(propToIngredient.at(i))->position = players.at(player)->rightControllerPosition;
+						ingredients.at(propToIngredient.at(i))->orientation = players.at(player)->rightControllerOrientation;
+						ingredients.at(propToIngredient.at(i))->isVisible = true;
+						players.at(player)->rightObjectHeld = propToIngredient.at(i);
+						players.at(player)->rightHoldingProp = false;
+						ingredients.at(propToIngredient.at(i))->grabbed = true;
+
+					}
+				}
+			}
+			else {
+				if (!players.at(player)->rightHoldingProp && ingredients.at(players.at(player)->rightObjectHeld)->detectCollision(playerBox)) {
+					ingredients.at(players.at(player)->rightObjectHeld)->position = players.at(player)->rightControllerPosition;
+					ingredients.at(players.at(player)->rightObjectHeld)->orientation = players.at(player)->rightControllerOrientation;
+					ingredients.at(players.at(player)->rightObjectHeld)->isVisible = true;
+					players.at(player)->rightHoldingProp = false;
+					ingredients.at(players.at(player)->rightObjectHeld)->grabbed = true;
+				}
+			}
+		}
+
+		if (!p.leftIndexTrigger && players.at(player)->leftHoldingProp && players.at(player)->leftObjectHeld > -1) {
 			BoundingBox leftApplianceBox = appliances.at(players.at(player)->leftObjectHeld)->getTransformedBoundingBox();
 			for (int i = 0; i < tables.size(); i++) {
 				if (tables.at(i)->detectCollision(leftApplianceBox)) {
@@ -88,7 +123,7 @@ public:
 
 
 
-		if (!p.rightIndexTrigger && players.at(player)->rightObjectHeld > -1) {
+		if (!p.rightIndexTrigger && players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
 			BoundingBox rightApplianceBox = appliances.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox();
 
 			for (int i = 0; i < tables.size(); i++) {
@@ -103,22 +138,31 @@ public:
 			players.at(player)->rightObjectHeld = -1;
 		}
 
+		if (!p.rightHandTrigger && !players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
+			
+			ingredients.at(players.at(player)->rightObjectHeld)->grabbed = false;
+			ingredients.at(players.at(player)->rightObjectHeld)->isVisible= false;
+			players.at(player)->rightObjectHeld = -1;
+		}
+
 		
 		for (int i = 0; i < appliances.size(); i++) {
 
 			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(0))
-			    && p.leftIndexTrigger && ((players.at(player)->leftObjectHeld == -1 && !appliances.at(i)->grabbed) || players.at(player)->leftObjectHeld == i)) {
+			    && p.leftIndexTrigger && !p.leftHandTrigger && ((players.at(player)->leftObjectHeld == -1 && !appliances.at(i)->grabbed) || (players.at(player)->leftHoldingProp && players.at(player)->leftObjectHeld == i))) {
 				appliances.at(i)->position = players.at(player)->leftControllerPosition;
 				appliances.at(i)->orientation = players.at(player)->leftControllerOrientation;
 				players.at(player)->leftObjectHeld = i;
+				players.at(player)->leftHoldingProp = true;
 				appliances.at(i)->grabbed = true;
 			};
 
 			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(1))
-				&& p.rightIndexTrigger && ((players.at(player)->rightObjectHeld == -1 && !appliances.at(i)->grabbed) || players.at(player)->rightObjectHeld == i)) {
+				&& p.rightIndexTrigger && !p.rightHandTrigger && ((players.at(player)->rightObjectHeld == -1 && !appliances.at(i)->grabbed) || (players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld == i))) {
 				appliances.at(i)->position = players.at(player)->rightControllerPosition;
 				appliances.at(i)->orientation = players.at(player)->rightControllerOrientation;
 				players.at(player)->rightObjectHeld = i;
+				players.at(player)->rightHoldingProp = true;
 				appliances.at(i)->grabbed = true;
 			};
 
@@ -131,11 +175,13 @@ public:
 	  players.at(1)->b = b.controller;
 	  appliances.at(0)->objectSpaceBoundingBox = b.cuttingBoard;
 	  appliances.at(1)->objectSpaceBoundingBox = b.knife;
-	  appliances.at(2)->objectSpaceBoundingBox = b.singleEgg;
-	  appliances.at(3)->objectSpaceBoundingBox = b.standMixer;
-	  appliances.at(4)->objectSpaceBoundingBox = b.barrel;
-	  appliances.at(5)->objectSpaceBoundingBox = b.sugarBowl;
-	  appliances.at(6)->objectSpaceBoundingBox = b.eggCrate;
+	  
+	  appliances.at(2)->objectSpaceBoundingBox = b.standMixer;
+	  appliances.at(3)->objectSpaceBoundingBox = b.barrel;
+	  appliances.at(4)->objectSpaceBoundingBox = b.sugarBowl;
+	  appliances.at(5)->objectSpaceBoundingBox = b.eggCrate;
+
+	  ingredients.at(0)->objectSpaceBoundingBox = b.singleEgg;
 	  for(int i = 0; i < tables.size(); i++) tables.at(i)->objectSpaceBoundingBox = b.table;
   }
 
@@ -145,11 +191,11 @@ public:
 	  output.player2 = players.at(1)->getState();
 	  output.cuttingBoard = appliances.at(0)->getState();
 	  output.knife = appliances.at(1)->getState();
-	  output.singleEgg = appliances.at(2)->getState();
-	  output.standMixer = appliances.at(3)->getState();
-	  output.barrel = appliances.at(4)->getState();
-	  output.sugarBowl = appliances.at(5)->getState();
-	  output.eggCrate = appliances.at(6)->getState();
+	  output.singleEgg = ingredients.at(0)->getState();
+	  output.standMixer = appliances.at(2)->getState();
+	  output.barrel = appliances.at(3)->getState();
+	  output.sugarBowl = appliances.at(4)->getState();
+	  output.eggCrate = appliances.at(5)->getState();
 	  return output;
 
   }

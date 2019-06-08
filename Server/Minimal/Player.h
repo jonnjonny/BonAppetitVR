@@ -37,6 +37,8 @@ public:
   glm::vec3 rightControllerPosition;
   glm::quat leftControllerOrientation;
   glm::quat rightControllerOrientation;
+  bool leftHoldingProp;
+  bool rightHoldingProp;
   int leftObjectHeld;
   int rightObjectHeld;
 

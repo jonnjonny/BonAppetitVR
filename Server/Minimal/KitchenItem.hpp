@@ -22,15 +22,17 @@ public:
 	glm::vec3 originalPosition;
 	glm::quat originalOrientation;
 	glm::vec3 scale;
+	bool isVisible;
 	 
 
-	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor) {
+	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor, bool visible = true) {
 		position = pos;
 		orientation = ori;
 		originalPosition = pos;
 		originalOrientation = ori;
 		scale = scaleFactor;
 		grabbed = false;
+		isVisible = visible;
 	}
 
 	BoundingBox getTransformedBoundingBox() {
@@ -136,6 +138,7 @@ public:
 		ObjectData output;
 		output.position = position;
 		output.orientation = orientation;
+		output.visible = isVisible;
 		return output;
 	}
 };

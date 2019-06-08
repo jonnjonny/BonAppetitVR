@@ -327,13 +327,17 @@ public:
 
     output.controller = controller;
 
+	//Props
     output.cuttingBoard = props.at((int)propsID::CHOPPING_BOARD)->getObjectSpaceBoundingBox();
 	output.knife = props.at((int)propsID::KNIFE)->getObjectSpaceBoundingBox();
-	output.singleEgg = props.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
 	output.standMixer = props.at((int)propsID::STAND_MIXER)->getObjectSpaceBoundingBox();
 	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
 	output.sugarBowl = props.at((int)propsID::SUGAR_CUBES)->getObjectSpaceBoundingBox();
 	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
+
+	//Ingredients
+	output.singleEgg = ingredients.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
+
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
 	xmax = ymax = zmax = 1.0f;
@@ -422,9 +426,9 @@ public:
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	//Ingredients
-
-	ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-
+	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
+		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
 
 
 	glUseProgram(textureShaderID);
@@ -593,7 +597,8 @@ public:
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
 
 	//Ingredients
-	props.at((int)ingredientsID::SINGLE_EGG)->toWorld = (
+	ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible = s.singleEgg.visible;
+	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.singleEgg.position) *
 		glm::mat4_cast(s.singleEgg.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));

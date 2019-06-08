@@ -16,16 +16,15 @@ class BonAppetiteApp : public RiftApp
 	std::shared_ptr<Scene> scene;
 	rpc::client* c;
 	int playerNumber;
-	bool buttonPressed;
-	bool stickShifted;
-	bool rightIndexTrigger;
 	bool leftIndexTrigger;
+	bool rightIndexTrigger;
+	bool leftHandTrigger;
+	bool rightHandTrigger;
 
 public:
 	BonAppetiteApp(rpc::client* connection)
 	{
-		buttonPressed = false;
-		stickShifted = false;
+		
 		c = connection;
 		playerNumber = c->call("getPlayerNumber").as<int>();
 	}
@@ -65,6 +64,8 @@ protected:
 		output.xmax = output.ymax = output.zmax = 0.01;
 		output.rightIndexTrigger = rightIndexTrigger;
 		output.leftIndexTrigger = leftIndexTrigger;
+		output.leftHandTrigger = leftHandTrigger;
+		output.rightHandTrigger = rightHandTrigger;
 
 		if (playerNumber == 1) {
 			output.headPos = glm::vec3(2.0,0.0,0.0) + output.headPos;
@@ -92,6 +93,20 @@ protected:
 			}
 			else {
 				leftIndexTrigger = false;
+			}
+
+			if (inputState.HandTrigger[ovrHand_Left] > 0.5f) {
+				leftHandTrigger = true;
+			}
+			else {
+				leftHandTrigger = false;
+			}
+
+			if (inputState.HandTrigger[ovrHand_Right] > 0.5f) {
+				rightHandTrigger = true;
+			}
+			else {
+				rightHandTrigger = false;
 			}
 		}
 
