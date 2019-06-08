@@ -102,6 +102,7 @@ class Scene {
 
 
   std::vector <Model*> props;
+  std::vector <Model*> ingredients;
   //std::vector<std::string> props;
 
 
@@ -142,6 +143,8 @@ class Scene {
   
   unordered_map<char, Model*> letters;
 
+  Model* hands[2];
+
 public:
   Scene() {
     // Shader Program
@@ -170,6 +173,11 @@ public:
     processingBar = new Model( "./Models/cube.obj" );
 
 
+	//hands[0] = new Model("./Models/Hand_left.obj");
+	//hands[1] = new Model("./Models/Hand_right.obj");
+
+
+
 	///for screen appearing from opening book
     screen = new Quad();
 	screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
@@ -186,17 +194,17 @@ public:
 	recipeBookOpened = new Model("./Models/RecipeBookOpened.obj");
 	recipeBookClosed = new Model("./Models/RecipeBookClosed.obj");
 
-
+	//Props
 	props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *
 		glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* 
 		glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
 
-	props.at((int)propsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) * 
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* 
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-
-	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) * 
+	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	props.at((int)propsID::STAND_MIXER_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[6]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1, 0, 0));
+	props.at((int)propsID::STAND_MIXER_MACHINE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 
 	props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[11]) * 
 		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
@@ -206,6 +214,11 @@ public:
 
 	props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+
+	//Ingredients
+	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 
 
 
@@ -269,7 +282,7 @@ public:
 	textureFileNames.push_back(std::string("ChoppingBoard"));
 	textureFileNames.push_back(std::string("Knife_metal"));
 	textureFileNames.push_back(std::string("Sugar_cubes"));
-	textureFileNames.push_back(std::string("HandMixer"));
+	textureFileNames.push_back(std::string("StandMixer_diffuse"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -328,7 +341,7 @@ public:
 
     output.cuttingBoard = props.at((int)propsID::CHOPPING_BOARD)->getObjectSpaceBoundingBox();
 	output.knife = props.at((int)propsID::KNIFE)->getObjectSpaceBoundingBox();
-	output.singleEgg = props.at((int)propsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
+	output.singleEgg = props.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
 	output.standMixer = props.at((int)propsID::STAND_MIXER)->getObjectSpaceBoundingBox();
 	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
 	output.sugarBowl = props.at((int)propsID::SUGAR_CUBES)->getObjectSpaceBoundingBox();
@@ -410,11 +423,11 @@ public:
 	glUniform1i(uniform_texture_from_picture, 5);
 	props.at((int)propsID::KNIFE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
-	props.at((int)propsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 7);
-	props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	//props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::STAND_MIXER_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	//props.at((int)propsID::STAND_MIXER_MACHINE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
@@ -424,17 +437,21 @@ public:
 
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
+	//Ingredients
+
+	ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
 
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 1);
     recipeBookClosed->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[3] + glm::vec3( 0, 0.03, 0 ) );
-	recipeBookClosed->Draw( textureShaderID, projection, view );
+	//recipeBookClosed->Draw( textureShaderID, projection, view );
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 2);
 	recipeBookOpened->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[2] + glm::vec3( 0, 0.03, 0 ) );
-	recipeBookOpened->Draw( textureShaderID, projection, view );
+	//recipeBookOpened->Draw( textureShaderID, projection, view );
 
 
 	
@@ -489,11 +506,14 @@ public:
   void loadingModels() {
     props.push_back( new Model( "./Models/ChoppingBoard.obj" ) );
     props.push_back( new Model( "./Models/Knife.obj" ) );
-    props.push_back( new Model( "./Models/SingleEgg.obj" ) );
-    props.push_back( new Model( "./Models/HandMixer.obj" ) );
+    props.push_back( new Model( "./Models/StandMixer.obj" ) );
+	props.push_back(new Model("./Models/StandMixer_bowl.obj"));
+	props.push_back(new Model("./Models/StandMixer_machine.obj"));
     props.push_back( new Model( "./Models/teapot_s0.obj" ) );
     props.push_back( new Model( "./Models/Sugar_cubes.obj" ) );
 	props.push_back(new Model("./Models/EggCrate.obj"));
+
+	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
 
   }
 
@@ -572,11 +592,11 @@ public:
 		glm::translate(glm::mat4(1.0), s.knife.position) *
 		glm::mat4_cast(s.knife.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02)));
-	props.at((int)propsID::SINGLE_EGG)->toWorld = (
-		glm::translate(glm::mat4(1.0), s.singleEgg.position) *
-		glm::mat4_cast(s.singleEgg.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));
 	props.at((int)propsID::STAND_MIXER)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.standMixer.position) *
+		glm::mat4_cast(s.standMixer.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)));
+	props.at((int)propsID::STAND_MIXER_MACHINE)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.standMixer.position) *
 		glm::mat4_cast(s.standMixer.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)));
@@ -593,6 +613,12 @@ public:
 		glm::translate(glm::mat4(1.0), s.eggCrate.position) *
 		glm::mat4_cast(s.eggCrate.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+
+	//Ingredients
+	props.at((int)ingredientsID::SINGLE_EGG)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.singleEgg.position) *
+		glm::mat4_cast(s.singleEgg.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));
 
   }
 

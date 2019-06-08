@@ -1,5 +1,4 @@
-#ifndef _PLAYER_H_
-#define _PLAYER_H_
+
 
 #include "ovr.hpp"
 
@@ -16,7 +15,8 @@
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
-
+#ifndef _PLAYER_H_
+#define _PLAYER_H_
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
@@ -35,7 +35,7 @@ public:
 
   Model* head;
   Model* leftHand;
-  Cube* rightHand;
+  Model* rightHand;
   Model* origin;
 
 
