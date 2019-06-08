@@ -9,12 +9,21 @@
 enum class propsID {
 	CHOPPING_BOARD,
 	KNIFE,
-	SINGLE_EGG,
 	STAND_MIXER,
 	BARREL,
 	SUGAR_CUBES,
 	EGG_CRATE,
 	
+};
+
+enum class ingredientsID {
+	SINGLE_EGG,
+	CRACKED_EGG,
+	SUGAR_CUBE,
+	FLOUR,
+	WATER,
+	CHOCOLATE,
+	STRAWBERRY
 };
 
 enum class SizeOption {
