@@ -38,8 +38,8 @@
 
 #include "Quad.hpp"
 
-#include <unordered_map>
 
+//#include "text.h"
 
 // a class for building and rendering cubes
 class Scene {
@@ -161,7 +161,7 @@ public:
 
     //for desert box
     desertbox = new Skybox( "desertbox" );
-    desertbox->toWorld = glm::scale( glm::mat4( 1.0f ), glm::vec3( 5.0f ) );
+    desertbox->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))*glm::scale( glm::mat4( 1.0f ), glm::vec3( 5.0f ) );
 
     ///controller
     sphere = new Model( "./Models/sphere.obj");
@@ -180,7 +180,7 @@ public:
 
 	///for screen appearing from opening book
     screen = new Quad();
-	screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -20.0f));
+	screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
                   //   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
                     // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
     populateInFrameRenderingBuffers();
@@ -190,7 +190,7 @@ public:
     player2 = new Player();
 
 
-    desk = new Model( "./Models/woodLog.obj", 1.0f );
+    desk = new Model( "./Models/Oven.obj", 1.0f );
 	recipeBookOpened = new Model("./Models/RecipeBookOpened.obj");
 	recipeBookClosed = new Model("./Models/RecipeBookClosed.obj");
 
@@ -292,6 +292,7 @@ public:
 	textureFileNames.push_back(std::string("Knife_metal"));
 	textureFileNames.push_back(std::string("Sugar_cubes"));
 	textureFileNames.push_back(std::string("StandMixer_diffuse"));
+	textureFileNames.push_back(std::string("Hand"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -391,7 +392,7 @@ public:
 		  //desertbox->draw( skyBoxShaderID, projection, view );
 		  //glClearColor(153.0f/255.0f, 255.0f / 255.0f, 153.0f / 255.0f, 1.0f);
 		  glUseProgram(woodShaderID);
-		  letters.at('A')->Draw(woodShaderID, projection, view);
+		  letters.at('A')->Draw(woodShaderID, projection, iView);
 		  //re-bind to default
 		  glBindFramebuffer(GL_FRAMEBUFFER, 1);
 		  glUseProgram(screenShaderID);
@@ -408,8 +409,8 @@ public:
 
 	  
 
-    //desertbox->draw( skyBoxShaderID, projection, view );
-	glClearColor(255.0f/255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f);
+    desertbox->draw( skyBoxShaderID, projection, view );
+	//glClearColor(255.0f/255.0f, 254.0f / 255.0f, 204.0f / 255.0f, 1.0f);
 
 
     ///controller
@@ -430,6 +431,11 @@ public:
 
    // renderProcessingBar( projection, view, 0.75f );
 
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 8);
+	player1->leftHand->Draw(textureShaderID, projection, view);
+	player1->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
 
 	
 	glUseProgram(textureShaderID);
@@ -445,10 +451,10 @@ public:
 	//props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	props.at((int)propsID::STAND_MIXER_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	//props.at((int)propsID::STAND_MIXER_MACHINE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-
+	
 	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
-	glUseProgram(textureShaderID);
+	//glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 6);
 	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
@@ -476,7 +482,7 @@ public:
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 3);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
-    desk->toWorld = glm::translate( glm::mat4( 1.0f ), table_positions[12] - glm::vec3( 0, 0.5, 0 ) ) *scaleMatrix;
+	desk->toWorld = glm::translate(glm::mat4(1.0f), table_positions[12] - glm::vec3(0, 0.5, 0));// *scaleMatrix;
 	desk->Draw(textureShaderID, projection, view);
 
 
@@ -525,7 +531,7 @@ public:
     props.push_back( new Model( "./Models/ChoppingBoard.obj" ) );
     props.push_back( new Model( "./Models/Knife.obj" ) );
     props.push_back( new Model( "./Models/StandMixer.obj" ) );
-	props.push_back(new Model("./Models/teapot_s0.obj"));
+	props.push_back(new Model("./Models/kettle.obj"));
 	props.push_back(new Model("./Models/Sugar_cubes.obj"));
 	props.push_back(new Model("./Models/EggCrate.obj"));
 	props.push_back(new Model("./Models/StandMixer_bowl.obj"));

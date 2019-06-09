@@ -33,8 +33,8 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 		head->Draw(shaderProgram, projection, view, headColorMap,false,0);
 	}
 
-	leftHand->Draw(shaderProgram, projection, view, false, 0);
-	rightHand->Draw(shaderProgram, projection, view,  false, 0);
+	//leftHand->Draw(shaderProgram, projection, view, false, 0);
+	//rightHand->Draw(shaderProgram, projection, view,  false, 0);
 	
 }
 
