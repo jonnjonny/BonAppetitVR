@@ -372,18 +372,18 @@ public:
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber ) {
 
 ///screen in-framebuffer rendering
-    glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glEnable( GL_DEPTH_TEST );
+   // glBindFramebuffer( GL_FRAMEBUFFER, screenFbo);
+   // glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+   // glEnable( GL_DEPTH_TEST );
     //set the view port ready for the texture scene
    // glViewport(0, 0, 1344, 1344);
     //TODO: render whatever in the screen later
-	glUseProgram(woodShaderID);
+	//glUseProgram(woodShaderID);
 	//letters.at('A')->Draw(woodShaderID, projection, view);
     //re-bind to default
-    glBindFramebuffer( GL_FRAMEBUFFER, 1 );
-	  glUseProgram(screenShaderID);
-	screen->draw(screenShaderID, projection, view);
+   // glBindFramebuffer( GL_FRAMEBUFFER, 1 );
+	//  glUseProgram(screenShaderID);
+	//screen->draw(screenShaderID, projection, view);
 
 /*
     if (eyeType == ovrEyeType::ovrEye_Left) {
@@ -411,14 +411,14 @@ public:
 
 
 
-    player1->draw( woodShaderID, projection, view, playerNumber == 0 );
-    player2->draw(woodShaderID, projection, view, playerNumber == 1 );
+    player1->draw( textureShaderID, projection, view, playerNumber == 0 );
+    //player2->draw(textureShaderID, projection, view, playerNumber == 1 );
 
 
-    renderProcessingBar( projection, view, 0.75f );
+   // renderProcessingBar( projection, view, 0.75f );
 
 
-
+	/*
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 4);
 	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
@@ -446,7 +446,8 @@ public:
 		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 
-
+*/
+	/*
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 1);
     recipeBookClosed->toWorld = glm::translate( glm::mat4( 1.0f ), table_center_positions[3] + glm::vec3( 0, 0.03, 0 ) );
@@ -458,7 +459,7 @@ public:
 	//recipeBookOpened->Draw( textureShaderID, projection, view );
 
 
-	
+*/	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 3);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
