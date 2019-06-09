@@ -72,8 +72,10 @@ public:
 
 		float amin, bmin, amax, bmax;
 
-		amin = bmin = std::numeric_limits<float>::max();
-		amax = bmax = std::numeric_limits<float>::min();
+		amin = std::numeric_limits<float>::max();
+		bmin = std::numeric_limits<float>::max();
+		amax = std::numeric_limits<float>::min();
+		bmax = std::numeric_limits<float>::min();
 		
 		for (int i = 0; i < a.size(); i++) {
 			amin = std::min(amin, glm::dot(a.at(i), axis));
@@ -94,11 +96,11 @@ public:
 
 		glm::vec3 a1 = glm::normalize(thisBoundingBox.v4 - thisBoundingBox.v1);
 		glm::vec3 a2 = glm::normalize(thisBoundingBox.v1 - thisBoundingBox.v5);
-		glm::vec3 a3 = glm::normalize(thisBoundingBox.v5 - thisBoundingBox.v6);
+		glm::vec3 a3 = glm::normalize(thisBoundingBox.v1 - thisBoundingBox.v2);
 
 		glm::vec3 b1 = glm::normalize(other.v4 - other.v1);
 		glm::vec3 b2 = glm::normalize(other.v1 - other.v5);
-		glm::vec3 b3 = glm::normalize(other.v5 - other.v6);
+		glm::vec3 b3 = glm::normalize(other.v1 - other.v2);
 
 		axes.push_back(a1);
 		axes.push_back(a2);
@@ -118,8 +120,10 @@ public:
 		axes.push_back(glm::normalize(glm::cross(a3, b2)));
 		axes.push_back(glm::normalize(glm::cross(a3, b3)));
 
+		std::vector<glm::vec3> thisBoundingBoxVector = convertBoundingBoxToVector(thisBoundingBox);
+		std::vector<glm::vec3> otherBoundingBoxVector = convertBoundingBoxToVector(other);
 		for (int i = 0; i < axes.size(); i++) {
-			if (!checkAxisProjectionOverlap(convertBoundingBoxToVector(thisBoundingBox), convertBoundingBoxToVector(other), axes.at(i))) {
+			if (!checkAxisProjectionOverlap(thisBoundingBoxVector, otherBoundingBoxVector, axes.at(i))) {
 				return false;
 			}
 		}

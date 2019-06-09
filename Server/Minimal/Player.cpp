@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 
 // Define the coordinates and indices needed to draw the cube. Note that it is not necessary
@@ -63,6 +64,8 @@ PlayerData Player::getState() {
 	output.LControlOri = this->leftControllerOrientation;
 	output.RControlPos = this->rightControllerPosition;
 	output.RControlOri = this->rightControllerOrientation;
+	output.leftHandVisible = leftObjectHeld == -1;
+	output.rightHandVisible = rightObjectHeld == -1;
 
 	return output;
 }

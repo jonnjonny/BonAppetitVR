@@ -222,6 +222,9 @@ public:
 	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::SUGAR_CUBE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 
 
 	loadTextureFiles();
@@ -349,6 +352,7 @@ public:
 	//Ingredients
 	output.singleEgg = ingredients.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
 	output.crackedEgg = ingredients.at((int)ingredientsID::CRACKED_EGG)->getObjectSpaceBoundingBox();
+	output.sugarCube = ingredients.at((int)ingredientsID::SUGAR_CUBE)->getObjectSpaceBoundingBox();
 
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
@@ -423,8 +427,8 @@ public:
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 8);
-	player1->leftHand->Draw(textureShaderID, projection, view);
-	player1->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if(player1->leftHandVisible) player1->leftHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if(player1->rightHandVisible) player1->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 
 	
@@ -457,6 +461,10 @@ public:
 
 	if (ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible) {
 		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+
+	if (ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible) {
+		ingredients.at((int)ingredientsID::SUGAR_CUBE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 
 
@@ -533,6 +541,7 @@ public:
 
 	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
 	ingredients.push_back(new Model("./Models/CrackedEgg.obj", false));
+	ingredients.push_back(new Model("./Models/Sugar_cube.obj", false));
 
   }
 
@@ -642,6 +651,12 @@ public:
 
 	ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = s.crackedEgg.visible;
 	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.crackedEgg.position) *
+		glm::mat4_cast(s.crackedEgg.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
+
+	ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible = s.crackedEgg.visible;
+	ingredients.at((int)ingredientsID::SUGAR_CUBE)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.crackedEgg.position) *
 		glm::mat4_cast(s.crackedEgg.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));

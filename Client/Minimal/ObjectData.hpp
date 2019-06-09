@@ -9,11 +9,9 @@ struct ObjectData {
 	glm::vec3 position;
 	glm::quat orientation;
 	bool visible;
-	float xmin, xmax, ymin, ymax, zmin, zmax;
 
 	MSGPACK_DEFINE_MAP(position.x, position.y, position.z,
-		orientation.x, orientation.y, orientation.z, orientation.w, visible,
-		xmin, xmax, ymin, ymax, zmin, zmax);
+		orientation.x, orientation.y, orientation.z, orientation.w, visible);
 
 };
 
@@ -29,7 +27,8 @@ struct PlayerData {
 	bool rightIndexTrigger;
 	bool leftHandTrigger;
 	bool rightHandTrigger;
-	float xmin, xmax, ymin, ymax, zmin, zmax;
+	bool leftHandVisible;
+	bool rightHandVisible;
 
 	MSGPACK_DEFINE_MAP(headPos.x, headPos.y, headPos.z,
 		headOri.x, headOri.y, headOri.z, headOri.w,
@@ -39,7 +38,7 @@ struct PlayerData {
 		RControlOri.x, RControlOri.y, RControlOri.z, RControlOri.w,
 		leftIndexTrigger, rightIndexTrigger,
 		leftHandTrigger, rightHandTrigger,
-		xmin, xmax, ymin, ymax, zmin, zmax);
+		leftHandVisible, rightHandVisible);
 
 };
 

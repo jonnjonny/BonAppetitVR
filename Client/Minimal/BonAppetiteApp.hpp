@@ -60,8 +60,6 @@ protected:
 		output.LControlOri = ovr::toGlm(handPoseStateL.ThePose.Orientation);
 		output.RControlPos = ovr::toGlm(handPoseStateR.ThePose.Position);
 		output.RControlOri = ovr::toGlm(handPoseStateR.ThePose.Orientation);
-		output.xmin = output.ymin = output.zmin = -0.01;
-		output.xmax = output.ymax = output.zmax = 0.01;
 		output.rightIndexTrigger = rightIndexTrigger;
 		output.leftIndexTrigger = leftIndexTrigger;
 		output.leftHandTrigger = leftHandTrigger;

@@ -32,10 +32,6 @@ void Player::draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::
 		head->toWorld = headPosition * headOrientation * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0)) * glm::scale(glm::mat4(1.0), glm::vec3(0.1, 0.1, 0.1));
 		head->Draw(shaderProgram, projection, view, headColorMap,false,0);
 	}
-
-	//leftHand->Draw(shaderProgram, projection, view, false, 0);
-	//rightHand->Draw(shaderProgram, projection, view,  false, 0);
-	
 }
 
 void Player::updateState(PlayerData p) {
@@ -45,4 +41,6 @@ void Player::updateState(PlayerData p) {
 	this->leftControllerPosition = glm::translate(glm::mat4(1.0), p.LControlPos);
 	this->rightControllerOrientation = glm::mat4_cast(p.RControlOri);
 	this->rightControllerPosition = glm::translate(glm::mat4(1.0), p.RControlPos);
+	this->leftHandVisible = p.leftHandVisible;
+	this->rightHandVisible = p.rightHandVisible;
 }

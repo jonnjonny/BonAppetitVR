@@ -48,6 +48,7 @@ public:
   glm::mat4 rightControllerPosition;
   glm::mat4 leftControllerOrientation;
   glm::mat4 rightControllerOrientation;
+  bool leftHandVisible, rightHandVisible;
 
 
   void draw(GLuint shaderProgram, const glm::mat4 &projection, const glm::mat4 &view, const bool isSelf);
