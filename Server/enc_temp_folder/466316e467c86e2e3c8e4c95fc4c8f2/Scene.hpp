@@ -14,7 +14,7 @@
 #include "BoundingBox.hpp"
 #include "KitchenItem.hpp"
 #include "SceneGraph.hpp"
-#include "../../Client/Minimal/enums.h"
+#include "enums.h"
 
 
 // a class for building and rendering cubes
