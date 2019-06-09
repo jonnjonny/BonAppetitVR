@@ -77,7 +77,7 @@ protected:
 	}
 
 
-	void renderScene(const glm::mat4& projection, const glm::mat4& eyePose) override
+	void renderScene(const glm::mat4& projection, const glm::mat4& eyePose, ovrEyeRenderDesc eyeRenderDesc) override
 	{
 		ovrInputState inputState;
 		if (OVR_SUCCESS(ovr_GetInputState(_session, ovrControllerType_Touch, &inputState))) {
@@ -118,7 +118,7 @@ protected:
 
 		scene->update(scenegraph);
 	
-		scene->render(projection, playerNumber == 0 ? glm::inverse(eyePose) : glm::inverse(glm::translate(glm::mat4(1.0),glm::vec3(2.0,0.0,0.0)) * eyePose), playerNumber);
+		scene->render(projection, playerNumber == 0 ? glm::inverse(eyePose) : glm::inverse(glm::translate(glm::mat4(1.0),glm::vec3(2.0,0.0,0.0)) * eyePose), playerNumber, eyeRenderDesc);
 		
 		
 		

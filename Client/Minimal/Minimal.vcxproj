@@ -163,7 +163,6 @@
     <ClInclude Include="ObjectData.hpp" />
     <ClInclude Include="ovr.hpp" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Pyramid.h" />
     <ClInclude Include="Quad.hpp" />
     <ClInclude Include="RecipeBook.h" />
     <ClInclude Include="RiftApp.hpp" />

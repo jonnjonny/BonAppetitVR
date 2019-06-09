@@ -219,9 +219,9 @@ public:
 	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+
+
+
 
 
 	loadTextureFiles();
@@ -356,10 +356,8 @@ public:
 	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
 	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
 
-
 	//Ingredients
 	output.singleEgg = ingredients.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
-	output.crackedEgg = ingredients.at((int)ingredientsID::CRACKED_EGG)->getObjectSpaceBoundingBox();
 
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
@@ -534,7 +532,6 @@ public:
 	props.push_back(new Model("./Models/StandMixer_machine.obj"));
 
 	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
-	ingredients.push_back(new Model("./Models/CrackedEgg.obj", false));
 
   }
 
@@ -641,12 +638,6 @@ public:
 		glm::translate(glm::mat4(1.0), s.singleEgg.position) *
 		glm::mat4_cast(s.singleEgg.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));
-
-	ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = s.crackedEgg.visible;
-	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = (
-		glm::translate(glm::mat4(1.0), s.crackedEgg.position) *
-		glm::mat4_cast(s.crackedEgg.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
 
   }
 
