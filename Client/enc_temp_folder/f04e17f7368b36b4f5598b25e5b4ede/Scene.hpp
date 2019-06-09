@@ -217,11 +217,11 @@ public:
 
 	//Ingredients
 	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.001, 0.001, 0.001))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-
-
-
+	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 
 
 	loadTextureFiles();
@@ -332,21 +332,9 @@ public:
 
     InitialData output;
 
-    BoundingBox controller;
     float xmin, xmax, ymin, ymax, zmin, zmax;
-    xmin = ymin = zmin = -0.01f;
-    xmax = ymax = zmax = 0.01f;
 
-    controller.v1 = glm::vec3( xmin, ymax, zmax );
-    controller.v2 = glm::vec3( xmin, ymax, zmin );
-    controller.v3 = glm::vec3( xmax, ymax, zmin );
-    controller.v4 = glm::vec3( xmax, ymax, zmax );
-    controller.v5 = glm::vec3( xmin, ymin, zmax );
-    controller.v6 = glm::vec3( xmin, ymin, zmin );
-    controller.v7 = glm::vec3( xmax, ymin, zmin );
-    controller.v8 = glm::vec3( xmax, ymin, zmax );
-
-    output.controller = controller;
+	output.controller = player1->leftHand->getObjectSpaceBoundingBox();
 
 	//Props
     output.cuttingBoard = props.at((int)propsID::CHOPPING_BOARD)->getObjectSpaceBoundingBox();
@@ -356,8 +344,10 @@ public:
 	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
 	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
 
+
 	//Ingredients
 	output.singleEgg = ingredients.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
+	output.crackedEgg = ingredients.at((int)ingredientsID::CRACKED_EGG)->getObjectSpaceBoundingBox();
 
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
@@ -408,8 +398,8 @@ public:
 
 	  
 
-    //desertbox->draw( skyBoxShaderID, projection, view );
-	glClearColor(255.0f/255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f);
+    desertbox->draw( skyBoxShaderID, projection, view );
+	//glClearColor(255.0f/255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f);
 
 
     ///controller
@@ -457,6 +447,10 @@ public:
 	//Ingredients
 	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
 		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+
+	if (ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible) {
+		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 
 
@@ -532,6 +526,7 @@ public:
 	props.push_back(new Model("./Models/StandMixer_machine.obj"));
 
 	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
+	ingredients.push_back(new Model("./Models/CrackedEgg.obj", false));
 
   }
 
@@ -637,7 +632,13 @@ public:
 	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.singleEgg.position) *
 		glm::mat4_cast(s.singleEgg.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.001, 0.001, 0.001)));
+
+	ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = s.crackedEgg.visible;
+	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.crackedEgg.position) *
+		glm::mat4_cast(s.crackedEgg.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
 
   }
 
