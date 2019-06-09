@@ -410,15 +410,16 @@ public:
     render11Tables( projection, view );
 
 
+	glUseProgram(shaderID);
 
-    player1->draw( textureShaderID, projection, view, playerNumber == 0 );
+    player1->draw( shaderID, projection, view, playerNumber == 0 );
     //player2->draw(textureShaderID, projection, view, playerNumber == 1 );
 
 
    // renderProcessingBar( projection, view, 0.75f );
 
 
-	/*
+	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 4);
 	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
@@ -446,7 +447,7 @@ public:
 		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 
-*/
+
 	/*
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 1);
