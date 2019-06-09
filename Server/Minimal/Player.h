@@ -26,7 +26,7 @@
 
 class Player {
 public:
-  Player();
+  Player(glm::vec3 scaleFactor);
 
 
   ~Player();
@@ -37,6 +37,7 @@ public:
   glm::vec3 rightControllerPosition;
   glm::quat leftControllerOrientation;
   glm::quat rightControllerOrientation;
+  glm::vec3 scale;
   bool leftHoldingProp;
   bool rightHoldingProp;
   int leftObjectHeld;
