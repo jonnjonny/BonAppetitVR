@@ -209,7 +209,7 @@ public:
 	props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[11]) * 
 		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
 
-	props.at((int)propsID::SUGAR_CUBES)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) *
+	props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.5,0.5,0.5 ))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0));
 
 	props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
@@ -344,7 +344,7 @@ public:
 	output.knife = props.at((int)propsID::KNIFE)->getObjectSpaceBoundingBox();
 	output.standMixer = props.at((int)propsID::STAND_MIXER)->getObjectSpaceBoundingBox();
 	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
-	output.sugarBowl = props.at((int)propsID::SUGAR_CUBES)->getObjectSpaceBoundingBox();
+	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
 	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
 
 	//Ingredients
@@ -379,7 +379,7 @@ public:
    // glViewport(0, 0, 1344, 1344);
     //TODO: render whatever in the screen later
 	glUseProgram(woodShaderID);
-	letters.at('A')->Draw(woodShaderID, projection, view);
+	//letters.at('A')->Draw(woodShaderID, projection, view);
     //re-bind to default
     glBindFramebuffer( GL_FRAMEBUFFER, 1 );
 	  glUseProgram(screenShaderID);
@@ -411,8 +411,8 @@ public:
 
 
 
-    player1->draw( shaderID, projection, view, playerNumber == 0 );
-    player2->draw( shaderID, projection, view, playerNumber == 1 );
+    player1->draw( woodShaderID, projection, view, playerNumber == 0 );
+    player2->draw(woodShaderID, projection, view, playerNumber == 1 );
 
 
     renderProcessingBar( projection, view, 0.75f );
@@ -437,7 +437,7 @@ public:
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 6);
-	props.at((int)propsID::SUGAR_CUBES)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
@@ -511,11 +511,11 @@ public:
     props.push_back( new Model( "./Models/ChoppingBoard.obj" ) );
     props.push_back( new Model( "./Models/Knife.obj" ) );
     props.push_back( new Model( "./Models/StandMixer.obj" ) );
+	props.push_back(new Model("./Models/teapot_s0.obj"));
+	props.push_back(new Model("./Models/Sugar_cubes.obj"));
+	props.push_back(new Model("./Models/EggCrate.obj"));
 	props.push_back(new Model("./Models/StandMixer_bowl.obj"));
 	props.push_back(new Model("./Models/StandMixer_machine.obj"));
-    props.push_back( new Model( "./Models/teapot_s0.obj" ) );
-    props.push_back( new Model( "./Models/Sugar_cubes.obj" ) );
-	props.push_back(new Model("./Models/EggCrate.obj"));
 
 	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
 
@@ -608,7 +608,7 @@ public:
 		glm::translate(glm::mat4(1.0), s.barrel.position) *
 		glm::mat4_cast(s.barrel.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)));
-	props.at((int)propsID::SUGAR_CUBES)->toWorld = (
+	props.at((int)propsID::SUGAR_BOWL)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.sugarBowl.position) *
 		glm::mat4_cast(s.sugarBowl.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));

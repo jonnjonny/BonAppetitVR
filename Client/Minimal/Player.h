@@ -15,6 +15,7 @@
 #ifndef GLM_FORCE_RADIANS
 #define GLM_FORCE_RADIANS
 #endif
+
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 #include <glm/mat4x4.hpp>

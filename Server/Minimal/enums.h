@@ -12,7 +12,9 @@ enum class propsID {
 	STAND_MIXER,
 	BARREL,
 	SUGAR_BOWL,
-	EGG_CRATE
+	EGG_CRATE,
+	STAND_MIXER_BOWL,
+	STAND_MIXER_MACHINE
 };
 
 enum class ingredientsID {
