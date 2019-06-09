@@ -40,8 +40,9 @@ struct InitialData {
 	BoundingBox barrel;
 	BoundingBox sugarBowl;
 	BoundingBox eggCrate;
+	BoundingBox crackedEgg;
 
-	MSGPACK_DEFINE_MAP(controller, cuttingBoard, table, knife, singleEgg, standMixer, barrel, sugarBowl,eggCrate);
+	MSGPACK_DEFINE_MAP(controller, cuttingBoard, table, knife, singleEgg, standMixer, barrel, sugarBowl,eggCrate,crackedEgg);
 
 };
 

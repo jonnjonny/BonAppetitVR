@@ -182,6 +182,7 @@ public:
 	  appliances.at(5)->objectSpaceBoundingBox = b.eggCrate;
 
 	  ingredients.at(0)->objectSpaceBoundingBox = b.singleEgg;
+	  ingredients.at(1)->objectSpaceBoundingBox = b.crackedEgg;
 	  for(int i = 0; i < tables.size(); i++) tables.at(i)->objectSpaceBoundingBox = b.table;
   }
 
@@ -196,6 +197,7 @@ public:
 	  output.barrel = appliances.at(3)->getState();
 	  output.sugarBowl = appliances.at(4)->getState();
 	  output.eggCrate = appliances.at(5)->getState();
+	  output.crackedEgg = ingredients.at(1)->getState();
 	  return output;
 
   }
