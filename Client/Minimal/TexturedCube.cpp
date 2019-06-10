@@ -95,6 +95,10 @@ TexturedCube::TexturedCube( const std::string dir ) : Cube() {
  // std::cout << dir << std::endl;
 }
 
+/*
+TexturedCube::TexturedCube(const std::string dir, bool singlePicture, std::vector <std::string> pic) : Cube() {
+	cubeMap = loadCubemap("./" + dir + "/", pic);
+}*/
 
 TexturedCube::~TexturedCube() {
   glDeleteTextures( 1, &cubeMap );

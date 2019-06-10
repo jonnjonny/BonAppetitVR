@@ -11,6 +11,7 @@ public:
 
   TexturedCube( const std::string dir );
 
+//  TexturedCube::TexturedCube(const std::string dir, bool singlePicture, std::vector <std::string> pic) : Cube();
 
   ~TexturedCube();
 

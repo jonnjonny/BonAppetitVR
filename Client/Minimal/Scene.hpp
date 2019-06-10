@@ -30,6 +30,8 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include <vector>
+#include <queue>
+
 #include "shader.h"
 
 
@@ -121,9 +123,11 @@ class Scene {
   GLuint processingBarShaderID; //shader id for skyboxB
 
   std::vector <std::string> textureFileNames;
+  std::vector <std::string> instrFileNames;
 
 
   std::vector <GLuint> textureIds;
+  std::vector <GLuint> instrTexIds;
 
 
   Model* recipeBookOpened;
@@ -145,6 +149,8 @@ class Scene {
 
   Model* hands[2];
 
+  Model* instrCube;
+
 public:
   Scene() {
     // Shader Program
@@ -159,7 +165,12 @@ public:
 
 	textureId2 = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
-    //for desert box
+	instrCube = new Model("./Models/cube.obj");
+	instrCube->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -4.0f)) 
+		* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.01));
+
+
+	//for desert box
     desertbox = new Skybox( "desertbox" );
     desertbox->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))*glm::scale( glm::mat4( 1.0f ), glm::vec3( 5.0f ) );
 
@@ -245,6 +256,7 @@ public:
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));*/
 	loadTextureFiles();
+	loadInstrTextureFiles();
 
 	populateLetterModels();
   }
@@ -301,6 +313,43 @@ public:
 
   }
 
+
+  void loadInstrTextureFiles() {
+	  for (int i = 0; i < 7; i++) {
+		  instrFileNames.push_back(std::to_string(i));
+	  }
+
+
+	  instrTexIds = std::vector <GLuint>();
+
+	  int width, height, numChannels;
+	  unsigned char* data;
+	  uniform_texture_from_picture = glGetUniformLocation(textureShaderID, "texFramebuffer");
+
+	  for (GLuint i = 0; i < instrFileNames.size(); i++) { //skipping index 0
+		//Setting up textures		 
+ instrTexIds.push_back(0);
+		  std::string fileName = "./Strawberry Cake/" + instrFileNames[i] + ".jpg";
+
+		  data = stbi_load(fileName.c_str(), &width, &height, &numChannels, 0);
+		  if (!data) {
+			  throw std::runtime_error("Cannot load JPG file");
+		  }
+		  else {
+			  std::cout << instrFileNames[i] + " loaded successfully." << " id = " << 31 - i << std::endl;
+		  }
+		  glActiveTexture(GL_TEXTURE0 + 31 - i);
+		  glGenTextures(1, &(instrTexIds[i]));
+		  glBindTexture(GL_TEXTURE_2D, instrTexIds[i]);
+		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_LINEAR);
+		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_LINEAR);
+		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+
+	  }
+  }
 
   void loadTextureFiles() {
 	textureFileNames.push_back(std::string("RecipeBookClosed_Cover_diffuse"));
@@ -398,7 +447,7 @@ public:
 	  glm::mat4 _view = view;
 ///screen in-framebuffer rendering
 	  glm::mat4 iView = glm::mat4(1.0f);
-		  glBindFramebuffer(GL_FRAMEBUFFER, screenFbos[eyeRenderDesc.Eye]);
+	/*	  glBindFramebuffer(GL_FRAMEBUFFER, screenFbos[eyeRenderDesc.Eye]);
 		  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		  glEnable(GL_DEPTH_TEST);
 		  //set the view port ready for the texture scene
@@ -419,10 +468,13 @@ public:
 	else if (eyeRenderDesc.Eye == ovrEyeType::ovrEye_Right) {
 		glViewport(1344, 0, 1344, 1600);
 	}
+*/	
 
-		  screen->draw(screenShaderID, projection, iView);
+	  glUseProgram(textureShaderID);
+	  glUniform1i(uniform_texture_from_picture, 31);
+	//	  screen->draw(textureShaderID, projection, iView);
 
-	  
+	  instrCube->Draw(textureShaderID, projection, iView);
 
     desertbox->draw( skyBoxShaderID, projection, view );
 	//glClearColor(255.0f/255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f);
@@ -592,7 +644,16 @@ public:
 
   }
 
-
+  void generateIntructionQueue() {
+	 /* for (int i = 0; i < 7 ; ++i) {
+		  std::vector<std::string> sixFaceOnePic;
+		  for (int i = 0; i < 6; ++i) {
+			  sixFaceOnePic.push_back(std::to_string(i));
+		  }
+		  tables.push_back(new TexturedCube("Strawberry Cake", true, sixFaceOnePic));
+	  }*/
+	  
+  }
   void render11Tables( const glm::mat4 &projection, const glm::mat4 &view ) {
     glm::mat4 scaleMatrix = glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.25, 0.5, 0.25 ) );
     for( int i = 0; i < tables.size(); ++i ) {
