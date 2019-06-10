@@ -50,7 +50,7 @@ public:
   unsigned int VAO;
 
 
-  GLuint uProjection, uModelview, uColorScheme;
+  GLuint uProjection, uModelview, uView, uColorScheme;
 
   /*  Functions  */
   // constructor
@@ -100,17 +100,19 @@ public:
 
     // Calculate the combination of the model and view (camera inverse) matrices
     glm::mat4 modelview = view * toWorld;
+
     // We need to calcullate this because modern OpenGL does not keep track of any matrix other than the viewport (D)
     // Consequently, we need to forward the projection, view, and model matrices to the shader programs
     // Get the location of the uniform variables "projection" and "modelview"
     uProjection = glGetUniformLocation( shaderId, "projection" );
     uModelview = glGetUniformLocation( shaderId, "modelview" );
     uColorScheme = glGetUniformLocation( shaderId, "colorScheme" );
-
+	uView = glGetUniformLocation(shaderId, "view");
 
     // Now send these values to the shader program
     glUniformMatrix4fv( uProjection, 1, GL_FALSE, &projection[0][0] );
     glUniformMatrix4fv( uModelview, 1, GL_FALSE, &modelview[0][0] );
+	glUniformMatrix4fv(uView, 1, GL_FALSE, &view[0][0]);
 	glUniform1i(uColorScheme, color);
 
     glBindVertexArray( VAO );

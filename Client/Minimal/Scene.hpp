@@ -210,7 +210,7 @@ public:
 		glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* 
 		glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
 
-	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[15]) *
+	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	//props.at((int)propsID::STAND_MIXER_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[6]) *
 		//glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1, 0, 0));
@@ -254,6 +254,9 @@ public:
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	ingredients.at((int)ingredientsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	loadTextureFiles();
 	loadInstrTextureFiles();
@@ -364,6 +367,7 @@ public:
 	textureFileNames.push_back(std::string("Hand"));
 	textureFileNames.push_back(std::string("Strawberry_diffuse"));
 	textureFileNames.push_back(std::string("Chocolate"));
+	textureFileNames.push_back(std::string("cookie_texture"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -425,7 +429,7 @@ public:
 	output.water = ingredients.at((int)ingredientsID::WATER)->getObjectSpaceBoundingBox();
 	output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getObjectSpaceBoundingBox();
 	output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getObjectSpaceBoundingBox();
-
+	output.cookieDough = ingredients.at((int)ingredientsID::COOKIE_DOUGH)->getObjectSpaceBoundingBox();
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
 	xmax = ymax = zmax = 1.0f;
@@ -525,49 +529,59 @@ public:
 	
 	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
+
 	//glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 6);
 	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if (ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible) {
+		ingredients.at((int)ingredientsID::SUGAR_CUBE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
 
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	props.at((int)propsID::FLOUR_SACK)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
+		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+	if (ingredients.at((int)ingredientsID::FLOUR)->isVisible) {
+		ingredients.at((int)ingredientsID::FLOUR)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
 
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 10);
 	props.at((int)propsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if (ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible) {
+		ingredients.at((int)ingredientsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 9);
 	props.at((int)propsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if (ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible) {
+		ingredients.at((int)ingredientsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
 
 	//Ingredients
-	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
-		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	}
+	
 
 	if (ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible) {
 		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 
-	if (ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible) {
-		ingredients.at((int)ingredientsID::SUGAR_CUBE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	}
+	
 
-	if (ingredients.at((int)ingredientsID::FLOUR)->isVisible) {
-		ingredients.at((int)ingredientsID::FLOUR)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	}
 
 	if (ingredients.at((int)ingredientsID::WATER)->isVisible) {
 		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 	
-	if (ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible) {
-		ingredients.at((int)ingredientsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 11);
+	if (ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible) {
+		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
-	if (ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible) {
-		ingredients.at((int)ingredientsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	}
+	
+	
 
 	/*
 	glUseProgram(textureShaderID);
@@ -650,6 +664,7 @@ public:
 	ingredients.push_back(new Model("./Models/cup.obj", false));
 	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/strawberry.obj", false));
+	ingredients.push_back(new Model("./Models/cookie.obj", false));
 
 
   }
@@ -813,6 +828,11 @@ public:
 		glm::translate(glm::mat4(1.0), s.strawberry.position) *
 		glm::mat4_cast(s.strawberry.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2)));
+	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible = s.cookieDough.visible;
+	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.cookieDough.position) *
+		glm::mat4_cast(s.cookieDough.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02)));
 
   }
 

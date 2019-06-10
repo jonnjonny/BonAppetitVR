@@ -32,7 +32,11 @@ enum class ingredientsID {
 	FLOUR,
 	WATER,
 	CHOCOLATE,
-	STRAWBERRY
+	STRAWBERRY,
+	COOKIE_DOUGH,
+	CAKE_DOUGH,
+	COOKIE,
+	CAKE
 };
 
 enum class SizeOption {
