@@ -262,7 +262,7 @@ public:
 	loadInstrTextureFiles();
 
 	populateLetterModels();//
-  }
+  }//
 
 
   void populateLetterModels() {
