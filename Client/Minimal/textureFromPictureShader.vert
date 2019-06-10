@@ -18,9 +18,17 @@ uniform mat4 projection;
 uniform mat4 modelview;
 
 
+out vec3 vertNormal;
+out vec4 vertex;
+out mat4 Modelview;
+
 void main()
 {
     // OpenGL maintains the D matrix so you only need to multiply by P, V (aka C inverse), and M
     gl_Position = projection * modelview * vec4(position, 1.0);
 	TexCoords = theTexCoord;
+
+    vertNormal = Normal;
+	vertex = vec4(position, 1.0f);
+	Modelview = modelview;
 }

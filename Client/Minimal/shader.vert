@@ -17,10 +17,14 @@ uniform mat4 modelview;
 // The default output, gl_Position, should be assigned something. You can define as many
 // extra outputs as you need.
 out vec3 vertNormal;
+out vec4 vertex;
+out mat4 Modelview;
 
 void main()
 {
     // OpenGL maintains the D matrix so you only need to multiply by P, V (aka C inverse), and M
     gl_Position = projection * modelview * vec4(position.x, position.y, position.z, 1.0);
     vertNormal = normal;
+	vertex = vec4(position, 1.0f);
+	Modelview = modelview;
 }
