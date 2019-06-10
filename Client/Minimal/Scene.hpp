@@ -165,7 +165,7 @@ public:
 
 	textureId2 = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
-	instrCube = new Model("./Models/cube.obj");
+	instrCube = new Model("./Models/cube.obj");//
 	instrCube->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -4.0f)) 
 		* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.01));
 
