@@ -441,7 +441,7 @@ public:
 	glUseProgram(shaderID);
 
     player1->draw( shaderID, projection, view, playerNumber == 0 );
-    //player2->draw(textureShaderID, projection, view, playerNumber == 1 );
+    player2->draw(shaderID, projection, view, playerNumber == 1 );
 
 
    // renderProcessingBar( projection, view, 0.75f );
