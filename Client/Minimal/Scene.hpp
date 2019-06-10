@@ -363,6 +363,7 @@ public:
 	textureFileNames.push_back(std::string("StandMixer_diffuse"));
 	textureFileNames.push_back(std::string("Hand"));
 	textureFileNames.push_back(std::string("Strawberry_diffuse"));
+	textureFileNames.push_back(std::string("Chocolate"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -531,6 +532,9 @@ public:
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	props.at((int)propsID::FLOUR_SACK)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
+
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 10);
 	props.at((int)propsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	
 	glUseProgram(textureShaderID);

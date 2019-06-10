@@ -22,7 +22,7 @@ vec4 myDiffuse = vec4(0.8,0.8,0.8,1);
 vec4 mySpecular = vec4(0.2,0.2,0.2,1);
 float myShininess = 20;
 
- float ambientStrength = 0.8;
+ float ambientStrength = 0.3;
     vec4 ambient = vec4( ambientStrength * vec3(lightColor.x,lightColor.y,lightColor.z),1.0);
 
 vec3 norm = normalize(vertNormal);
