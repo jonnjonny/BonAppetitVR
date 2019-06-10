@@ -21,6 +21,7 @@ public:
 	glm::quat orientation;
 	glm::vec3 originalPosition;
 	glm::quat originalOrientation;
+	glm::mat4 toWorld;
 	glm::vec3 scale;
 	bool isVisible;
 	 

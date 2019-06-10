@@ -14,6 +14,9 @@ struct SceneGraph {
 	ObjectData barrel;
 	ObjectData sugarBowl;
 	ObjectData eggCrate;
+	ObjectData flourSack;
+	ObjectData chocolateSource;
+	ObjectData strawberrySource;
 	ObjectData crackedEgg;
 	ObjectData sugarCube;
 	ObjectData flour;
@@ -23,7 +26,7 @@ struct SceneGraph {
 
 
 	MSGPACK_DEFINE_MAP(player1, player2, cuttingBoard, knife, singleEgg, standMixer, barrel, sugarBowl, eggCrate,
-		crackedEgg, sugarCube, flour, water, chocolate, strawberry);
+		flourSack, chocolateSource, strawberrySource, crackedEgg, sugarCube, flour, water, chocolate, strawberry);
 
 };
 

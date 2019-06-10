@@ -201,10 +201,10 @@ public:
 
 	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	props.at((int)propsID::STAND_MIXER_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[6]) *
+	/*props.at((int)propsID::STAND_MIXER_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[6]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1, 0, 0));
 	props.at((int)propsID::STAND_MIXER_MACHINE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));*/
 
 	props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[11]) * 
 		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
@@ -214,6 +214,13 @@ public:
 
 	props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+
+	props.at((int)propsID::FLOUR_SACK)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[7]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+	//props.at((int)propsID::CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[9]) *
+	//	glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+	//props.at((int)propsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[8]) *
+	//	glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 
 	//Ingredients
 	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
@@ -225,8 +232,18 @@ public:
 	ingredients.at((int)ingredientsID::SUGAR_CUBE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-
-
+	ingredients.at((int)ingredientsID::FLOUR)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	/*ingredients.at((int)ingredientsID::WATER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[1]) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));*/
 	loadTextureFiles();
 
 	populateLetterModels();
@@ -347,12 +364,16 @@ public:
 	output.barrel = props.at((int)propsID::BARREL)->getObjectSpaceBoundingBox();
 	output.sugarBowl = props.at((int)propsID::SUGAR_BOWL)->getObjectSpaceBoundingBox();
 	output.eggCrate = props.at((int)propsID::EGG_CRATE)->getObjectSpaceBoundingBox();
-
+	output.flourSack = props.at((int)propsID::FLOUR_SACK)->getObjectSpaceBoundingBox();
 
 	//Ingredients
 	output.singleEgg = ingredients.at((int)ingredientsID::SINGLE_EGG)->getObjectSpaceBoundingBox();
 	output.crackedEgg = ingredients.at((int)ingredientsID::CRACKED_EGG)->getObjectSpaceBoundingBox();
 	output.sugarCube = ingredients.at((int)ingredientsID::SUGAR_CUBE)->getObjectSpaceBoundingBox();
+	output.flour = ingredients.at((int)ingredientsID::FLOUR)->getObjectSpaceBoundingBox();
+	//output.water = ingredients.at((int)ingredientsID::WATER)->getObjectSpaceBoundingBox();
+	/*output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getObjectSpaceBoundingBox();
+	output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getObjectSpaceBoundingBox();*/
 
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
@@ -443,7 +464,7 @@ public:
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 7);
 	//props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	props.at((int)propsID::STAND_MIXER_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	//props.at((int)propsID::STAND_MIXER_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	//props.at((int)propsID::STAND_MIXER_MACHINE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	
 	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
@@ -453,6 +474,10 @@ public:
 	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::FLOUR_SACK)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+
+	//props.at((int)propsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	//props.at((int)propsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 	//Ingredients
 	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
@@ -467,6 +492,20 @@ public:
 		ingredients.at((int)ingredientsID::SUGAR_CUBE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
 
+	if (ingredients.at((int)ingredientsID::FLOUR)->isVisible) {
+		ingredients.at((int)ingredientsID::FLOUR)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+
+	/*if (ingredients.at((int)ingredientsID::WATER)->isVisible) {
+		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+	
+	if (ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible) {
+		ingredients.at((int)ingredientsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+	if (ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible) {
+		ingredients.at((int)ingredientsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}*/
 
 	/*
 	glUseProgram(textureShaderID);
@@ -536,12 +575,20 @@ public:
 	props.push_back(new Model("./Models/kettle.obj"));
 	props.push_back(new Model("./Models/Sugar_cubes.obj"));
 	props.push_back(new Model("./Models/EggCrate.obj"));
-	props.push_back(new Model("./Models/StandMixer_bowl.obj"));
-	props.push_back(new Model("./Models/StandMixer_machine.obj"));
+	props.push_back(new Model("./Models/flour_sack.obj"));
+	//props.push_back(new Model("./Models/StandMixer_bowl.obj"));
+	//props.push_back(new Model("./Models/StandMixer_machine.obj"));
+	//props.push_back(new Model("./Models/water.obj"));
+	//props.push_back(new Model("./Models/water.obj"));
 
 	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
 	ingredients.push_back(new Model("./Models/CrackedEgg.obj", false));
 	ingredients.push_back(new Model("./Models/Sugar_cube.obj", false));
+	ingredients.push_back(new Model("./Models/flourpile.obj", false));
+	//ingredients.push_back(new Model("./Models/water.obj", false));
+	//ingredients.push_back(new Model("./Models/water.obj", false));
+	//ingredients.push_back(new Model("./Models/water.obj", false));
+
 
   }
 
@@ -583,7 +630,6 @@ public:
     table_positions.push_back( glm::vec3( 2.25, -1, 0.75 ) );//17
     table_positions.push_back( glm::vec3( 1.75, -1, 0.75 ) );//18
     table_positions.push_back( glm::vec3( 1.25, -1, 0.75 ) );//19
-    //std::cout << tables.size() << std::endl;
 
 
     table_center_positions.push_back( glm::vec3( 0.25, -0.495, -0.75 ) );//0
@@ -620,14 +666,14 @@ public:
 		glm::translate(glm::mat4(1.0), s.knife.position) *
 		glm::mat4_cast(s.knife.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02)));
-	props.at((int)propsID::STAND_MIXER)->toWorld = (
+	/*props.at((int)propsID::STAND_MIXER)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.standMixer.position) *
 		glm::mat4_cast(s.standMixer.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)));
 	props.at((int)propsID::STAND_MIXER_MACHINE)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.standMixer.position) *
 		glm::mat4_cast(s.standMixer.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)));
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01)));*/
 	props.at((int)propsID::BARREL)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.barrel.position) *
 		glm::mat4_cast(s.barrel.orientation)
@@ -636,11 +682,23 @@ public:
 		glm::translate(glm::mat4(1.0), s.sugarBowl.position) *
 		glm::mat4_cast(s.sugarBowl.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
-
 	props.at((int)propsID::EGG_CRATE)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.eggCrate.position) *
 		glm::mat4_cast(s.eggCrate.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+	props.at((int)propsID::FLOUR_SACK)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.flourSack.position) *
+		glm::mat4_cast(s.flourSack.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005)));
+	/*props.at((int)propsID::CHOCOLATE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.chocolate.position) *
+		glm::mat4_cast(s.chocolate.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+	props.at((int)propsID::STRAWBERRY)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.strawberry.position) *
+		glm::mat4_cast(s.strawberry.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));*/
+	
 
 	//Ingredients
 	ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible = s.singleEgg.visible;
@@ -655,11 +713,35 @@ public:
 		glm::mat4_cast(s.crackedEgg.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
 
-	ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible = s.crackedEgg.visible;
+	ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible = s.sugarCube.visible;
 	ingredients.at((int)ingredientsID::SUGAR_CUBE)->toWorld = (
-		glm::translate(glm::mat4(1.0), s.crackedEgg.position) *
-		glm::mat4_cast(s.crackedEgg.orientation)
+		glm::translate(glm::mat4(1.0), s.sugarCube.position) *
+		glm::mat4_cast(s.sugarCube.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5)));
+
+	ingredients.at((int)ingredientsID::FLOUR)->isVisible = s.flour.visible;
+	ingredients.at((int)ingredientsID::FLOUR)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.flour.position) *
+		glm::mat4_cast(s.flour.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+
+	/*ingredients.at((int)ingredientsID::WATER)->isVisible = s.water.visible;
+	ingredients.at((int)ingredientsID::FLOUR)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.water.position) *
+		glm::mat4_cast(s.water.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+	
+	ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible = s.chocolate.visible;
+	ingredients.at((int)ingredientsID::CHOCOLATE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.chocolate.position) *
+		glm::mat4_cast(s.chocolate.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+
+	ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible = s.strawberry.visible;
+	ingredients.at((int)ingredientsID::STRAWBERRY)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.strawberry.position) *
+		glm::mat4_cast(s.strawberry.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));*/
 
   }
 

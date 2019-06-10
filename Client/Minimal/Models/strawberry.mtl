@@ -1,0 +1,21 @@
+newmtl strawberry:blinn1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.80
+Ks 0.64 0.64 0.76
+newmtl strawberry:blinn2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd tree.jpg
+bump leaf.jpg -bm -3.2644
+Ni 1.00
+newmtl strawberry:lambert2SG
+illum 4
+Kd 0.99 0.99 0.99
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00

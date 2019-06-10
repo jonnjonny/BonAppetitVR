@@ -1,0 +1,13 @@
+# Blender MTL File: 'flourpile.blend'
+# Material Count: 1
+
+newmtl hromada_pisek_01_30k_Material
+Ns 9.803922
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\jkl034\\Downloads\\a-pile-of-sand\\source\\hromada_pisek_01_30k_uw\\hromada_pisek_01_30k_albedo.jpg
