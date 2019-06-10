@@ -20,6 +20,11 @@ enum class propsID {
 	
 };
 
+enum class menuID {
+	COOKIE,
+	CAKE
+};
+
 enum class ingredientsID {
 	SINGLE_EGG,
 	CRACKED_EGG,
