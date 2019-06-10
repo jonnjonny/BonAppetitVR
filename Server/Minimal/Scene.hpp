@@ -29,47 +29,69 @@ class Scene {
   std::vector<KitchenItem*> appliances;
   std::vector<KitchenItem*> ingredients;
   std::unordered_map<int, int> propToIngredient;
-  int eggBasketLocation, eggCrackCount;
+  std::vector<bool> occupied;
+  int currentMenuItem,points;
+  std::vector<std::unordered_map<int, int>> recipe;
+  std::vector<int> totalIngredientsNeeded;
+  std::unordered_map<int, int> ingredientCount;
+  int addedIngredients;
 
 
 
 public:
-  Scene() {
+	Scene() {
+		currentMenuItem = 0;
+		points = 0;
+		addedIngredients = 0;
 
-	players.push_back(new Player(glm::vec3(0.1,0.1,0.1)));
-	players.push_back(new Player(glm::vec3(0.1,0.1,0.1)));
-	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))),glm::vec3(0.01,0.01,0.01))); //CHOPPING BOARD
-	appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.475, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.02, 0.02, 0.02))); //KNIFE
-	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.01, 0.01, 0.01))); //STAND MIXER
-	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0))), glm::vec3(1, 1, 1))); //BARREL
-	appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0))), glm::vec3(0.5, 0.5, 0.5))); //SUGAR BOWL
-	appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f),glm::vec3(0,1,0))), glm::vec3(0.05, 0.05, 0.05))); //EGG CRATE
-	appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, 0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(0.005, 0.005, 0.005))); //FLOUR SACK
-	//appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, -0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(0.005, 0.005, 0.005))); //CHOCOLATE SOURCE
-	//appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, 0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(0.005, 0.005, 0.005))); //STRAWBERRY SOURCE
-	
-	//Ingredients
+		players.push_back(new Player(glm::vec3(0.1, 0.1, 0.1)));
+		players.push_back(new Player(glm::vec3(0.1, 0.1, 0.1)));
+		appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(0.01, 0.01, 0.01), true, 0)); //CHOPPING BOARD
+		appliances.push_back(new KitchenItem(glm::vec3(0.25, -0.475, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.02, 0.02, 0.02), true, 0)); //KNIFE
+		appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, -0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.01, 0.01, 0.01), true, 2)); //STAND MIXER
+		appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0))), glm::vec3(1, 1, 1), true, 3)); //BARREL
+		appliances.push_back(new KitchenItem(glm::vec3(0.75, -0.495, 0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(0, 1, 0))), glm::vec3(0.5, 0.5, 0.5), true, 4)); //SUGAR BOWL
+		appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(0.1, 0.1, 0.1), true, 10)); //EGG CRATE
+		appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, 0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(0.005, 0.005, 0.005), true, 7)); //FLOUR SACK
+		appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, -0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(1, 1, 1), true, 9)); //CHOCOLATE SOURCE
+		appliances.push_back(new KitchenItem(glm::vec3(-0.75, -0.495, 0.25), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0))), glm::vec3(1, 1, 1), true, 8)); //STRAWBERRY SOURCE
 
-	ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.001, 0.001, 0.001),false)); //SINGLE EGG
-	ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.5, 0.5, 0.5), false)); //CRACKED EGG
-	ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.5, 0.5, 0.5), false)); //SUGAR CUBE
-	ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //FLOUR
-	//ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //WATER
-	//ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //CHOCOLATE
-	//ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -0.495, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //STRAWBERRY
-	loadTableCoordinates();
+		for (int i = 0; i < 20; i++) occupied.push_back(false);
+		occupied.at(0) = true;
+		occupied.at(2) = true;
+		occupied.at(3) = true;
+		occupied.at(4) = true;
+		occupied.at(10) = true;
+		occupied.at(7) = true;
+		occupied.at(9) = true;
+		occupied.at(8) = true;
+		//Ingredients
 
-	propToIngredient = { {(int)propsID::EGG_CRATE,(int)ingredientsID::SINGLE_EGG}, {(int)propsID::SUGAR_BOWL,(int)ingredientsID::SUGAR_CUBE},
-	{(int)propsID::FLOUR_SACK,(int)ingredientsID::FLOUR}, {(int)propsID::CHOCOLATE,(int)ingredientsID::CHOCOLATE}, {(int)propsID::STRAWBERRY,(int)ingredientsID::STRAWBERRY},
-	{(int)propsID::BARREL,(int)ingredientsID::WATER} };
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.001, 0.001, 0.001), false)); //SINGLE EGG
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.5, 0.5, 0.5), false)); //CRACKED EGG
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.5, 0.5, 0.5), false)); //SUGAR CUBE
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //FLOUR
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //WATER
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.2, 0.2, 0.2), false)); //CHOCOLATE
+		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.2, 0.2, 0.2), false)); //STRAWBERRY
+		loadTableCoordinates();
 
-	//Setting preset rotations
-	appliances.at((int)propsID::KNIFE)->toWorld = glm::rotate(glm::rotate(glm::mat4(1.0), glm::radians(180.0f), glm::vec3(1, 0, 0)), glm::radians(90.0f), glm::vec3(0, 1, 0));
-	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::rotate(glm::mat4(1.0), glm::radians(180.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::FLOUR)->toWorld = glm::rotate(glm::mat4(1.0),glm::radians(180.0f), glm::vec3(0,0,1));
-  
-	eggBasketLocation = 10;
-  }
+		propToIngredient = { {(int)propsID::EGG_CRATE,(int)ingredientsID::SINGLE_EGG}, {(int)propsID::SUGAR_BOWL,(int)ingredientsID::SUGAR_CUBE},
+		{(int)propsID::FLOUR_SACK,(int)ingredientsID::FLOUR}, {(int)propsID::CHOCOLATE,(int)ingredientsID::CHOCOLATE}, {(int)propsID::STRAWBERRY,(int)ingredientsID::STRAWBERRY},
+		{(int)propsID::BARREL,(int)ingredientsID::WATER} };
+
+		//Setting preset rotations
+		appliances.at((int)propsID::KNIFE)->toWorld = glm::rotate(glm::rotate(glm::mat4(1.0), glm::radians(180.0f), glm::vec3(1, 0, 0)), glm::radians(90.0f), glm::vec3(0, 1, 0));
+		ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::rotate(glm::mat4(1.0), glm::radians(180.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::FLOUR)->toWorld = glm::rotate(glm::mat4(1.0), glm::radians(180.0f), glm::vec3(1, 0, 0));
+
+		//Pushing Recipes
+		recipe.push_back({ { (int)ingredientsID::CRACKED_EGG,2 }, { (int)ingredientsID::CHOCOLATE,1 }, { (int)ingredientsID::FLOUR,1 }, { (int)ingredientsID::WATER, 1 }, { (int)ingredientsID::SUGAR_CUBE,2 } });
+		recipe.push_back({ { (int)ingredientsID::CRACKED_EGG,3 }, { (int)ingredientsID::STRAWBERRY,2 }, { (int)ingredientsID::FLOUR,1 }, { (int)ingredientsID::WATER, 1 }, { (int)ingredientsID::SUGAR_CUBE,3 } });
+		
+		totalIngredientsNeeded.push_back(7);
+		totalIngredientsNeeded.push_back(10);
+	}
 
   void loadTableCoordinates() {
 
@@ -105,16 +127,33 @@ public:
 		if (!p.rightIndexTrigger && p.rightHandTrigger) {
 			BoundingBox playerBox = players.at(player)->getTransformedBoundingBox(1);
 			if (players.at(player)->rightObjectHeld == -1) {
-				for (int i = 0; i < appliances.size(); i++) {
-					if (propToIngredient.find(i) != propToIngredient.end() && appliances.at(i)->detectCollision(playerBox)) {
-						ingredients.at(propToIngredient.at(i))->position = players.at(player)->rightControllerPosition;
-						ingredients.at(propToIngredient.at(i))->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation) * ingredients.at(propToIngredient.at(i))->toWorld);
-						ingredients.at(propToIngredient.at(i))->isVisible = true;
-						players.at(player)->rightObjectHeld = propToIngredient.at(i);
-						players.at(player)->rightHoldingProp = false;
-						ingredients.at(propToIngredient.at(i))->grabbed = true;
-						break;
+				bool ingredientCollision = false;
 
+				for (int i = 0; i < ingredients.size(); i++) {
+					if (ingredients.at(i)->detectCollision(playerBox)) {
+						ingredients.at(i)->position = players.at(player)->rightControllerPosition;
+						ingredients.at(i)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation) * ingredients.at(i)->toWorld);
+						ingredients.at(i)->isVisible = true;
+						players.at(player)->rightObjectHeld = i;
+						players.at(player)->rightHoldingProp = false;
+						occupied.at(ingredients.at(i)->tableNumber) = false;
+						ingredients.at(i)->tableNumber = -1;
+						ingredients.at(i)->grabbed = true;
+						break;
+					}
+				}
+				if (!ingredientCollision) {
+					for (int i = 0; i < appliances.size(); i++) {
+						if (propToIngredient.find(i) != propToIngredient.end() && appliances.at(i)->detectCollision(playerBox)) {
+							ingredients.at(propToIngredient.at(i))->position = players.at(player)->rightControllerPosition;
+							ingredients.at(propToIngredient.at(i))->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation) * ingredients.at(propToIngredient.at(i))->toWorld);
+							ingredients.at(propToIngredient.at(i))->isVisible = true;
+							players.at(player)->rightObjectHeld = propToIngredient.at(i);
+							players.at(player)->rightHoldingProp = false;
+							ingredients.at(propToIngredient.at(i))->grabbed = true;
+							break;
+
+						}
 					}
 				}
 			}
@@ -133,7 +172,7 @@ public:
 				if (!players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld == 0) {
 					BoundingBox rightIngredientBox = ingredients.at(0)->getTransformedBoundingBox();
 					for (int i = 0; i < tables.size(); i++) {
-						if (eggBasketLocation != i && tables.at(i)->detectCollision(rightIngredientBox)) {
+						if (i != appliances.at((int)propsID::EGG_CRATE)->tableNumber && tables.at(i)->detectCollision(rightIngredientBox)) {
 							ingredients.at(0)->position = ingredients.at(0)->originalPosition;
 							ingredients.at(0)->orientation = ingredients.at(0)->originalOrientation;
 							ingredients.at(0)->isVisible = false;
@@ -154,7 +193,7 @@ public:
 
 
 		//If left index trigger released and appliance is still in hand and is colliding to table, snap appliance onto table
-		if (!p.leftIndexTrigger && players.at(player)->leftHoldingProp && players.at(player)->leftObjectHeld > -1) {
+		/*if (!p.leftIndexTrigger && players.at(player)->leftHoldingProp && players.at(player)->leftObjectHeld > -1) {
 			BoundingBox leftApplianceBox = appliances.at(players.at(player)->leftObjectHeld)->getTransformedBoundingBox();
 			for (int i = 0; i < tables.size(); i++) {
 				if (tables.at(i)->detectCollision(leftApplianceBox)) {
@@ -187,19 +226,82 @@ public:
 			}
 			appliances.at(players.at(player)->rightObjectHeld)->grabbed = false;
 			players.at(player)->rightObjectHeld = -1;
-		}
+		}*/
 
 		//If right hand trigger released, ingredient should disappear
 		if (!p.rightHandTrigger && !players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
+
+			BoundingBox rightIngredientBox = ingredients.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox();
+			bool collidedWithMixer = false;
+
+			if (recipe.at(currentMenuItem).find(players.at(player)->rightObjectHeld) != recipe.at(currentMenuItem).end() && appliances.at((int)propsID::STAND_MIXER)->detectCollision(rightIngredientBox)) {
+				collidedWithMixer = true;
+				std::cout << "Mixer Collided with Ingredient" << std::endl;
+				if (ingredientCount.find(players.at(player)->rightObjectHeld) == ingredientCount.end()) ingredientCount.at(players.at(player)->rightObjectHeld) = 0;
+				std::cout << "Initialized Count for : " << players.at(player)->rightObjectHeld << std::endl;
+				if (recipe.at(currentMenuItem).at(players.at(player)->rightObjectHeld) > ingredientCount.at(players.at(player)->rightObjectHeld)) {
+					ingredientCount.at(players.at(player)->rightObjectHeld)++;
+					addedIngredients++;
+				}
+
+				std::cout << "NEW ITEM ADDED: " << std::endl;
+				int crackedEggCount = ingredientCount.find((int)ingredientsID::CRACKED_EGG) != ingredientCount.end() ? ingredientCount.at((int)ingredientsID::CRACKED_EGG) : 0;
+				int chocolateCount = ingredientCount.find((int)ingredientsID::CHOCOLATE) != ingredientCount.end() ? ingredientCount.at((int)ingredientsID::CHOCOLATE) : 0;
+				int strawberryCount = ingredientCount.find((int)ingredientsID::STRAWBERRY) != ingredientCount.end() ? ingredientCount.at((int)ingredientsID::STRAWBERRY) : 0;
+				int flourCount = ingredientCount.find((int)ingredientsID::FLOUR) != ingredientCount.end() ? ingredientCount.at((int)ingredientsID::FLOUR) : 0;
+				int sugarCount = ingredientCount.find((int)ingredientsID::SUGAR_CUBE) != ingredientCount.end() ? ingredientCount.at((int)ingredientsID::SUGAR_CUBE) : 0;
+				int waterCount = ingredientCount.find((int)ingredientsID::WATER) != ingredientCount.end() ? ingredientCount.at((int)ingredientsID::WATER) : 0;
+				std::cout << "CRACKED EGGS: " << crackedEggCount << std::endl;
+				std::cout << "CHOCOLATE: " << chocolateCount << std::endl;
+				std::cout << "STRAWBERRY: " << strawberryCount << std::endl;
+				std::cout << "FLOUR: " << flourCount << std::endl;
+				std::cout << "SUGAR: " << sugarCount << std::endl;
+				std::cout << "WATER: " << waterCount << std::endl;
+
+				if (addedIngredients == totalIngredientsNeeded.at(currentMenuItem)) {
+					std::cout << "Item has been created" << std::endl;
+					currentMenuItem = (currentMenuItem + 1) % 2;
+					ingredientCount.clear();
+					points++;
+				}
+			}
+			bool collidedWithTable = false;
+			if (!collidedWithMixer) {
+
+				for (int i = 0; i < tables.size(); i++) {
+					if (tables.at(i)->detectCollision(rightIngredientBox)) {
+						if (!occupied.at(i)) {
+							glm::vec3 snappedPosition = tables.at(i)->position;
+							snappedPosition.y = -0.45f;
+							ingredients.at(players.at(player)->rightObjectHeld)->position = snappedPosition;
+							ingredients.at(players.at(player)->rightObjectHeld)->orientation = ingredients.at(players.at(player)->rightObjectHeld)->originalOrientation;
+							occupied.at(i) = true;
+							collidedWithTable = true;
+							ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = i;
+							break;
+						}
+						else {
+							std::cout << "Collides with Table: " << i << " but is occupied." << std::endl;
+						}
+					}
+				}
+			}
+
 			ingredients.at(players.at(player)->rightObjectHeld)->grabbed = false;
-			ingredients.at(players.at(player)->rightObjectHeld)->isVisible= false;
-			ingredients.at(players.at(player)->rightObjectHeld)->position = ingredients.at(players.at(player)->rightObjectHeld)->originalPosition;
-			ingredients.at(players.at(player)->rightObjectHeld)->orientation = ingredients.at(players.at(player)->rightObjectHeld)->originalOrientation;
+			
+			if (!collidedWithTable) {
+				ingredients.at(players.at(player)->rightObjectHeld)->isVisible = false;
+				ingredients.at(players.at(player)->rightObjectHeld)->position = ingredients.at(players.at(player)->rightObjectHeld)->originalPosition;
+				ingredients.at(players.at(player)->rightObjectHeld)->orientation = ingredients.at(players.at(player)->rightObjectHeld)->originalOrientation;
+				if(ingredients.at(players.at(player)->rightObjectHeld)->tableNumber > -1)
+					occupied.at(ingredients.at(players.at(player)->rightObjectHeld)->tableNumber) = false;
+				ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = -1;
+			}
 			players.at(player)->rightObjectHeld = -1;
 		}
 
 		//If index trigger in either left or right hand is pressed, then if controller collides with appliance, move appliance with controller
-		for (int i = 0; i < appliances.size(); i++) {
+		/*for (int i = 0; i < appliances.size(); i++) {
 
 			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(0))
 				&& p.leftIndexTrigger && !p.leftHandTrigger && ((players.at(player)->leftObjectHeld == -1 && !appliances.at(i)->grabbed) || (players.at(player)->leftHoldingProp && players.at(player)->leftObjectHeld == i))) {
@@ -224,7 +326,7 @@ public:
 				break;
 			}
 
-		}
+		}*/
 
   }
 
@@ -239,16 +341,16 @@ public:
 	  appliances.at((int)propsID::SUGAR_BOWL)->objectSpaceBoundingBox = b.sugarBowl;
 	  appliances.at((int)propsID::EGG_CRATE)->objectSpaceBoundingBox = b.eggCrate;
 	  appliances.at((int)propsID::FLOUR_SACK)->objectSpaceBoundingBox = b.flourSack;
-	  //appliances.at((int)propsID::CHOCOLATE)->objectSpaceBoundingBox = b.chocolate;
-	  //appliances.at((int)propsID::STRAWBERRY)->objectSpaceBoundingBox = b.strawberry;
+	  appliances.at((int)propsID::CHOCOLATE)->objectSpaceBoundingBox = b.chocolate;
+	  appliances.at((int)propsID::STRAWBERRY)->objectSpaceBoundingBox = b.strawberry;
 
 	  ingredients.at((int)ingredientsID::SINGLE_EGG)->objectSpaceBoundingBox = b.singleEgg;
 	  ingredients.at((int)ingredientsID::CRACKED_EGG)->objectSpaceBoundingBox = b.crackedEgg;
 	  ingredients.at((int)ingredientsID::SUGAR_CUBE)->objectSpaceBoundingBox = b.sugarCube;
 	  ingredients.at((int)ingredientsID::FLOUR)->objectSpaceBoundingBox = b.flour;
-	  //ingredients.at((int)ingredientsID::WATER)->objectSpaceBoundingBox = b.water;
-	  //ingredients.at((int)ingredientsID::CHOCOLATE)->objectSpaceBoundingBox = b.chocolate;
-	  //ingredients.at((int)ingredientsID::STRAWBERRY)->objectSpaceBoundingBox = b.strawberry;
+	  ingredients.at((int)ingredientsID::WATER)->objectSpaceBoundingBox = b.water;
+	  ingredients.at((int)ingredientsID::CHOCOLATE)->objectSpaceBoundingBox = b.chocolate;
+	  ingredients.at((int)ingredientsID::STRAWBERRY)->objectSpaceBoundingBox = b.strawberry;
 
 	  for(int i = 0; i < tables.size(); i++) tables.at(i)->objectSpaceBoundingBox = b.table;
   }
@@ -264,16 +366,16 @@ public:
 	  output.sugarBowl = appliances.at((int)propsID::SUGAR_BOWL)->getState();
 	  output.eggCrate = appliances.at((int)propsID::EGG_CRATE)->getState();
 	  output.flourSack = appliances.at((int)propsID::FLOUR_SACK)->getState();
-	  //output.chocolateSource = appliances.at((int)propsID::CHOCOLATE)->getState();
-	  //output.strawberrySource = appliances.at((int)propsID::STRAWBERRY)->getState();
+	  output.chocolateSource = appliances.at((int)propsID::CHOCOLATE)->getState();
+	  output.strawberrySource = appliances.at((int)propsID::STRAWBERRY)->getState();
 
 	  output.singleEgg = ingredients.at((int)ingredientsID::SINGLE_EGG)->getState();
 	  output.crackedEgg = ingredients.at((int)ingredientsID::CRACKED_EGG)->getState();
 	  output.sugarCube = ingredients.at((int)ingredientsID::SUGAR_CUBE)->getState();
 	  output.flour = ingredients.at((int)ingredientsID::FLOUR)->getState();
-	  //output.water = ingredients.at((int)ingredientsID::WATER)->getState();
-	  //output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getState();
-	  //output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getState();
+	  output.water = ingredients.at((int)ingredientsID::WATER)->getState();
+	  output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getState();
+	  output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getState();
 	  return output;
 
   }

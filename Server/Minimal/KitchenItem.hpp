@@ -17,6 +17,7 @@ class KitchenItem {
 public:
 	BoundingBox objectSpaceBoundingBox;
 	bool grabbed;
+	int tableNumber;
 	glm::vec3 position;
 	glm::quat orientation;
 	glm::vec3 originalPosition;
@@ -26,7 +27,7 @@ public:
 	bool isVisible;
 	 
 
-	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor, bool visible = true) {
+	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor, bool visible = true, int tableNumber = -1) {
 		position = pos;
 		orientation = ori;
 		originalPosition = pos;
@@ -34,6 +35,8 @@ public:
 		scale = scaleFactor;
 		grabbed = false;
 		isVisible = visible;
+		tableNumber = -1;
+		toWorld = glm::mat4(1.0);
 	}
 
 	BoundingBox getTransformedBoundingBox() {
