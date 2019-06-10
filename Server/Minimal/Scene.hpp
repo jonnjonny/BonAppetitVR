@@ -236,9 +236,9 @@ public:
 
 			if (recipe.at(currentMenuItem).find(players.at(player)->rightObjectHeld) != recipe.at(currentMenuItem).end() && appliances.at((int)propsID::STAND_MIXER)->detectCollision(rightIngredientBox)) {
 				collidedWithMixer = true;
-				std::cout << "Mixer Collided with Ingredient" << std::endl;
+				
 				if (ingredientCount.find(players.at(player)->rightObjectHeld) == ingredientCount.end()) ingredientCount.insert({ players.at(player)->rightObjectHeld,0 });
-				std::cout << "Initialized Count for : " << players.at(player)->rightObjectHeld << std::endl;
+	
 				if (recipe.at(currentMenuItem).at(players.at(player)->rightObjectHeld) > ingredientCount.at(players.at(player)->rightObjectHeld)) {
 					ingredientCount.at(players.at(player)->rightObjectHeld)++;
 					addedIngredients++;
@@ -261,6 +261,7 @@ public:
 				if (addedIngredients == totalIngredientsNeeded.at(currentMenuItem)) {
 					std::cout << "Item has been created" << std::endl;
 					currentMenuItem = (currentMenuItem + 1) % 2;
+					addedIngredients = 0;
 					ingredientCount.clear();
 					points++;
 				}
