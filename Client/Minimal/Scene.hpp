@@ -274,7 +274,7 @@ public:
 			glm::scale( glm::mat4( 1.0f ), glm::vec3( 0.1f, 0.1f, 0.1f ) );
 		  letters.insert({ (char)ascii_A, upperCaseModel });
 		 // Model* lowerCaseModel = new Model((std::string("./Models/Letters/") + (char)(ascii_a+i) + std::string(".obj")).c_str());
-		 // letters.insert({ (char)ascii_A, lowerCaseModel });
+		 // letters.insert({ (char)ascii_A, lowerCaseModel });//
 	  }
 	  
   }
