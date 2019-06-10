@@ -261,7 +261,7 @@ public:
 	loadTextureFiles();
 	loadInstrTextureFiles();
 
-	populateLetterModels();
+	populateLetterModels();//
   }
 
 
