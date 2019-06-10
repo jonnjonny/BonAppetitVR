@@ -16,39 +16,36 @@ void main()
 vec4 objectColor = texture2D(texFramebuffer, TexCoords );
 
 //pt light
-vec3 lightPos = vec3(2,1.5,-3);
+vec3 lightPos = vec3(0,1,0);
 vec4 lightColor = vec4(1,1,1,1);
 vec4 myDiffuse = vec4(0.8,0.8,0.8,1);
-vec4 mySpecular = vec4(0.2,0.2,0.2,1);
+vec4 mySpecular = vec4(0.5,0.5,0.5,1);
 float myShininess = 20;
 
  float ambientStrength = 0.3;
     vec4 ambient = vec4( ambientStrength * vec3(lightColor.x,lightColor.y,lightColor.z),1.0);
 
-vec3 norm = normalize(vertNormal);
+vec3 trans_norm = normalize(mat3(transpose(inverse(Modelview)))*vertNormal);
 vec4 transfMyVertex = Modelview * vertex;
 
 
+vec3 eyePosition = vec3(0,0,0);
+vec3 vertex_trans = transfMyVertex.xyz / transfMyVertex.z;
+vec3 eyeDirection = normalize(eyePosition - vertex_trans); 
+vec3 lightDirection = normalize(lightPos-vertex_trans);
 
-vec3 FragPos = transfMyVertex.xyz / transfMyVertex.z;
-vec3 lightDir = normalize(lightPos - FragPos);  
+float nDotL = dot(trans_norm,lightDirection);
+vec4 lambert = myDiffuse* max(nDotL, 0.0) * lightColor;
 
+vec3 halfvec = normalize(lightDirection + eyeDirection);
 
-vec4 lambert = myDiffuse* max(dot(norm, lightDir), 0.0) * lightColor;
-
-vec3 halfvec = normalize(lightDir + vec3(1,0,0));
-float nDotH = dot(norm, halfvec);
-vec4 phong = mySpecular * lightColor;// * pow(max(nDotH, 0.0), myShininess);
-
-
-
-float diff = max(dot(norm, lightDir), 0.0);
-vec4 diffuse = diff * lightColor;
-
-vec4 
- result = (ambient + diffuse ) * objectColor;
+float nDotH = dot(trans_norm, halfvec);
+vec4 phong = mySpecular * lightColor* pow(max(nDotH, 0.0), myShininess);
 
 
-	fragColor = result;
+vec4 result = (ambient + lambert + phong)*objectColor;
+
+
+fragColor = result;
 
 }
