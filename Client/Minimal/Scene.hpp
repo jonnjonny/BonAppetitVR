@@ -22,9 +22,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-//#include <AL/al.h>
-//#include <AL/alc.h>
-//#include <AL/alut.h>
+#include "irrKlang.h"
 
 #include "Model.h"
 
@@ -154,6 +152,7 @@ class Scene {
 
   Model* instrCube;
 
+  irrklang::ISoundEngine *soundEngine;
   //ALCdevice *device;
   //ALboolean enumeration;
 
@@ -197,7 +196,7 @@ public:
 
 		///for screen appearing from opening book
 		screen = new Quad();
-		screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
+		screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f)) *glm::scale(glm::mat4(1.0),glm::vec3(2.0,2.0,2.0));
 		//   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
 		  // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
 		populateInFrameRenderingBuffers();
@@ -278,42 +277,9 @@ public:
 
 		populateLetterModels();//
 
-		/*device = alcOpenDevice(NULL);
-		if (!device) {
-			std::cout << "Device failed to load." << std::endl;
-		}
-		enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
-		if (enumeration == AL_FALSE) {
-			std::cout << "Enumeration not supported" << std::endl;
-		}
-		else {
-			std::cout << "Enumeration supported" << std::endl;
-		}
+		soundEngine = irrklang::createIrrKlangDevice();
+		soundEngine->play2D("audio/restaurant_music.mp3", GL_TRUE);
 
-		listAudioDevices(alcGetString(NULL, ALC_DEVICE_SPECIFIER));
-
-		ALCcontext *context;
-
-		context = alcCreateContext(device, NULL);
-		if (!alcMakeContextCurrent(context)) {
-			std::cout << "Failed to make context" << std::endl;
-		}
-
-		ALuint sourceBackgroundMusic;
-
-		alGenSources((ALuint)1, &sourceBackgroundMusic);
-		alSourcef(sourceBackgroundMusic, AL_PITCH, 1);
-		alSourcef(sourceBackgroundMusic, AL_GAIN, 1);
-		alSource3f(sourceBackgroundMusic, AL_POSITION, 0, 0, 0);
-		alSource3f(sourceBackgroundMusic, AL_VELOCITY, 0, 0, 0);
-		alSourcei(sourceBackgroundMusic, AL_LOOPING, AL_TRUE);
-
-		ALuint buffer;
-		buffer = alutCreateBufferFromFile("test.wav");
-		if (alutGetError() != ALUT_ERROR_NO_ERROR) {
-			return;
-		}
-		*/
 
   }//
 
@@ -685,7 +651,7 @@ public:
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 3);
 	glm::mat4 scaleMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 1, 0.5));
-	desk->toWorld = glm::translate(glm::mat4(1.0f), table_positions[12] - glm::vec3(0, 0.5, 0));// *scaleMatrix;
+	desk->toWorld = glm::translate(glm::mat4(1.0f), table_positions[12] - glm::vec3(0, 0.5, 0));// *glm::scale(glm::mat4(1.0), glm::vec3(0.0, 1.3, 0.0));// *scaleMatrix;
 	desk->Draw(textureShaderID, projection, view);
 
 
