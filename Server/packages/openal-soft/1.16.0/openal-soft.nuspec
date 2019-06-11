@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>OpenAL-Soft</id>
+    <version>1.16.0</version>
+    <title>OpenAL Soft</title>
+    <authors>OpenAL Soft developers</authors>
+    <owners>OpenAL Soft developers</owners>
+    <licenseUrl>https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html</licenseUrl>
+    <projectUrl>http://kcat.strangesoft.net/openal.html</projectUrl>
+    <iconUrl>http://cdn.lo4d.com/t/icon/100/openal.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>OpenAL provides capabilities for playing audio in a virtual 3D environment. Distance attenuation, doppler shift, and directional sound emitters are among the features handled by the API. More advanced effects, including air absorption, occlusion, and environmental reverb, are available through the EFX extension. It also facilitates streaming audio, multi-channel buffers, and audio capture.</description>
+    <summary>Software implementation of the OpenAL 3D audio API.</summary>
+    <releaseNotes>Repackaging of the original Win32 and Win64 binaries.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>OpenAL redist Audio</tags>
+  </metadata>
+</package>

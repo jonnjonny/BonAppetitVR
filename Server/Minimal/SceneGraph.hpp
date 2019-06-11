@@ -24,10 +24,13 @@ struct SceneGraph {
 	ObjectData chocolate;
 	ObjectData strawberry;
 	ObjectData cookieDough;
+	ObjectData cakeDough;
+	ObjectData cookie;
+	ObjectData cake;
 
 
 	MSGPACK_DEFINE_MAP(player1, player2, cuttingBoard, knife, singleEgg, standMixer, barrel, sugarBowl, eggCrate,
-		flourSack, chocolateSource, strawberrySource, crackedEgg, sugarCube, flour, water, chocolate, strawberry, cookieDough);
+		flourSack, chocolateSource, strawberrySource, crackedEgg, sugarCube, flour, water, chocolate, strawberry, cookieDough,cakeDough, cookie, cake);
 
 };
 

@@ -22,6 +22,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
 #include "Model.h"
 
 
@@ -36,7 +39,6 @@
 
 
 #include "enums.h"
-
 
 #include "Quad.hpp"
 
@@ -151,6 +153,8 @@ class Scene {
 
   Model* instrCube;
 
+  ALCdevice *device;
+
 public:
   Scene() {
     // Shader Program
@@ -258,10 +262,24 @@ public:
 	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::CAKE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::COOKIE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	ingredients.at((int)ingredientsID::CAKE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(1,1, 1))*
+		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	loadTextureFiles();
 	loadInstrTextureFiles();
 
 	populateLetterModels();//
+
+	device = alcOpenDevice(NULL);
+	if (!device) {
+		std::cout << "Device failed to load." << std::endl;
+	}
   }//
 
 
@@ -368,6 +386,7 @@ public:
 	textureFileNames.push_back(std::string("Strawberry_diffuse"));
 	textureFileNames.push_back(std::string("Chocolate"));
 	textureFileNames.push_back(std::string("cookie_texture"));
+	textureFileNames.push_back(std::string("cake_texture"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -430,6 +449,10 @@ public:
 	output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getObjectSpaceBoundingBox();
 	output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getObjectSpaceBoundingBox();
 	output.cookieDough = ingredients.at((int)ingredientsID::COOKIE_DOUGH)->getObjectSpaceBoundingBox();
+	output.cakeDough = ingredients.at((int)ingredientsID::CAKE_DOUGH)->getObjectSpaceBoundingBox();
+	output.cookie = ingredients.at((int)ingredientsID::COOKIE)->getObjectSpaceBoundingBox();
+	output.cake = ingredients.at((int)ingredientsID::CAKE)->getObjectSpaceBoundingBox();
+	
 	BoundingBox table;
 	xmin = ymin = zmin = -1.0f;
 	xmax = ymax = zmax = 1.0f;
@@ -508,8 +531,8 @@ public:
 	glUniform1i(uniform_texture_from_picture, 8);
 	if(player1->leftHandVisible) player1->leftHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	if(player1->rightHandVisible) player1->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	if (player2->leftHandVisible) player2->leftHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	if (player2->rightHandVisible) player2->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if(player2->leftHandVisible) player2->leftHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if(player2->rightHandVisible) player2->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 
 
 	
@@ -580,6 +603,20 @@ public:
 	if (ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible) {
 		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	}
+	if (ingredients.at((int)ingredientsID::COOKIE)->isVisible) {
+		ingredients.at((int)ingredientsID::COOKIE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+
+
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 12);
+	if (ingredients.at((int)ingredientsID::CAKE_DOUGH)->isVisible) {
+		ingredients.at((int)ingredientsID::CAKE_DOUGH)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+	if (ingredients.at((int)ingredientsID::CAKE)->isVisible) {
+		ingredients.at((int)ingredientsID::CAKE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	}
+
 	
 	
 
@@ -665,6 +702,9 @@ public:
 	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/strawberry.obj", false));
 	ingredients.push_back(new Model("./Models/cookie.obj", false));
+	ingredients.push_back(new Model("./Models/cake.obj"));
+	ingredients.push_back(new Model("./Models/cookie.obj", false));
+	ingredients.push_back(new Model("./Models/cake.obj", false));
 
 
   }
@@ -833,6 +873,21 @@ public:
 		glm::translate(glm::mat4(1.0), s.cookieDough.position) *
 		glm::mat4_cast(s.cookieDough.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02)));
+	ingredients.at((int)ingredientsID::CAKE_DOUGH)->isVisible = s.cakeDough.visible;
+	ingredients.at((int)ingredientsID::CAKE_DOUGH)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.cakeDough.position) *
+		glm::mat4_cast(s.cakeDough.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)));
+	ingredients.at((int)ingredientsID::COOKIE)->isVisible = s.cookie.visible;
+	ingredients.at((int)ingredientsID::COOKIE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.cookie.position) *
+		glm::mat4_cast(s.cookie.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02)));
+	ingredients.at((int)ingredientsID::CAKE)->isVisible = s.cake.visible;
+	ingredients.at((int)ingredientsID::CAKE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.cake.position) *
+		glm::mat4_cast(s.cake.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)));
 
   }
 

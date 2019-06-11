@@ -25,8 +25,8 @@ void main()
 	vec4 mySpecular = vec4(0.5,0.5,0.5,1);
 	float myShininess = 20;
 
-	 float ambientStrength = 0.3;
-		vec4 ambient = vec4( ambientStrength * vec3(lightColor.x,lightColor.y,lightColor.z),1.0);
+	float ambientStrength = 0.3;
+	vec4 ambient = vec4( ambientStrength * vec3(lightColor.x,lightColor.y,lightColor.z),1.0);
 
 	vec3 trans_norm = normalize(mat3(transpose(inverse(Modelview)))*vertNormal);
 	vec4 transfMyVertex = Modelview * vertex;
@@ -35,7 +35,10 @@ void main()
 	vec3 eyePosition = vec3(0,0,0);
 	vec3 vertex_trans = transfMyVertex.xyz / transfMyVertex.w;
 	vec3 eyeDirection = normalize(eyePosition - vertex_trans); 
-	vec3 lightDirection = normalize(vec3(lightPos_h)-vertex_trans);
+
+	vec3 lightDirection = normalize(trans_light-vertex_trans);
+
+	//vec3 lightDirection = normalize(vec3(lightPos_h)-vertex_trans);
 
 	float nDotL = dot(trans_norm,lightDirection);
 	vec4 lambert = myDiffuse* max(nDotL, 0.0) * lightColor;
@@ -47,8 +50,7 @@ void main()
 
 
 	vec4 result = (ambient + lambert + phong)*objectColor;
-
-
-	fragColor = result;
+	
+	fragColor = result;//
 
 }

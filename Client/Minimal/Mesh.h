@@ -65,7 +65,6 @@ public:
 
   }
 
-
   // render the mesh
   void Draw( GLuint shaderId, const glm::mat4 &projection, const glm::mat4 &view,
              const glm::mat4 &toWorld, int color) {
@@ -97,7 +96,6 @@ public:
 
     // draw mesh
     glUseProgram( shaderId );
-
     // Calculate the combination of the model and view (camera inverse) matrices
     glm::mat4 modelview = view * toWorld;
 
@@ -163,11 +161,13 @@ public:
 	  uProjection = glGetUniformLocation(shaderId, "projection");
 	  uModelview = glGetUniformLocation(shaderId, "modelview");
 	  uColorScheme = glGetUniformLocation(shaderId, "colorScheme");
+	  uView = glGetUniformLocation(shaderId, "view");
 
 
 	  // Now send these values to the shader program
 	  glUniformMatrix4fv(uProjection, 1, GL_FALSE, &projection[0][0]);
 	  glUniformMatrix4fv(uModelview, 1, GL_FALSE, &modelview[0][0]);
+	  glUniformMatrix4fv(uView, 1, GL_FALSE, &view[0][0]);
 
 	  glBindVertexArray(VAO);
 	  glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
