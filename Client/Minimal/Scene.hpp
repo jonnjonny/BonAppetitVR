@@ -480,8 +480,8 @@ public:
 	output.water = ingredients.at((int)ingredientsID::WATER)->getObjectSpaceBoundingBox();
 	output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getObjectSpaceBoundingBox();
 	output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getObjectSpaceBoundingBox();
-	output.chocolate = ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->getObjectSpaceBoundingBox();
-	output.strawberry = ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->getObjectSpaceBoundingBox();
+	output.choppedChocolate = ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->getObjectSpaceBoundingBox();
+	output.choppedStrawberry = ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->getObjectSpaceBoundingBox();
 	output.cookieDough = ingredients.at((int)ingredientsID::COOKIE_DOUGH)->getObjectSpaceBoundingBox();
 	output.cakeDough = ingredients.at((int)ingredientsID::CAKE_DOUGH)->getObjectSpaceBoundingBox();
 	output.cookie = ingredients.at((int)ingredientsID::COOKIE)->getObjectSpaceBoundingBox();
@@ -737,8 +737,8 @@ public:
 	ingredients.push_back(new Model("./Models/cup.obj", false));
 	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/strawberry.obj", false));
-	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/strawberry.obj", false));
+	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/cookie.obj", false));
 	ingredients.push_back(new Model("./Models/cake.obj"));
 	ingredients.push_back(new Model("./Models/cookie.obj", false));

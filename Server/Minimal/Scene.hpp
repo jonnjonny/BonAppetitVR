@@ -39,6 +39,8 @@ class Scene {
   std::vector<std::vector<int>> ingredientOrder;
   int addedIngredients, currentStep;
   bool ovenOccupied,choppingBoardOccupied;
+  bool sameCrack, sameChop;
+  int numberOfCracks, numberOfChops;
 
 
 
@@ -49,6 +51,8 @@ public:
 		addedIngredients = 0;
 		currentStep = 0;
 		ovenOccupied = false;
+		sameCrack = sameChop = false;
+		numberOfCracks = numberOfChops = 0;
 		choppingBoardOccupied;
 
 		players.push_back(new Player(glm::vec3(0.1, 0.1, 0.1)));
@@ -159,7 +163,9 @@ public:
 			BoundingBox playerBox = players.at(player)->getTransformedBoundingBox(1);
 			if (players.at(player)->rightObjectHeld == -1) {
 
+
 				if (addedIngredients == totalIngredientsNeeded.at(currentMenuItem) && appliances.at((int)propsID::STAND_MIXER)->detectCollision(playerBox)) {
+					
 					int raw = rawIngredient.at(currentMenuItem);
 					ingredients.at(raw)->position = players.at(player)->rightControllerPosition;
 					ingredients.at(raw)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation) * ingredients.at(raw)->toWorld);
@@ -171,6 +177,7 @@ public:
 					addedIngredients = 0;
 				}
 				else if (ovenOccupied) {
+					
 					int cooked = cookedIngredient.at(currentMenuItem);
 					ingredients.at(cooked)->position = players.at(player)->rightControllerPosition;
 					ingredients.at(cooked)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation) * ingredients.at(cooked)->toWorld);
@@ -186,15 +193,19 @@ public:
 				}
 				else {
 					bool ingredientCollision = false;
-
+					
 					for (int i = 0; i < ingredients.size(); i++) {
 						if (ingredients.at(i)->detectCollision(playerBox)) {
+							
 							ingredients.at(i)->position = players.at(player)->rightControllerPosition;
 							ingredients.at(i)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation) * ingredients.at(i)->toWorld);
 							ingredients.at(i)->isVisible = true;
 							players.at(player)->rightObjectHeld = i;
 							players.at(player)->rightHoldingProp = false;
-							if (ingredients.at(i)->tableNumber == 0) choppingBoardOccupied = false;
+							if (ingredients.at(i)->tableNumber == 0) {
+								choppingBoardOccupied = false;
+								numberOfChops = 0;
+							}
 							if(ingredients.at(i)->tableNumber > 0) occupied.at(ingredients.at(i)->tableNumber) = false;
 							ingredients.at(i)->tableNumber = -1;
 							ingredients.at(i)->grabbed = true;
@@ -232,21 +243,36 @@ public:
 				//If egg collides with table, then change egg to cracked state
 				if (!players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld == (int)ingredientsID::SINGLE_EGG) {
 					BoundingBox rightIngredientBox = ingredients.at((int)ingredientsID::SINGLE_EGG)->getTransformedBoundingBox();
+					bool eggTableCollision = false;
 					for (int i = 0; i < tables.size(); i++) {
-						if (i != appliances.at((int)propsID::EGG_CRATE)->tableNumber && tables.at(i)->detectCollision(rightIngredientBox)) {
-							ingredients.at((int)ingredientsID::SINGLE_EGG)->position = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalPosition;
-							ingredients.at((int)ingredientsID::SINGLE_EGG)->orientation = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalOrientation;
-							ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible = false;
-							ingredients.at((int)ingredientsID::SINGLE_EGG)->grabbed = false;
-							ingredients.at((int)ingredientsID::CRACKED_EGG)->position = players.at(player)->rightControllerPosition;
-							ingredients.at((int)ingredientsID::CRACKED_EGG)->orientation = players.at(player)->rightControllerOrientation;
-							ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = true;
-							ingredients.at((int)ingredientsID::CRACKED_EGG)->grabbed = true;
-							players.at(player)->rightHoldingProp = false;
-							players.at(player)->rightObjectHeld = (int)ingredientsID::CRACKED_EGG;
-							break;
+						if (i != appliances.at((int)propsID::EGG_CRATE)->tableNumber) {
+							if (!sameCrack && tables.at(i)->detectCollision(rightIngredientBox)) {
+								if (numberOfCracks == 2) {
+									std::cout << "Egg Cracked" << std::endl;
+									ingredients.at((int)ingredientsID::SINGLE_EGG)->position = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalPosition;
+									ingredients.at((int)ingredientsID::SINGLE_EGG)->orientation = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalOrientation;
+									ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible = false;
+									ingredients.at((int)ingredientsID::SINGLE_EGG)->grabbed = false;
+									ingredients.at((int)ingredientsID::CRACKED_EGG)->position = players.at(player)->rightControllerPosition;
+									ingredients.at((int)ingredientsID::CRACKED_EGG)->orientation = players.at(player)->rightControllerOrientation;
+									ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = true;
+									ingredients.at((int)ingredientsID::CRACKED_EGG)->grabbed = true;
+									players.at(player)->rightHoldingProp = false;
+									players.at(player)->rightObjectHeld = (int)ingredientsID::CRACKED_EGG;
+									numberOfCracks = 0;
+									sameCrack = false;
+								}
+								else {
+									numberOfCracks++;
+									std::cout << "Number of Cracks Increased To: " << numberOfCracks << std::endl;
+								}
+								eggTableCollision = true;
+								break;
+							}
 						}
 					}
+
+					sameCrack = eggTableCollision;
 				}
 
 			}
@@ -276,6 +302,7 @@ public:
 			appliances.at((int)propsID::KNIFE)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
 			appliances.at((int)propsID::KNIFE)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
 			appliances.at((int)propsID::KNIFE)->grabbed = false;
+			players.at(player)->rightHoldingProp = false;
 			players.at(player)->rightObjectHeld = -1;
 		}
 
@@ -323,7 +350,8 @@ public:
 					appliances.at((int)propsID::CHOPPING_BOARD)->detectCollision(rightIngredientBox)) {
 					ingredients.at(players.at(player)->rightObjectHeld)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
 					ingredients.at(players.at(player)->rightObjectHeld)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
-					ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = (int)propsID::CHOPPING_BOARD;
+					ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = 0;
+					choppingBoardOccupied = true;
 					collidedWithTable = true;
 				}
 				else {
