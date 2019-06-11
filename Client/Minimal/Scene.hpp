@@ -262,6 +262,12 @@ public:
 		ingredients.at((int)ingredientsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
 			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
 			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
@@ -474,6 +480,8 @@ public:
 	output.water = ingredients.at((int)ingredientsID::WATER)->getObjectSpaceBoundingBox();
 	output.chocolate = ingredients.at((int)ingredientsID::CHOCOLATE)->getObjectSpaceBoundingBox();
 	output.strawberry = ingredients.at((int)ingredientsID::STRAWBERRY)->getObjectSpaceBoundingBox();
+	output.chocolate = ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->getObjectSpaceBoundingBox();
+	output.strawberry = ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->getObjectSpaceBoundingBox();
 	output.cookieDough = ingredients.at((int)ingredientsID::COOKIE_DOUGH)->getObjectSpaceBoundingBox();
 	output.cakeDough = ingredients.at((int)ingredientsID::CAKE_DOUGH)->getObjectSpaceBoundingBox();
 	output.cookie = ingredients.at((int)ingredientsID::COOKIE)->getObjectSpaceBoundingBox();
@@ -587,6 +595,10 @@ public:
 	}
 
 	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view);
+	if (ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible) {
+		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view);
+	}
+
 	props.at((int)propsID::FLOUR_SACK)->Draw(textureShaderID, projection, view);
 	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
 		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view);
@@ -602,6 +614,9 @@ public:
 	if (ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible) {
 		ingredients.at((int)ingredientsID::CHOCOLATE)->Draw(textureShaderID, projection, view);
 	}
+	if (ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->isVisible) {
+		ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->Draw(textureShaderID, projection, view);
+	}
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 9);
@@ -609,17 +624,12 @@ public:
 	if (ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible) {
 		ingredients.at((int)ingredientsID::STRAWBERRY)->Draw(textureShaderID, projection, view);
 	}
+	if (ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->isVisible) {
+		ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->Draw(textureShaderID, projection, view);
+	}
 
 	//Ingredients
 	
-
-	if (ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible) {
-		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view);
-	}
-
-	
-
-
 	if (ingredients.at((int)ingredientsID::WATER)->isVisible) {
 		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view);
 	}
@@ -725,6 +735,8 @@ public:
 	ingredients.push_back(new Model("./Models/Sugar_cube.obj", false));
 	ingredients.push_back(new Model("./Models/flourpile.obj", false));
 	ingredients.push_back(new Model("./Models/cup.obj", false));
+	ingredients.push_back(new Model("./Models/chocolate.obj", false));
+	ingredients.push_back(new Model("./Models/strawberry.obj", false));
 	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/strawberry.obj", false));
 	ingredients.push_back(new Model("./Models/cookie.obj", false));
@@ -876,7 +888,7 @@ public:
 	ingredients.at((int)ingredientsID::FLOUR)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.flour.position) *
 		glm::mat4_cast(s.flour.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05)));
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.15, 0.15, 0.15)));
 
 	ingredients.at((int)ingredientsID::WATER)->isVisible = s.water.visible;
 	ingredients.at((int)ingredientsID::WATER)->toWorld = (
@@ -895,6 +907,19 @@ public:
 		glm::translate(glm::mat4(1.0), s.strawberry.position) *
 		glm::mat4_cast(s.strawberry.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2)));
+
+	ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->isVisible = s.choppedChocolate.visible;
+	ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.choppedChocolate.position) *
+		glm::mat4_cast(s.choppedChocolate.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2)));
+
+	ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->isVisible = s.choppedStrawberry.visible;
+	ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->toWorld = (
+		glm::translate(glm::mat4(1.0), s.choppedStrawberry.position) *
+		glm::mat4_cast(s.choppedStrawberry.orientation)
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2)));
+
 	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible = s.cookieDough.visible;
 	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.cookieDough.position) *
