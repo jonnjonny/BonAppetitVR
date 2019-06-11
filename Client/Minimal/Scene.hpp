@@ -22,8 +22,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <AL/al.h>
-#include <AL/alc.h>
+//#include <AL/al.h>
+//#include <AL/alc.h>
+//#include <AL/alut.h>
 
 #include "Model.h"
 
@@ -153,134 +154,182 @@ class Scene {
 
   Model* instrCube;
 
-  ALCdevice *device;
+  //ALCdevice *device;
+  //ALboolean enumeration;
 
 public:
-  Scene() {
-    // Shader Program
-    shaderID = LoadShaders( "shader.vert", "shader.frag" );
-    woodShaderID = LoadShaders( "woodShader.vert", "woodShader.frag" );
-    skyBoxShaderID = LoadShaders( "skybox.vert", "skybox.frag" );
-    processingBarShaderID = LoadShaders( "processingBarShader.vert", "processingBarShader.frag" );
-    boundingBoxShaderID = LoadShaders( "boundingbox.vert", "boundingbox.frag" );
-    screenShaderID = LoadShaders( "screenShader.vert", "screenShader.frag" );
-    controllerShaderID = LoadShaders( "shader.vert", "shader.frag" );    
-	textureShaderID = LoadShaders( "textureFromPictureShader.vert","textureFromPictureShader.frag" );
+	Scene() {
+		// Shader Program
+		shaderID = LoadShaders("shader.vert", "shader.frag");
+		woodShaderID = LoadShaders("woodShader.vert", "woodShader.frag");
+		skyBoxShaderID = LoadShaders("skybox.vert", "skybox.frag");
+		processingBarShaderID = LoadShaders("processingBarShader.vert", "processingBarShader.frag");
+		boundingBoxShaderID = LoadShaders("boundingbox.vert", "boundingbox.frag");
+		screenShaderID = LoadShaders("screenShader.vert", "screenShader.frag");
+		controllerShaderID = LoadShaders("shader.vert", "shader.frag");
+		textureShaderID = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
-	textureId2 = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
+		textureId2 = LoadShaders("textureFromPictureShader.vert", "textureFromPictureShader.frag");
 
-	instrCube = new Model("./Models/cube.obj");//
-	instrCube->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -4.0f)) 
-		* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.01));
-
-
-	//for desert box
-    desertbox = new Skybox( "desertbox" );
-    desertbox->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))*glm::scale( glm::mat4( 1.0f ), glm::vec3( 5.0f ) );
-
-    ///controller
-    sphere = new Model( "./Models/sphere.obj");
-
-    populatingTables();
-
-    loadingModels();
-
-    processingBar = new Model( "./Models/cube.obj" );
+		instrCube = new Model("./Models/cube.obj");//
+		instrCube->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -4.0f))
+			* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.01));
 
 
-	//hands[0] = new Model("./Models/Hand_left.obj");
-	//hands[1] = new Model("./Models/Hand_right.obj");
+		//for desert box
+		desertbox = new Skybox("restaurantbox");
+		desertbox->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f))*glm::scale(glm::mat4(1.0f), glm::vec3(5.0f));
+
+		///controller
+		sphere = new Model("./Models/sphere.obj");
+
+		populatingTables();
+
+		loadingModels();
+
+		processingBar = new Model("./Models/cube.obj");
+
+
+		//hands[0] = new Model("./Models/Hand_left.obj");
+		//hands[1] = new Model("./Models/Hand_right.obj");
 
 
 
-	///for screen appearing from opening book
-    screen = new Quad();
-	screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
-                  //   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
-                    // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    populateInFrameRenderingBuffers();
+		///for screen appearing from opening book
+		screen = new Quad();
+		screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
+		//   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
+		  // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
+		populateInFrameRenderingBuffers();
 
 
-    player1 = new Player();
-    player2 = new Player();
+		player1 = new Player();
+		player2 = new Player();
 
 
-    desk = new Model( "./Models/Oven.obj", 1.0f );
-	recipeBookOpened = new Model("./Models/RecipeBookOpened.obj");
-	recipeBookClosed = new Model("./Models/RecipeBookClosed.obj");
+		desk = new Model("./Models/Oven.obj", 1.0f);
+		recipeBookOpened = new Model("./Models/RecipeBookOpened.obj");
+		recipeBookClosed = new Model("./Models/RecipeBookClosed.obj");
 
-	//Props
-	props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *
-		glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))* 
-		glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
+		//Props
+		props.at((int)propsID::KNIFE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.02, 0)) *
+			glm::translate(glm::mat4(1.0f), table_center_positions[0]) * glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 0, 1));
 
-	props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	//props.at((int)propsID::STAND_MIXER_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[6]) *
-		//glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1, 0, 0));
-	//props.at((int)propsID::STAND_MIXER_MACHINE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
-		//glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0)); 
+		props.at((int)propsID::STAND_MIXER)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.01, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		//props.at((int)propsID::STAND_MIXER_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[6]) *
+			//glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1, 0, 0));
+		//props.at((int)propsID::STAND_MIXER_MACHINE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[2]) *
+			//glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.01, 0.01))* glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0)); 
 
-	props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[3]) * 
-		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
+		props.at((int)propsID::BARREL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[3]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(0, 1, 0));
 
-	props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.5,0.5,0.5 ))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0));
+		props.at((int)propsID::SUGAR_BOWL)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[4]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))* glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0));
 
-	props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.1, 0.1))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+		props.at((int)propsID::EGG_CRATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[10]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.1, 0.1, 0.1))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 
-	props.at((int)propsID::FLOUR_SACK)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[7]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
-	props.at((int)propsID::CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[9]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
-	props.at((int)propsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[8]) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+		props.at((int)propsID::FLOUR_SACK)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[7]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+		props.at((int)propsID::CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[9]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+		props.at((int)propsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[8]) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 
-	//Ingredients
-	ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.001, 0.001, 0.001))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::SUGAR_CUBE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::FLOUR)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::WATER)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::CAKE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::COOKIE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	ingredients.at((int)ingredientsID::CAKE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(1,1, 1))*
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
-	loadTextureFiles();
-	loadInstrTextureFiles();
+		//Ingredients
+		ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.001, 0.001, 0.001))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::CRACKED_EGG)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::SUGAR_CUBE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.5))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::FLOUR)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::WATER)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.05, 0.05, 0.05))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::CHOCOLATE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::CAKE_DOUGH)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::COOKIE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(0.02, 0.02, 0.02))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		ingredients.at((int)ingredientsID::CAKE)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))*
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+		loadTextureFiles();
+		loadInstrTextureFiles();
 
-	populateLetterModels();//
+		populateLetterModels();//
 
-	device = alcOpenDevice(NULL);
-	if (!device) {
-		std::cout << "Device failed to load." << std::endl;
-	}
+		/*device = alcOpenDevice(NULL);
+		if (!device) {
+			std::cout << "Device failed to load." << std::endl;
+		}
+		enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
+		if (enumeration == AL_FALSE) {
+			std::cout << "Enumeration not supported" << std::endl;
+		}
+		else {
+			std::cout << "Enumeration supported" << std::endl;
+		}
+
+		listAudioDevices(alcGetString(NULL, ALC_DEVICE_SPECIFIER));
+
+		ALCcontext *context;
+
+		context = alcCreateContext(device, NULL);
+		if (!alcMakeContextCurrent(context)) {
+			std::cout << "Failed to make context" << std::endl;
+		}
+
+		ALuint sourceBackgroundMusic;
+
+		alGenSources((ALuint)1, &sourceBackgroundMusic);
+		alSourcef(sourceBackgroundMusic, AL_PITCH, 1);
+		alSourcef(sourceBackgroundMusic, AL_GAIN, 1);
+		alSource3f(sourceBackgroundMusic, AL_POSITION, 0, 0, 0);
+		alSource3f(sourceBackgroundMusic, AL_VELOCITY, 0, 0, 0);
+		alSourcei(sourceBackgroundMusic, AL_LOOPING, AL_TRUE);
+
+		ALuint buffer;
+		buffer = alutCreateBufferFromFile("test.wav");
+		if (alutGetError() != ALUT_ERROR_NO_ERROR) {
+			return;
+		}
+		*/
+
   }//
+
+  /*void listAudioDevices(const ALCchar *devices) {
+	  const ALCchar *dev = devices, *next = devices + 1;
+	  size_t len = 0;
+
+	  std::cout << "Devices list:\n" << std::endl;
+	  while (dev && *dev != '\0' && next && *next != '\0') {
+		  fprintf(stdout, "%s\n", dev);
+		  len = strlen(dev);
+		  dev += (len + 1);
+		  next += (len + 2);
+	  }
+	  std::cout << "Done Listing" << std::endl;
+  }*/
 
 
   void populateLetterModels() {
@@ -505,7 +554,7 @@ public:
 
 	  instrCube->Draw(textureShaderID, projection, iView);
 
-    desertbox->draw( skyBoxShaderID, projection, view );
+    desertbox->draw(skyBoxShaderID, projection, view );
 	//glClearColor(255.0f/255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f);
 
 
@@ -529,92 +578,92 @@ public:
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 8);
-	if(player1->leftHandVisible) player1->leftHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	if(player1->rightHandVisible) player1->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	if(player2->leftHandVisible) player2->leftHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	if(player2->rightHandVisible) player2->rightHand->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	if(player1->leftHandVisible) player1->leftHand->Draw(textureShaderID, projection, view);
+	if(player1->rightHandVisible) player1->rightHand->Draw(textureShaderID, projection, view);
+	if(player2->leftHandVisible) player2->leftHand->Draw(textureShaderID, projection, view);
+	if(player2->rightHandVisible) player2->rightHand->Draw(textureShaderID, projection, view);
 
 
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 4);
 	//rendering props, order matters, add after existing lines!!!!!! Make sure matching the enum class propsID
-	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::CHOPPING_BOARD)->Draw(textureShaderID, projection, view);
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 5);
-	props.at((int)propsID::KNIFE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::KNIFE)->Draw(textureShaderID, projection, view);
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 7);
-	props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::STAND_MIXER)->Draw(textureShaderID, projection, view);
 	//props.at((int)propsID::STAND_MIXER_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	//props.at((int)propsID::STAND_MIXER_MACHINE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
 	
-	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::BARREL)->Draw(textureShaderID, projection, view);
 
 
 	//glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 6);
-	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::SUGAR_BOWL)->Draw(textureShaderID, projection, view);
 	if (ingredients.at((int)ingredientsID::SUGAR_CUBE)->isVisible) {
-		ingredients.at((int)ingredientsID::SUGAR_CUBE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::SUGAR_CUBE)->Draw(textureShaderID, projection, view);
 	}
 
-	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
-	props.at((int)propsID::FLOUR_SACK)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::EGG_CRATE)->Draw(textureShaderID, projection, view);
+	props.at((int)propsID::FLOUR_SACK)->Draw(textureShaderID, projection, view);
 	if (ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible) {
-		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::SINGLE_EGG)->Draw(textureShaderID, projection, view);
 	}
 	if (ingredients.at((int)ingredientsID::FLOUR)->isVisible) {
-		ingredients.at((int)ingredientsID::FLOUR)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::FLOUR)->Draw(textureShaderID, projection, view);
 	}
 
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 10);
-	props.at((int)propsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::CHOCOLATE)->Draw(textureShaderID, projection, view);
 	if (ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible) {
-		ingredients.at((int)ingredientsID::CHOCOLATE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::CHOCOLATE)->Draw(textureShaderID, projection, view);
 	}
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 9);
-	props.at((int)propsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+	props.at((int)propsID::STRAWBERRY)->Draw(textureShaderID, projection, view);
 	if (ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible) {
-		ingredients.at((int)ingredientsID::STRAWBERRY)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::STRAWBERRY)->Draw(textureShaderID, projection, view);
 	}
 
 	//Ingredients
 	
 
 	if (ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible) {
-		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::CRACKED_EGG)->Draw(textureShaderID, projection, view);
 	}
 
 	
 
 
 	if (ingredients.at((int)ingredientsID::WATER)->isVisible) {
-		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view);
 	}
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 11);
 	if (ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible) {
-		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->Draw(textureShaderID, projection, view);
 	}
 	if (ingredients.at((int)ingredientsID::COOKIE)->isVisible) {
-		ingredients.at((int)ingredientsID::COOKIE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::COOKIE)->Draw(textureShaderID, projection, view);
 	}
 
 
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 12);
 	if (ingredients.at((int)ingredientsID::CAKE_DOUGH)->isVisible) {
-		ingredients.at((int)ingredientsID::CAKE_DOUGH)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::CAKE_DOUGH)->Draw(textureShaderID, projection, view);
 	}
 	if (ingredients.at((int)ingredientsID::CAKE)->isVisible) {
-		ingredients.at((int)ingredientsID::CAKE)->Draw(textureShaderID, projection, view, true, boundingBoxShaderID);
+		ingredients.at((int)ingredientsID::CAKE)->Draw(textureShaderID, projection, view);
 	}
 
 	
@@ -731,7 +780,7 @@ public:
 
   void populatingTables() {
     for( int i = 0; i < 20; ++i ) {
-      tables.push_back( new TexturedCube( "Martini" ) );
+      tables.push_back( new TexturedCube( "table" ) );
 
       //std::cout << i << std::endl;
     }
