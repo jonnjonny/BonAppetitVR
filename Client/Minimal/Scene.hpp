@@ -560,6 +560,10 @@ public:
     player1->draw( shaderID, projection, view, playerNumber == 0 );
     player2->draw(shaderID, projection, view, playerNumber == 1 );
 
+	if (ingredients.at((int)ingredientsID::WATER)->isVisible) {
+		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view, { {0,3} },false,0);
+	}
+
 
    // renderProcessingBar( projection, view, 0.75f );
 
@@ -631,10 +635,7 @@ public:
 	}
 
 	//Ingredients
-	
-	if (ingredients.at((int)ingredientsID::WATER)->isVisible) {
-		ingredients.at((int)ingredientsID::WATER)->Draw(textureShaderID, projection, view);
-	}
+
 	
 	glUseProgram(textureShaderID);
 	glUniform1i(uniform_texture_from_picture, 13);
