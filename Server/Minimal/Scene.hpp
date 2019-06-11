@@ -36,16 +36,18 @@ class Scene {
   std::unordered_map<int, int> ingredientCount;
   std::vector<int> rawIngredient;
   std::vector<int> cookedIngredient;
-  int addedIngredients;
+  std::vector<std::vector<int>> ingredientOrder;
+  int addedIngredients, currentStep;
   bool ovenOccupied;
 
 
 
 public:
 	Scene() {
-		currentMenuItem = 1;
+		currentMenuItem = 0;
 		points = 0;
 		addedIngredients = 0;
+		currentStep = 0;
 		ovenOccupied = false;
 
 		players.push_back(new Player(glm::vec3(0.1, 0.1, 0.1)));
@@ -94,12 +96,12 @@ public:
 		ingredients.at((int)ingredientsID::FLOUR)->toWorld = glm::rotate(glm::mat4(1.0), glm::radians(180.0f), glm::vec3(1, 0, 0));
 
 		//Pushing Recipes
-		recipe.push_back({ { (int)ingredientsID::CRACKED_EGG,2 }, { (int)ingredientsID::CHOCOLATE,1 }, { (int)ingredientsID::FLOUR,1 }, { (int)ingredientsID::WATER, 1 }, { (int)ingredientsID::SUGAR_CUBE,2 } });
-		recipe.push_back({ { (int)ingredientsID::CRACKED_EGG,3 }, { (int)ingredientsID::STRAWBERRY,2 }, { (int)ingredientsID::FLOUR,1 }, { (int)ingredientsID::WATER, 1 }, { (int)ingredientsID::SUGAR_CUBE,3 } });
+		recipe.push_back({ { (int)ingredientsID::CRACKED_EGG,2 }, { (int)ingredientsID::CHOCOLATE,2 }, { (int)ingredientsID::FLOUR,1 }, { (int)ingredientsID::WATER, 1 }, { (int)ingredientsID::SUGAR_CUBE,2 } });
+		recipe.push_back({ { (int)ingredientsID::CRACKED_EGG,3 }, { (int)ingredientsID::STRAWBERRY,3 }, { (int)ingredientsID::FLOUR,1 }, { (int)ingredientsID::WATER, 1 }, { (int)ingredientsID::SUGAR_CUBE,3 } });
 		
 		//Number of ingredients needed for each recipe
-		totalIngredientsNeeded.push_back(7);
-		totalIngredientsNeeded.push_back(10);
+		totalIngredientsNeeded.push_back(8);
+		totalIngredientsNeeded.push_back(11);
 
 		//Raw Version of Recipe
 		rawIngredient.push_back((int)ingredientsID::COOKIE_DOUGH);
@@ -108,6 +110,13 @@ public:
 		//Cooked Version of Recipe
 		cookedIngredient.push_back((int)ingredientsID::COOKIE);
 		cookedIngredient.push_back((int)ingredientsID::CAKE);
+
+		//Establishing Ingredient Order
+		ingredientOrder.push_back({ (int)ingredientsID::CHOCOLATE,(int)ingredientsID::FLOUR,
+			(int)ingredientsID::CRACKED_EGG,(int)ingredientsID::WATER,(int)ingredientsID::SUGAR_CUBE });
+		ingredientOrder.push_back({ (int)ingredientsID::FLOUR,(int)ingredientsID::CRACKED_EGG,
+			(int)ingredientsID::STRAWBERRY,(int)ingredientsID::WATER,(int)ingredientsID::SUGAR_CUBE });
+
 
 
 	}
@@ -168,6 +177,9 @@ public:
 					ingredients.at(cooked)->grabbed = true;
 					std::cout << "Baked Goods Extracted!" << std::endl;
 					ovenOccupied = false;
+					currentStep = 0;
+					currentMenuItem = (currentMenuItem + 1) % 2;
+
 				}
 				else {
 					bool ingredientCollision = false;
@@ -252,26 +264,16 @@ public:
 			}
 			appliances.at(players.at(player)->leftObjectHeld)->grabbed = false;
 			players.at(player)->leftObjectHeld = -1;
-		}
+		}*/
 
 
 		//If right index trigger released and appliance is still in hand and is colliding to table, snap appliance onto table
 		if (!p.rightIndexTrigger && players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
-			BoundingBox rightApplianceBox = appliances.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox();
-
-			for (int i = 0; i < tables.size(); i++) {
-				if (tables.at(i)->detectCollision(rightApplianceBox)) {
-					glm::vec3 snappedPosition = tables.at(i)->position;
-					snappedPosition.y = appliances.at(players.at(player)->rightObjectHeld)->originalPosition.y;
-					appliances.at(players.at(player)->rightObjectHeld)->position = snappedPosition;
-					appliances.at(players.at(player)->rightObjectHeld)->orientation = appliances.at(players.at(player)->rightObjectHeld)->originalOrientation;
-					if (players.at(player)->rightObjectHeld == (int)propsID::EGG_CRATE) eggBasketLocation = i;
-					break;
-				}
-			}
-			appliances.at(players.at(player)->rightObjectHeld)->grabbed = false;
+			appliances.at((int)propsID::KNIFE)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
+			appliances.at((int)propsID::KNIFE)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
+			appliances.at((int)propsID::KNIFE)->grabbed = false;
 			players.at(player)->rightObjectHeld = -1;
-		}*/
+		}
 
 		//If right hand trigger released, ingredient should disappear
 		if (!p.rightHandTrigger && !players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
@@ -280,7 +282,8 @@ public:
 			
 			bool collidedWithMixer = false;
 
-			if (recipe.at(currentMenuItem).find(players.at(player)->rightObjectHeld) != recipe.at(currentMenuItem).end() && appliances.at((int)propsID::STAND_MIXER)->detectCollision(rightIngredientBox)) {
+			if (currentStep < ingredientOrder.at(currentMenuItem).size() && ingredientOrder.at(currentMenuItem).at(currentStep) == players.at(player)->rightObjectHeld &&
+				recipe.at(currentMenuItem).find(players.at(player)->rightObjectHeld) != recipe.at(currentMenuItem).end() && appliances.at((int)propsID::STAND_MIXER)->detectCollision(rightIngredientBox)) {
 				collidedWithMixer = true;
 				
 				if (ingredientCount.find(players.at(player)->rightObjectHeld) == ingredientCount.end()) ingredientCount.insert({ players.at(player)->rightObjectHeld,0 });
@@ -303,6 +306,11 @@ public:
 					std::cout << "FLOUR: " << flourCount << std::endl;
 					std::cout << "SUGAR: " << sugarCount << std::endl;
 					std::cout << "WATER: " << waterCount << std::endl;
+					if (recipe.at(currentMenuItem).at(players.at(player)->rightObjectHeld) == ingredientCount.at(players.at(player)->rightObjectHeld)) {
+						currentStep++;
+						std::cout << "Proceeding to Step " << currentStep << std::endl;
+
+					}
 				}
 			}
 			bool collidedWithTable = false;
@@ -316,6 +324,8 @@ public:
 								ingredients.at(players.at(player)->rightObjectHeld)->position = ingredients.at(players.at(player)->rightObjectHeld)->originalPosition;
 								ingredients.at(players.at(player)->rightObjectHeld)->orientation = ingredients.at(players.at(player)->rightObjectHeld)->originalOrientation;
 								ovenOccupied = true;
+								currentStep++;
+								std::cout << "Proceeding to Step " << currentStep << std::endl;
 								std::cout << "Oven Occupied!" << std::endl;
 							}
 							else {
@@ -357,21 +367,20 @@ public:
 				appliances.at(i)->grabbed = true;
 				break;
 			}
+		}*/
+
+		
+
+		if (appliances.at((int)propsID::KNIFE)->detectCollision(players.at(player)->getTransformedBoundingBox(1))
+			&& p.rightIndexTrigger && !p.rightHandTrigger && ((players.at(player)->rightObjectHeld == -1 && !appliances.at((int)propsID::KNIFE)->grabbed) || (players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld == (int)propsID::KNIFE))) {
+			appliances.at((int)propsID::KNIFE)->position = players.at(player)->rightControllerPosition;
+			appliances.at((int)propsID::KNIFE)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation)* appliances.at((int)propsID::KNIFE)->toWorld );
+			players.at(player)->rightObjectHeld = (int)propsID::KNIFE;
+			players.at(player)->rightHoldingProp = true;
+			appliances.at((int)propsID::KNIFE)->grabbed = true;
 		}
 
-		for (int i = 0; i < appliances.size(); i++) {
-
-			if (appliances.at(i)->detectCollision(players.at(player)->getTransformedBoundingBox(1))
-				&& p.rightIndexTrigger && !p.rightHandTrigger && ((players.at(player)->rightObjectHeld == -1 && !appliances.at(i)->grabbed) || (players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld == i))) {
-				appliances.at(i)->position = players.at(player)->rightControllerPosition;
-				appliances.at(i)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation)* appliances.at(i)->toWorld );
-				players.at(player)->rightObjectHeld = i;
-				players.at(player)->rightHoldingProp = true;
-				appliances.at(i)->grabbed = true;
-				break;
-			}
-
-		}*/
+		
 
   }
 
@@ -428,6 +437,9 @@ public:
 	  output.cakeDough = ingredients.at((int)ingredientsID::CAKE_DOUGH)->getState();
 	  output.cookie = ingredients.at((int)ingredientsID::COOKIE)->getState();
 	  output.cake = ingredients.at((int)ingredientsID::CAKE)->getState();
+
+	  output.currentMenuItem = currentMenuItem;
+	  output.currentStep = currentStep;
 	  return output;
 
   }

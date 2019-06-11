@@ -153,6 +153,8 @@ class Scene {
   Model* instrCube;
 
   irrklang::ISoundEngine *soundEngine;
+
+  int currentMenuItem, currentStep;
   //ALCdevice *device;
   //ALboolean enumeration;
 
@@ -195,8 +197,8 @@ public:
 
 
 		///for screen appearing from opening book
-		screen = new Quad();
-		screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f)) *glm::scale(glm::mat4(1.0),glm::vec3(2.0,2.0,2.0));
+		screen = new Quad(glm::vec3(10.0, 10.0, 10.0));
+		screen->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
 		//   * glm::rotate( glm::mat4( 1.0f ), glm::radians( 45.0f ), glm::vec3( 0.0f, 1.0f, 0.0f ) )
 		  // * glm::scale( glm::mat4( 1.0f ), glm::vec3( 1.0f, 1.0f, 1.0f ) );
 		populateInFrameRenderingBuffers();
@@ -280,6 +282,9 @@ public:
 		soundEngine = irrklang::createIrrKlangDevice();
 		soundEngine->play2D("audio/restaurant_music.mp3", GL_TRUE);
 
+		currentMenuItem = 0;
+		currentStep = 0;
+
 
   }//
 
@@ -351,8 +356,15 @@ public:
 
 
   void loadInstrTextureFiles() {
+
 	  for (int i = 0; i < 7; i++) {
-		  instrFileNames.push_back(std::to_string(i));
+		  std::string fileName = "./Chocolate Cookie/" + std::to_string(i) + ".jpg";
+		  instrFileNames.push_back(fileName);
+	  }
+
+	  for (int i = 0; i < 7; i++) {
+		  std::string fileName = "./Strawberry Cake/" + std::to_string(i) + ".jpg";
+		  instrFileNames.push_back(fileName);
 	  }
 
 
@@ -364,10 +376,9 @@ public:
 
 	  for (GLuint i = 0; i < instrFileNames.size(); i++) { //skipping index 0
 		//Setting up textures		 
- instrTexIds.push_back(0);
-		  std::string fileName = "./Strawberry Cake/" + instrFileNames[i] + ".jpg";
+		  instrTexIds.push_back(0);
 
-		  data = stbi_load(fileName.c_str(), &width, &height, &numChannels, 0);
+		  data = stbi_load(instrFileNames.at(i).c_str(), &width, &height, &numChannels, 0);
 		  if (!data) {
 			  throw std::runtime_error("Cannot load JPG file");
 		  }
@@ -796,7 +807,8 @@ public:
 
 
   void update( SceneGraph s ) {
-
+	  currentMenuItem = s.currentMenuItem;
+	  currentStep = s.currentStep;
     player1->updateState( s.player1 );
     player2->updateState( s.player2 );
     props.at( ( int ) propsID::CHOPPING_BOARD )->toWorld = (
