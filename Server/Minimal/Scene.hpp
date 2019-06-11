@@ -84,6 +84,7 @@ public:
 		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(1, 0, 0))), glm::vec3(0.15, 0.15, 0.15), false)); //FLOUR
 		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.05, 0.05, 0.05), false)); //WATER
 		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.2, 0.2, 0.2), false)); //CHOCOLATE
+		std::cout << "CHOCOLATE INITIAL TABLE NUMBER" << ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber << std::endl;;
 		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.2, 0.2, 0.2), false)); //STRAWBERRY
 		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.2, 0.2, 0.2), false)); //CHOPPED_CHOCOLATE
 		ingredients.push_back(new KitchenItem(glm::vec3(-15.0, -15.0, -0.75), glm::quat(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0))), glm::vec3(0.2, 0.2, 0.2), false)); //CHOPPED_STRAWBERRY
@@ -155,11 +156,13 @@ public:
 
   void update(PlayerData p, int player) {
 
-	  
+	    std::cout << "CHOCOLATE TABLE NUMBER BEFORE PLAYER UPDATE: " << ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber << std::endl;
 		players.at(player)->updateState(p);
+		std::cout << "CHOCOLATE TABLE NUMBER: " << ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber << std::endl;
 
 		//If right hand trigger is pressed, see if there are any appliances collided that will give you an ingredient
 		if (!p.rightIndexTrigger && p.rightHandTrigger) {
+			std::cout << "Executing right hand trigger push" << std::endl;
 			BoundingBox playerBox = players.at(player)->getTransformedBoundingBox(1);
 			if (players.at(player)->rightObjectHeld == -1) {
 
@@ -303,6 +306,7 @@ public:
 
 		//If right index trigger released and appliance is still in hand and is colliding to table, snap appliance onto table
 		if (!p.rightIndexTrigger && players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
+			std::cout << "Executing Index Release" << std::endl;
 			appliances.at((int)propsID::KNIFE)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
 			appliances.at((int)propsID::KNIFE)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
 			appliances.at((int)propsID::KNIFE)->grabbed = false;
@@ -312,6 +316,7 @@ public:
 
 		//If right hand trigger released, ingredient should disappear
 		if (!p.rightHandTrigger && !players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld > -1) {
+			std::cout << "Executing right hand trigger release" << std::endl;
 
 			BoundingBox rightIngredientBox = ingredients.at(players.at(player)->rightObjectHeld)->getTransformedBoundingBox();
 			
@@ -380,6 +385,7 @@ public:
 									ingredients.at(players.at(player)->rightObjectHeld)->position = snappedPosition;
 									ingredients.at(players.at(player)->rightObjectHeld)->orientation = ingredients.at(players.at(player)->rightObjectHeld)->originalOrientation;
 									occupied.at(i) = true;
+									std::cout << "Set Ingredient :" << players.at(player)->rightObjectHeld << " to table number " << i << std::endl;
 									ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = i;
 									collidedWithTable = true;
 								}
@@ -414,10 +420,10 @@ public:
 			}
 		}*/
 
-		
-
 		if (p.rightIndexTrigger && !p.rightHandTrigger && appliances.at((int)propsID::KNIFE)->detectCollision(players.at(player)->getTransformedBoundingBox(1))
 			&& ((players.at(player)->rightObjectHeld == -1 && !appliances.at((int)propsID::KNIFE)->grabbed) || (players.at(player)->rightHoldingProp && players.at(player)->rightObjectHeld == (int)propsID::KNIFE))) {
+			
+			std::cout << "Executing right index trigger push" << std::endl;
 			appliances.at((int)propsID::KNIFE)->position = players.at(player)->rightControllerPosition;
 			appliances.at((int)propsID::KNIFE)->orientation = glm::quat(glm::mat4_cast(players.at(player)->rightControllerOrientation)* appliances.at((int)propsID::KNIFE)->toWorld );
 			players.at(player)->rightObjectHeld = (int)propsID::KNIFE;
