@@ -205,6 +205,7 @@ public:
 							if (ingredients.at(i)->tableNumber == 0) {
 								choppingBoardOccupied = false;
 								numberOfChops = 0;
+								sameChop = false;
 							}
 							if(ingredients.at(i)->tableNumber > 0) occupied.at(ingredients.at(i)->tableNumber) = false;
 							ingredients.at(i)->tableNumber = -1;
@@ -246,28 +247,31 @@ public:
 					bool eggTableCollision = false;
 					for (int i = 0; i < tables.size(); i++) {
 						if (i != appliances.at((int)propsID::EGG_CRATE)->tableNumber) {
-							if (!sameCrack && tables.at(i)->detectCollision(rightIngredientBox)) {
-								if (numberOfCracks == 2) {
-									std::cout << "Egg Cracked" << std::endl;
-									ingredients.at((int)ingredientsID::SINGLE_EGG)->position = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalPosition;
-									ingredients.at((int)ingredientsID::SINGLE_EGG)->orientation = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalOrientation;
-									ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible = false;
-									ingredients.at((int)ingredientsID::SINGLE_EGG)->grabbed = false;
-									ingredients.at((int)ingredientsID::CRACKED_EGG)->position = players.at(player)->rightControllerPosition;
-									ingredients.at((int)ingredientsID::CRACKED_EGG)->orientation = players.at(player)->rightControllerOrientation;
-									ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = true;
-									ingredients.at((int)ingredientsID::CRACKED_EGG)->grabbed = true;
-									players.at(player)->rightHoldingProp = false;
-									players.at(player)->rightObjectHeld = (int)ingredientsID::CRACKED_EGG;
-									numberOfCracks = 0;
-									sameCrack = false;
-								}
-								else {
-									numberOfCracks++;
-									std::cout << "Number of Cracks Increased To: " << numberOfCracks << std::endl;
-								}
+							if (tables.at(i)->detectCollision(rightIngredientBox)) {
 								eggTableCollision = true;
-								break;
+								if (!sameCrack) {
+									sameCrack = true;
+									if (numberOfCracks == 2) {
+										std::cout << "Egg Cracked" << std::endl;
+										ingredients.at((int)ingredientsID::SINGLE_EGG)->position = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalPosition;
+										ingredients.at((int)ingredientsID::SINGLE_EGG)->orientation = ingredients.at((int)ingredientsID::SINGLE_EGG)->originalOrientation;
+										ingredients.at((int)ingredientsID::SINGLE_EGG)->isVisible = false;
+										ingredients.at((int)ingredientsID::SINGLE_EGG)->grabbed = false;
+										ingredients.at((int)ingredientsID::CRACKED_EGG)->position = players.at(player)->rightControllerPosition;
+										ingredients.at((int)ingredientsID::CRACKED_EGG)->orientation = players.at(player)->rightControllerOrientation;
+										ingredients.at((int)ingredientsID::CRACKED_EGG)->isVisible = true;
+										ingredients.at((int)ingredientsID::CRACKED_EGG)->grabbed = true;
+										players.at(player)->rightHoldingProp = false;
+										players.at(player)->rightObjectHeld = (int)ingredientsID::CRACKED_EGG;
+										numberOfCracks = 0;
+										sameCrack = false;
+									}
+									else {
+										numberOfCracks++;
+										std::cout << "Number of Cracks Increased To: " << numberOfCracks << std::endl;
+									}
+									break;
+								}
 							}
 						}
 					}
@@ -350,6 +354,7 @@ public:
 					appliances.at((int)propsID::CHOPPING_BOARD)->detectCollision(rightIngredientBox)) {
 					ingredients.at(players.at(player)->rightObjectHeld)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
 					ingredients.at(players.at(player)->rightObjectHeld)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
+					std::cout << "Ingredient " << players.at(player)->rightObjectHeld << " table number updated to 0" << std::endl;
 					ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = 0;
 					choppingBoardOccupied = true;
 					collidedWithTable = true;
@@ -420,28 +425,67 @@ public:
 			appliances.at((int)propsID::KNIFE)->grabbed = true;
 
 			if (choppingBoardOccupied) {
-				if (ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber == 0 && appliances.at((int)propsID::KNIFE)->detectCollision(ingredients.at((int)ingredientsID::CHOCOLATE)->getTransformedBoundingBox())) {
-					ingredients.at((int)ingredientsID::CHOCOLATE)->position = ingredients.at((int)ingredientsID::CHOCOLATE)->originalPosition;
-					ingredients.at((int)ingredientsID::CHOCOLATE)->orientation = ingredients.at((int)ingredientsID::CHOCOLATE)->originalOrientation;
-					ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible = false;
-					ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber = -1;
-					ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
-					ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
-					ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->isVisible = true;
-					ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->tableNumber = 0;
-					std::cout << "CHOCOLATE CHOPPED" << std::endl;
+				std::cout << "Reaching here." << std::endl;
+				if (ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber == 0){
+					std::cout << "Reaching chocolate." << std::endl;
+					if (appliances.at((int)propsID::KNIFE)->detectCollision(ingredients.at((int)ingredientsID::CHOCOLATE)->getTransformedBoundingBox())) {
+						if (!sameChop) {
+							sameChop = true;
+							if (numberOfChops == 5) {
+								ingredients.at((int)ingredientsID::CHOCOLATE)->position = ingredients.at((int)ingredientsID::CHOCOLATE)->originalPosition;
+								ingredients.at((int)ingredientsID::CHOCOLATE)->orientation = ingredients.at((int)ingredientsID::CHOCOLATE)->originalOrientation;
+								ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible = false;
+								ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber = -1;
+								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
+								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
+								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->isVisible = true;
+								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->tableNumber = 0;
+								sameChop = false;
+								numberOfChops = 0;
+								std::cout << "CHOCOLATE CHOPPED" << std::endl;
+							}
+							else {
+								numberOfChops++;
+								std::cout << "Number of Chops Increased to : " << numberOfChops << std::endl;
+							}
+						}
+					}
+					else {
+
+						sameChop = false;
+					}
 
 				}
-				else if (ingredients.at((int)ingredientsID::STRAWBERRY)->tableNumber == 0 && appliances.at((int)propsID::KNIFE)->detectCollision(ingredients.at((int)ingredientsID::STRAWBERRY)->getTransformedBoundingBox())) {
-					ingredients.at((int)ingredientsID::STRAWBERRY)->position = ingredients.at((int)ingredientsID::STRAWBERRY)->originalPosition;
-					ingredients.at((int)ingredientsID::STRAWBERRY)->orientation = ingredients.at((int)ingredientsID::STRAWBERRY)->originalOrientation;
-					ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible = false;
-					ingredients.at((int)ingredientsID::STRAWBERRY)->tableNumber = -1;
-					ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
-					ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
-					ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->isVisible = true;
-					ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->tableNumber = 0;
-					std::cout << "STRAWBERRY CHOPPED" << std::endl;
+				else if (ingredients.at((int)ingredientsID::STRAWBERRY)->tableNumber == 0) {
+					std::cout << "Reaching here." << std::endl;
+					if (appliances.at((int)propsID::KNIFE)->detectCollision(ingredients.at((int)ingredientsID::STRAWBERRY)->getTransformedBoundingBox())) {
+						std::cout << "Collision with Strawberry" << std::endl;
+						if (!sameChop) {
+							sameChop = true;
+							if (numberOfChops == 5) {
+								ingredients.at((int)ingredientsID::STRAWBERRY)->position = ingredients.at((int)ingredientsID::STRAWBERRY)->originalPosition;
+								ingredients.at((int)ingredientsID::STRAWBERRY)->orientation = ingredients.at((int)ingredientsID::STRAWBERRY)->originalOrientation;
+								ingredients.at((int)ingredientsID::STRAWBERRY)->isVisible = false;
+								ingredients.at((int)ingredientsID::STRAWBERRY)->tableNumber = -1;
+								ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
+								ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
+								ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->isVisible = true;
+								ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->tableNumber = 0;
+								sameChop = false;
+								numberOfChops = 0;
+								std::cout << "STRAWBERRY CHOPPED" << std::endl;
+							}
+							else {
+								numberOfChops++;
+								std::cout << "Number of Chops Increased to : " << numberOfChops << std::endl;
+							}
+						}
+					}
+					else {
+
+						sameChop = false;
+					}
+
 				}
 
 			}
