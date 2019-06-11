@@ -352,7 +352,8 @@ public:
 				if ((players.at(player)->rightObjectHeld == (int)ingredientsID::CHOCOLATE || players.at(player)->rightObjectHeld == (int)ingredientsID::STRAWBERRY) && !choppingBoardOccupied &&
 					appliances.at((int)propsID::CHOPPING_BOARD)->detectCollision(rightIngredientBox)) {
 					ingredients.at(players.at(player)->rightObjectHeld)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
-					ingredients.at(players.at(player)->rightObjectHeld)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
+					if (players.at(player)->rightObjectHeld == (int)ingredientsID::CHOCOLATE) ingredients.at(players.at(player)->rightObjectHeld)->orientation = glm::quat(glm::rotate(glm::mat4(1.0),glm::radians(90.0f),glm::vec3(1,0,0))*glm::mat4_cast(appliances.at((int)propsID::KNIFE)->originalOrientation));
+					else ingredients.at(players.at(player)->rightObjectHeld)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
 					ingredients.at(players.at(player)->rightObjectHeld)->tableNumber = 0;
 					choppingBoardOccupied = true;
 					collidedWithTable = true;
@@ -436,7 +437,7 @@ public:
 								ingredients.at((int)ingredientsID::CHOCOLATE)->isVisible = false;
 								ingredients.at((int)ingredientsID::CHOCOLATE)->tableNumber = -1;
 								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->position = appliances.at((int)propsID::KNIFE)->originalPosition;
-								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->orientation = appliances.at((int)propsID::KNIFE)->originalOrientation;
+								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->orientation = glm::quat(glm::rotate(glm::mat4(1.0),glm::radians(90.0f),glm::vec3(1,0,0))*glm::mat4_cast(appliances.at((int)propsID::KNIFE)->originalOrientation));
 								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->isVisible = true;
 								ingredients.at((int)ingredientsID::CHOPPED_CHOCOLATE)->tableNumber = 0;
 								sameChop = false;
