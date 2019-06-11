@@ -174,7 +174,7 @@ public:
 
 		instrCube = new Model("./Models/cube.obj");//
 		instrCube->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -4.0f))
-			* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0.01));
+			* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 0.1));
 
 
 		//for desert box
@@ -419,6 +419,7 @@ public:
 	textureFileNames.push_back(std::string("Chocolate"));
 	textureFileNames.push_back(std::string("cookie_texture"));
 	textureFileNames.push_back(std::string("cake_texture"));
+	textureFileNames.push_back(std::string("dough"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -533,8 +534,9 @@ public:
 	}
 */	
 
+
 	  glUseProgram(textureShaderID);
-	  glUniform1i(uniform_texture_from_picture, 31);
+	  glUniform1i(uniform_texture_from_picture, 31 - (currentMenuItem*7+currentStep));
 	//	  screen->draw(textureShaderID, projection, iView);
 
 	  instrCube->Draw(textureShaderID, projection, iView);
@@ -635,20 +637,27 @@ public:
 	}
 	
 	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture_from_picture, 11);
+	glUniform1i(uniform_texture_from_picture, 13);
 	if (ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible) {
 		ingredients.at((int)ingredientsID::COOKIE_DOUGH)->Draw(textureShaderID, projection, view);
 	}
+
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 11);
 	if (ingredients.at((int)ingredientsID::COOKIE)->isVisible) {
 		ingredients.at((int)ingredientsID::COOKIE)->Draw(textureShaderID, projection, view);
 	}
 
 
 	glUseProgram(textureShaderID);
-	glUniform1i(uniform_texture_from_picture, 12);
+	glUniform1i(uniform_texture_from_picture, 13);
 	if (ingredients.at((int)ingredientsID::CAKE_DOUGH)->isVisible) {
 		ingredients.at((int)ingredientsID::CAKE_DOUGH)->Draw(textureShaderID, projection, view);
 	}
+
+
+	glUseProgram(textureShaderID);
+	glUniform1i(uniform_texture_from_picture, 12);
 	if (ingredients.at((int)ingredientsID::CAKE)->isVisible) {
 		ingredients.at((int)ingredientsID::CAKE)->Draw(textureShaderID, projection, view);
 	}
