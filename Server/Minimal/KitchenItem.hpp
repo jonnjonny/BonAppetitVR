@@ -27,7 +27,7 @@ public:
 	bool isVisible;
 	 
 
-	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor, bool visible = true, int tableNumber = -1) {
+	KitchenItem(glm::vec3 pos, glm::quat ori, glm::vec3 scaleFactor, bool visible = true, int tableNum = -1) {
 		position = pos;
 		orientation = ori;
 		originalPosition = pos;
@@ -35,7 +35,7 @@ public:
 		scale = scaleFactor;
 		grabbed = false;
 		isVisible = visible;
-		tableNumber = -1;
+		tableNumber = tableNum;
 		toWorld = glm::mat4(1.0);
 	}
 
