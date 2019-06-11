@@ -737,8 +737,8 @@ public:
 	ingredients.push_back(new Model("./Models/cup.obj", false));
 	ingredients.push_back(new Model("./Models/chocolate.obj", false));
 	ingredients.push_back(new Model("./Models/strawberry.obj", false));
-	ingredients.push_back(new Model("./Models/strawberry.obj", false));
-	ingredients.push_back(new Model("./Models/chocolate.obj", false));
+	ingredients.push_back(new Model("./Models/Chocolate_chopped.obj", false));
+	ingredients.push_back(new Model("./Models/Strawberry_chopped.obj", false));
 	ingredients.push_back(new Model("./Models/cookie.obj", false));
 	ingredients.push_back(new Model("./Models/cake.obj"));
 	ingredients.push_back(new Model("./Models/cookie.obj", false));
@@ -918,7 +918,7 @@ public:
 	ingredients.at((int)ingredientsID::CHOPPED_STRAWBERRY)->toWorld = (
 		glm::translate(glm::mat4(1.0), s.choppedStrawberry.position) *
 		glm::mat4_cast(s.choppedStrawberry.orientation)
-		* glm::scale(glm::mat4(1.0f), glm::vec3(0.2, 0.2, 0.2)));
+		* glm::scale(glm::mat4(1.0f), glm::vec3(0.00064, 0.00064, 0.00064)));
 
 	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->isVisible = s.cookieDough.visible;
 	ingredients.at((int)ingredientsID::COOKIE_DOUGH)->toWorld = (
