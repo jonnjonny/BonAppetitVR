@@ -151,6 +151,7 @@ class Scene {
   Model* hands[2];
 
   Model* instrCube;
+  Model* instrCube2;
 
   irrklang::ISoundEngine *soundEngine;
 
@@ -174,6 +175,10 @@ public:
 
 		instrCube = new Model("./Models/cube.obj");//
 		instrCube->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -4.0f))
+			* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 0.1));
+
+		instrCube2 = new Model("./Models/cube.obj");//
+		instrCube2->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.0f, -5.0f))
 			* glm::rotate(glm::mat4(1.0f), glm::radians(-0.0f), glm::vec3(1.0f, 0.0f, 0.0f))* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 0.1));
 
 
@@ -239,6 +244,9 @@ public:
 			glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
 		props.at((int)propsID::STRAWBERRY)->toWorld = glm::translate(glm::mat4(1.0f), table_center_positions[8]) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(0.005, 0.005, 0.005))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));
+
+		std::cout << props.size() << std::endl;
+		
 
 		//Ingredients
 		ingredients.at((int)ingredientsID::SINGLE_EGG)->toWorld = glm::translate(glm::mat4(1.0f), glm::vec3(-15.0, -15.0, -0.75)) *
@@ -420,6 +428,7 @@ public:
 	textureFileNames.push_back(std::string("cookie_texture"));
 	textureFileNames.push_back(std::string("cake_texture"));
 	textureFileNames.push_back(std::string("dough"));
+	textureFileNames.push_back(std::string("instr"));
 
 
     textureIds = std::vector <GLuint>( 31 );
@@ -508,6 +517,9 @@ public:
 
 
   void render( const glm::mat4 &projection, const glm::mat4 &view, const int playerNumber, ovrEyeRenderDesc eyeRenderDesc) {
+
+	  //props[(int)propsID::INSTR]->Draw(shaderID, projection, view);
+
 	  glm::mat4 _view = view;
 ///screen in-framebuffer rendering
 	  glm::mat4 iView = glm::mat4(1.0f);
@@ -539,7 +551,15 @@ public:
 	  glUniform1i(uniform_texture_from_picture, 31 - (currentMenuItem*7+currentStep));
 	//	  screen->draw(textureShaderID, projection, iView);
 
+
+
 	  instrCube->Draw(textureShaderID, projection, iView);
+
+	  glUseProgram(textureShaderID);
+	  glUniform1i(uniform_texture_from_picture, 14);
+
+
+	  instrCube2->Draw(textureShaderID, projection, view);
 
     desertbox->draw(skyBoxShaderID, projection, view );
 	//glClearColor(255.0f/255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f);
@@ -738,6 +758,7 @@ public:
 	//props.push_back(new Model("./Models/StandMixer_machine.obj"));
 	props.push_back(new Model("./Models/chocolate.obj"));
 	props.push_back(new Model("./Models/strawberry.obj"));
+	props.push_back(new Model("./Models/Instr.obj"));
 
 	ingredients.push_back(new Model("./Models/SingleEgg.obj",false));
 	ingredients.push_back(new Model("./Models/CrackedEgg.obj", false));
@@ -872,6 +893,7 @@ public:
 		glm::translate(glm::mat4(1.0), s.strawberrySource.position) *
 		glm::mat4_cast(s.strawberrySource.orientation)
 		* glm::scale(glm::mat4(1.0f), glm::vec3(1, 1, 1)));
+
 	
 
 	//Ingredients
