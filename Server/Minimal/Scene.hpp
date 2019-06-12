@@ -221,8 +221,8 @@ public:
 								ingredients.at(propToIngredient.at(i))->isVisible = true;
 								players.at(player)->rightObjectHeld = propToIngredient.at(i);
 								players.at(player)->rightHoldingProp = false;
-								if (ingredients.at(i)->tableNumber > -1) occupied.at(ingredients.at(i)->tableNumber) = false;
-								ingredients.at(i)->tableNumber = -1;
+								if (ingredients.at(propToIngredient.at(i))->tableNumber > -1) occupied.at(ingredients.at(propToIngredient.at(i))->tableNumber) = false;
+								ingredients.at(propToIngredient.at(i))->tableNumber = -1;
 								ingredients.at(propToIngredient.at(i))->grabbed = true;
 								break;
 
